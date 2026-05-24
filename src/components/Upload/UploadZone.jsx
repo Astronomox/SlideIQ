@@ -2,6 +2,7 @@ import React, { useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUploads } from '../../hooks/useUploads';
 import { IconUpload, IconDoc, IconX } from '../Icons/Icons';
+import { savePDFLocally } from '../../hooks/usePDFStore';
 import * as pdfjsLib from 'pdfjs-dist';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
@@ -42,6 +43,8 @@ export default function UploadZone({ onUploadComplete }) {
     try {
       setStatus('extracting');
       const arrayBuffer = await file.arrayBuffer();
+      // Copy the buffer before pdfjs detaches it during parsing
+      const bufferCopy = arrayBuffer.slice(0);
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       setPageCount(pdf.numPages);
 
@@ -59,6 +62,10 @@ export default function UploadZone({ onUploadComplete }) {
       }
 
       const doc = await registerUpload(file.name);
+
+      // Save the copied buffer to IndexedDB for local retrieval
+      await savePDFLocally(doc.id, file.name, bufferCopy);
+
       setProgress(100);
       setStatus('done');
 

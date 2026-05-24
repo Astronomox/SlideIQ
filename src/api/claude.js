@@ -15,6 +15,13 @@ const PERSONALITY_DESCRIPTIONS = {
 export async function generateQuizContent({ pdfText, personality, mcqCount, theoryCount }) {
   const personalityDesc = PERSONALITY_DESCRIPTIONS[personality.id] || personality.title;
 
+  // Scale max_tokens based on question count — each MCQ ~150 tokens, theory ~300 tokens
+  const estimatedOutputTokens = 800 + (mcqCount * 160) + (theoryCount * 320);
+  const maxTokens = Math.min(Math.max(estimatedOutputTokens + 1000, 4096), 16000);
+
+  // Scale PDF text budget inversely — more questions means less room for context
+  const pdfBudget = Math.max(12000, 80000 - (mcqCount * 800) - (theoryCount * 1200));
+
   const systemPrompt = `You are a university lecturer with this personality: ${personalityDesc}
 
 Your task is to read lecture slide content and produce educational material in your personality voice.
@@ -24,14 +31,15 @@ CRITICAL RULES:
 - Return ONLY valid JSON — no markdown, no code blocks, no explanation outside the JSON.
 - The explanation must sound unmistakably like your personality voice.
 - MCQ options must have exactly 4 choices (A, B, C, D) with exactly one correct answer.
-- Theory model answers should be detailed and lecture-grounded.`;
+- Theory model answers should be detailed and lecture-grounded.
+- You MUST produce exactly ${mcqCount} MCQ questions and exactly ${theoryCount} theory questions. Do not stop early.`;
 
   const userPrompt = `Based ONLY on the following lecture slide content, produce:
 1. A 3-5 paragraph explanation of the main topics in your personality voice
-2. ${mcqCount} MCQ questions with 4 options each
-3. ${theoryCount} theory questions with detailed model answers
+2. Exactly ${mcqCount} MCQ questions with 4 options each
+3. Exactly ${theoryCount} theory questions with detailed model answers
 
-Return ONLY this JSON structure:
+Return ONLY this JSON structure with no text before or after:
 {
   "explanation": "3-5 paragraphs as a single string with paragraph breaks using \\n\\n",
   "mcq": [
@@ -50,7 +58,7 @@ Return ONLY this JSON structure:
 }
 
 LECTURE SLIDE CONTENT:
-${pdfText.slice(0, 80000)}`;
+${pdfText.slice(0, pdfBudget)}`;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -62,7 +70,7 @@ ${pdfText.slice(0, 80000)}`;
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 8192,
+      max_tokens: maxTokens,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }],
     }),
@@ -82,6 +90,8 @@ ${pdfText.slice(0, 80000)}`;
   try {
     return JSON.parse(cleaned);
   } catch {
+    // Log the raw response to help debug future issues
+    console.error('Invalid JSON from Claude:', cleaned.slice(0, 500));
     throw new Error('Claude returned invalid JSON. Please try again.');
   }
 }

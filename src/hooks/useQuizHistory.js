@@ -59,5 +59,17 @@ export function useQuizHistory() {
     return docRef.id;
   };
 
-  return { history, loadingHistory, saveQuizResult, refetchHistory: fetchHistory };
+  const clearHistory = async () => {
+    if (!user) return;
+    try {
+      const { deleteDoc, doc } = await import('firebase/firestore');
+      await Promise.all(history.map(entry => deleteDoc(doc(db, 'quizHistory', entry.id))));
+      setHistory([]);
+    } catch (e) {
+      console.error('clearHistory:', e);
+      throw e;
+    }
+  };
+
+  return { history, loadingHistory, saveQuizResult, clearHistory, refetchHistory: fetchHistory };
 }

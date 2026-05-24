@@ -441,7 +441,7 @@ export default function Dashboard() {
                   value={mcqCount}
                   onChange={setMcqCount}
                   min={1}
-                  max={20}
+                  max={60}
                 />
                 <QuestionCountCard
                   label="Theory"

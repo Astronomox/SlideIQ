@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   collection, addDoc, getDocs, query, where, orderBy, serverTimestamp,
+  deleteDoc, doc,
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
@@ -24,7 +25,6 @@ export function useUploads() {
       const snap = await getDocs(q);
       setUploads(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     } catch (e) {
-      // Composite index not yet built — fall back to client-side sort
       if (e.code === 'failed-precondition' || (e.message && e.message.includes('index'))) {
         try {
           const q2 = query(collection(db, 'uploads'), where('uid', '==', user.uid));
@@ -65,5 +65,12 @@ export function useUploads() {
     return newDoc;
   };
 
-  return { uploads, loadingUploads, registerUpload, refetchUploads: fetchUploads };
+  const clearUploads = async () => {
+    if (!user) return;
+    // Delete every upload record from Firestore for this user
+    await Promise.all(uploads.map(u => deleteDoc(doc(db, 'uploads', u.id))));
+    setUploads([]);
+  };
+
+  return { uploads, loadingUploads, registerUpload, clearUploads, refetchUploads: fetchUploads };
 }

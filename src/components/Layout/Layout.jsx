@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useUploads } from '../../hooks/useUploads';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { Wordmark, IconUpload, IconDoc, IconHistory, IconLogout } from '../Icons/Icons';
+import { getPDFLocally, downloadPDFFromBuffer } from '../../hooks/usePDFStore';
 
 function NavSectionLabel({ children }) {
   return (
@@ -83,11 +84,31 @@ function CloseIcon() {
 
 export default function Layout({ children }) {
   const { user, logout } = useAuth();
-  const { uploads } = useUploads();
+  const { uploads, clearUploads } = useUploads();
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [toast, setToast] = useState(null);
+  const [showClearModal, setShowClearModal] = useState(false);
+  const [clearingUploads, setClearingUploads] = useState(false);
+
+  const showToast = (msg, type = 'error') => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
+  const handleClearUploads = async () => {
+    setClearingUploads(true);
+    try {
+      await clearUploads();
+      setShowClearModal(false);
+    } catch (e) {
+      showToast('Failed to clear recents. Please try again.');
+    } finally {
+      setClearingUploads(false);
+    }
+  };
 
   React.useEffect(() => {
     setSidebarOpen(false);
@@ -179,37 +200,89 @@ export default function Layout({ children }) {
           padding: '16px 12px 8px', flex: 1, minHeight: 0,
           display: 'flex', flexDirection: 'column', overflow: 'hidden',
         }}>
-          <NavSectionLabel>Recent</NavSectionLabel>
+          {/* Header row with label + clear button */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, padding: '0 0 0 0' }}>
+            <NavSectionLabel>Recent</NavSectionLabel>
+            <button
+              onClick={() => setShowClearModal(true)}
+              style={{
+                all: 'unset', cursor: 'pointer',
+                fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase',
+                color: 'rgba(250,247,240,0.25)', paddingRight: 12,
+                transition: 'color 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.25)'}
+            >
+              Clear
+            </button>
+          </div>
           <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 1 }}>
             {uploads.slice(0, 6).map((u, i) => (
-              <button
+              <div
                 key={u.id}
-                onClick={() => { navigate('/dashboard', { state: { uploadId: u.id } }); setSidebarOpen(false); }}
                 style={{
-                  all: 'unset', cursor: 'pointer',
-                  padding: '8px 12px',
-                  display: 'flex', flexDirection: 'column', gap: 3,
+                  display: 'flex', alignItems: 'center', gap: 4,
                   borderLeft: `2px solid ${i === 0 ? '#4ade80' : 'transparent'}`,
                   background: i === 0 ? 'rgba(74,222,128,0.06)' : 'transparent',
-                  transition: 'background 0.15s', borderRadius: '0 4px 4px 0',
+                  borderRadius: '0 4px 4px 0',
+                  transition: 'background 0.15s',
                 }}
                 onMouseEnter={e => e.currentTarget.style.background = 'rgba(74,222,128,0.06)'}
                 onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(74,222,128,0.06)' : 'transparent'}
               >
-                <span style={{
-                  fontFamily: '"Lora", serif',
-                  fontSize: 13, color: '#faf7f0', lineHeight: 1.3,
-                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 220,
-                }}>
-                  {u.filename}
-                </span>
-                <span style={{
-                  fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 10, color: 'rgba(250,247,240,0.35)', letterSpacing: '0.08em',
-                }}>
-                  {formatDate(u.createdAt)}
-                </span>
-              </button>
+                {/* Filename — click to go to dashboard */}
+                <button
+                  onClick={() => { navigate('/dashboard', { state: { uploadId: u.id } }); setSidebarOpen(false); }}
+                  style={{
+                    all: 'unset', cursor: 'pointer', flex: 1,
+                    padding: '8px 4px 8px 12px',
+                    display: 'flex', flexDirection: 'column', gap: 3,
+                  }}
+                >
+                  <span style={{
+                    fontFamily: '"Lora", serif',
+                    fontSize: 13, color: '#faf7f0', lineHeight: 1.3,
+                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180,
+                  }}>
+                    {u.filename}
+                  </span>
+                  <span style={{
+                    fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                    fontSize: 10, color: 'rgba(250,247,240,0.35)', letterSpacing: '0.08em',
+                  }}>
+                    {formatDate(u.createdAt)}
+                  </span>
+                </button>
+
+                {/* Download PDF button */}
+                <button
+                  title="Download PDF"
+                  onClick={async () => {
+                    const stored = await getPDFLocally(u.id);
+                    if (stored) {
+                      downloadPDFFromBuffer(stored.data, stored.filename);
+                    } else {
+                      showToast('PDF not available — only PDFs uploaded on this device can be re-downloaded.');
+                    }
+                  }}
+                  style={{
+                    all: 'unset', cursor: 'pointer',
+                    padding: '8px 10px',
+                    color: 'rgba(250,247,240,0.25)',
+                    display: 'flex', alignItems: 'center',
+                    transition: 'color 0.15s', flexShrink: 0,
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#4ade80'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.25)'}
+                >
+                  <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 16V4M7 20h10M4 20h16M7 12l5 5 5-5" />
+                  </svg>
+                </button>
+              </div>
             ))}
           </div>
         </div>
@@ -264,6 +337,71 @@ export default function Layout({ children }) {
       background: '#0d1117',
       display: 'flex', overflow: 'hidden', position: 'relative',
     }}>
+      {/* In-app toast */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
+            style={{
+              position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)',
+              zIndex: 9999, display: 'flex', alignItems: 'center', gap: 12,
+              padding: '12px 18px',
+              background: toast.type === 'confirm' ? '#1c2128' : '#1c1015',
+              border: `1px solid ${toast.type === 'confirm' ? 'rgba(74,222,128,0.30)' : 'rgba(239,68,68,0.40)'}`,
+              borderRadius: 10,
+              boxShadow: '0 8px 32px rgba(0,0,0,0.60)',
+              maxWidth: 380, width: 'calc(100vw - 48px)',
+            }}
+          >
+            <span style={{
+              fontFamily: '"Lora", serif', fontSize: 13,
+              color: toast.type === 'confirm' ? 'rgba(250,247,240,0.80)' : '#fca5a5',
+              flex: 1, lineHeight: 1.5,
+            }}>
+              {toast.msg}
+            </span>
+            {toast.type === 'confirm' ? (
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                <button
+                  onClick={() => { clearUploads(); setToast(null); }}
+                  style={{
+                    all: 'unset', cursor: 'pointer', padding: '5px 12px',
+                    background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.40)',
+                    borderRadius: 5, color: '#ef4444',
+                    fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10,
+                    letterSpacing: '0.12em', textTransform: 'uppercase',
+                  }}
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={() => setToast(null)}
+                  style={{
+                    all: 'unset', cursor: 'pointer', padding: '5px 12px',
+                    background: 'rgba(250,247,240,0.06)', border: '1px solid rgba(250,247,240,0.12)',
+                    borderRadius: 5, color: 'rgba(250,247,240,0.50)',
+                    fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10,
+                    letterSpacing: '0.12em', textTransform: 'uppercase',
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setToast(null)}
+                style={{ all: 'unset', cursor: 'pointer', color: 'rgba(250,247,240,0.35)', padding: 4 }}
+              >
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Atmosphere */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
@@ -352,6 +490,115 @@ export default function Layout({ children }) {
       }}>
         {children}
       </main>
+
+      {/* Clear recents confirmation modal */}
+      <AnimatePresence>
+        {showClearModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => !clearingUploads && setShowClearModal(false)}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 500,
+              background: 'rgba(13,17,23,0.88)',
+              backdropFilter: 'blur(6px)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: 24,
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0, y: 16 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.92, opacity: 0, y: 16 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 26 }}
+              onClick={e => e.stopPropagation()}
+              style={{
+                background: '#161b22',
+                border: '1px solid rgba(239,68,68,0.25)',
+                borderRadius: 12,
+                padding: '32px 28px',
+                maxWidth: 380, width: '100%',
+                boxShadow: '0 24px 60px rgba(0,0,0,0.60)',
+              }}
+            >
+              <div style={{
+                width: 48, height: 48, borderRadius: '50%',
+                background: 'rgba(239,68,68,0.10)',
+                border: '1px solid rgba(239,68,68,0.30)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: 20, color: '#ef4444',
+              }}>
+                <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                  <path d="M10 11v6M14 11v6"/>
+                  <path d="M9 6V4h6v2"/>
+                </svg>
+              </div>
+
+              <div style={{
+                fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
+                color: '#ef4444', marginBottom: 8,
+              }}>
+                Clear recents
+              </div>
+
+              <h3 style={{
+                fontFamily: '"Montserrat", sans-serif',
+                fontWeight: 700, fontSize: 20, color: '#faf7f0',
+                letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 12,
+              }}>
+                Remove all recent uploads?
+              </h3>
+
+              <p style={{
+                fontFamily: '"Lora", serif',
+                fontSize: 14, color: 'rgba(250,247,240,0.60)', lineHeight: 1.65,
+                marginBottom: 28,
+              }}>
+                This removes the recent uploads list. Your quiz history is never affected and will always be preserved.
+              </p>
+
+              <div style={{ display: 'flex', gap: 10 }}>
+                <button
+                  onClick={handleClearUploads}
+                  disabled={clearingUploads}
+                  style={{
+                    all: 'unset', cursor: clearingUploads ? 'wait' : 'pointer',
+                    flex: 1, padding: '12px 18px', textAlign: 'center',
+                    background: 'rgba(239,68,68,0.12)',
+                    border: '1px solid rgba(239,68,68,0.40)',
+                    borderRadius: 8, color: '#ef4444',
+                    fontFamily: '"Montserrat", sans-serif',
+                    fontWeight: 700, fontSize: 14,
+                    opacity: clearingUploads ? 0.6 : 1,
+                    transition: 'opacity 0.15s',
+                  }}
+                >
+                  {clearingUploads ? 'Clearing...' : 'Yes, clear'}
+                </button>
+                <button
+                  onClick={() => setShowClearModal(false)}
+                  disabled={clearingUploads}
+                  style={{
+                    all: 'unset', cursor: 'pointer',
+                    flex: 1, padding: '12px 18px', textAlign: 'center',
+                    background: 'rgba(250,247,240,0.05)',
+                    border: '1px solid rgba(250,247,240,0.12)',
+                    borderRadius: 8, color: 'rgba(250,247,240,0.65)',
+                    fontFamily: '"Montserrat", sans-serif',
+                    fontWeight: 600, fontSize: 14,
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

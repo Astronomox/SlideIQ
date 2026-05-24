@@ -268,6 +268,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
           <article style={{
             display: 'flex', flexDirection: 'column', gap: 16,
             overflowY: 'auto', minHeight: 0, position: 'relative',
+            paddingBottom: 80,
           }}>
             <div style={{
               display: 'flex', alignItems: 'center', gap: 12,
