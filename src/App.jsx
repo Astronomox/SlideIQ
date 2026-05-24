@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Quiz from './pages/Quiz';
 import HistoryPage from './pages/History';
+import { useAuth } from './context/AuthContext';
 
 function ProtectedLayout({ children }) {
   return (
@@ -17,12 +18,23 @@ function ProtectedLayout({ children }) {
   );
 }
 
+// Root: send authenticated users to /dashboard, unauthenticated to landing page
+function RootRedirect() {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  if (user) return <Navigate to="/dashboard" replace />;
+  // Redirect to the standalone landing page
+  window.location.replace('/landing.html');
+  return null;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <QuizProvider>
           <Routes>
+            <Route path="/" element={<RootRedirect />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={
               <ProtectedLayout>
@@ -39,7 +51,7 @@ export default function App() {
                 <HistoryPage />
               </ProtectedLayout>
             } />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </QuizProvider>
       </AuthProvider>

@@ -8,6 +8,12 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    historyApiFallback: {
+      rewrites: [
+        { from: /^\/landing\.html$/, to: '/landing.html' },
+        { from: /./, to: '/index.html' },
+      ],
+    },
   },
   build: {
     chunkSizeWarningLimit: 2000,
