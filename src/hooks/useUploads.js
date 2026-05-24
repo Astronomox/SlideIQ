@@ -5,8 +5,8 @@ import {
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 
-// Tracks upload metadata in Firestore (filename, date) and nothing else.
-// Extracted text lives in React state only — never sent to any server.
+const toMs = (v) => v?.toDate ? v.toDate().getTime() : v instanceof Date ? v.getTime() : new Date(v ?? 0).getTime();
+
 export function useUploads() {
   const { user } = useAuth();
   const [uploads, setUploads] = useState([]);
@@ -24,7 +24,21 @@ export function useUploads() {
       const snap = await getDocs(q);
       setUploads(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     } catch (e) {
-      console.error('fetchUploads:', e);
+      // Composite index not yet built — fall back to client-side sort
+      if (e.code === 'failed-precondition' || (e.message && e.message.includes('index'))) {
+        try {
+          const q2 = query(collection(db, 'uploads'), where('uid', '==', user.uid));
+          const snap = await getDocs(q2);
+          const docs = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => toMs(b.createdAt) - toMs(a.createdAt));
+          setUploads(docs);
+        } catch (e2) {
+          console.error('fetchUploads fallback:', e2);
+        }
+      } else {
+        console.error('fetchUploads:', e);
+      }
     } finally {
       setLoadingUploads(false);
     }
@@ -34,7 +48,6 @@ export function useUploads() {
     fetchUploads();
   }, [user]);
 
-  // Records filename + date in Firestore. The PDF itself and its text are never stored.
   const registerUpload = async (filename) => {
     if (!user) throw new Error('Not authenticated');
     const docRef = await addDoc(collection(db, 'uploads'), {

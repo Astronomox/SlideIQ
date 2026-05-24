@@ -2,73 +2,56 @@ import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useUploads } from '../hooks/useUploads';
+import { useIsMobile } from '../hooks/useIsMobile';
 import UploadZone from '../components/Upload/UploadZone';
 import PersonalitySelector, { PERSONALITIES } from '../components/PersonalitySelector/PersonalitySelector';
 import QuizMode from '../components/QuizMode/QuizMode';
 import { PersonaGlyph, IconArrow, IconSparkle } from '../components/Icons/Icons';
 import { generateQuizContent } from '../api/claude';
 
-// Step indicator
+const CTA = 'linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%)';
+
 function StepIndicator({ steps, current }) {
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: 0,
-      marginBottom: 40,
-    }}>
-      {steps.map((step, i) => {
+    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 36 }}>
+      {steps.map((_, i) => {
         const isActive = i === current;
         const isCompleted = i < current;
         return (
           <React.Fragment key={i}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                border: isCompleted
-                  ? 'none'
-                  : `1.5px solid ${isActive ? '#c9a84c' : 'rgba(201,168,76,0.2)'}`,
-                background: isCompleted
-                  ? '#c9a84c'
-                  : isActive
-                    ? 'rgba(201,168,76,0.12)'
-                    : 'transparent',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                fontSize: 11,
-                color: isCompleted ? '#0a0f1e' : isActive ? '#c9a84c' : 'rgba(240,236,226,0.38)',
-                transition: 'all 0.3s',
-                flexShrink: 0,
-              }}>
-                {isCompleted ? (
-                  <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 13l4 4L19 7" />
-                  </svg>
-                ) : (
-                  i + 1
-                )}
-              </div>
-              <span style={{
-                fontFamily: '"Source Serif 4", Georgia, serif',
-                fontSize: 13,
-                color: isActive ? '#f0ece2' : 'rgba(240,236,226,0.4)',
-                transition: 'color 0.3s',
-                whiteSpace: 'nowrap',
-              }}>
-                {step}
-              </span>
+            <div style={{
+              width: 28, height: 28, borderRadius: '50%',
+              border: isCompleted
+                ? 'none'
+                : `1.5px solid ${isActive ? '#4ade80' : 'rgba(74,222,128,0.20)'}`,
+              background: isCompleted
+                ? '#4ade80'
+                : isActive
+                  ? 'rgba(74,222,128,0.10)'
+                  : 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+              fontSize: 11, fontWeight: 600,
+              color: isCompleted
+                ? '#0d1117'
+                : isActive
+                  ? '#4ade80'
+                  : 'rgba(250,247,240,0.25)',
+              flexShrink: 0, transition: 'all 0.3s',
+            }}>
+              {isCompleted ? (
+                <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                i + 1
+              )}
             </div>
             {i < steps.length - 1 && (
               <div style={{
-                flex: 1,
-                height: 1,
-                margin: '0 16px',
-                background: isCompleted ? '#c9a84c' : 'rgba(201,168,76,0.15)',
+                flex: 1, height: 1.5, margin: '0 8px',
+                background: isCompleted ? '#4ade80' : 'rgba(74,222,128,0.12)',
                 transition: 'background 0.3s',
               }} />
             )}
@@ -79,74 +62,47 @@ function StepIndicator({ steps, current }) {
   );
 }
 
-// Plus/minus count card
 function QuestionCountCard({ label, description, value, onChange, min, max }) {
-  const [sliderVal, setSliderVal] = useState(value);
-
-  const handlePlus = () => {
-    if (value < max) onChange(value + 1);
-  };
-  const handleMinus = () => {
-    if (value > min) onChange(value - 1);
-  };
-
   return (
-    <div style={{
-      background: '#141b34',
-      border: '1px solid rgba(201,168,76,0.18)',
-      borderRadius: 8,
-      padding: 24,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 14,
-    }}>
+    <motion.div
+      whileHover={{ y: -2, boxShadow: '0 8px 32px rgba(74,222,128,0.10)' }}
+      transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+      style={{
+        background: '#161b22',
+        border: '1px solid rgba(74,222,128,0.12)',
+        borderRadius: 10, padding: 24,
+        display: 'flex', flexDirection: 'column', gap: 14,
+        boxShadow: '0 1px 8px rgba(0,0,0,0.30)',
+      }}>
       <div>
         <h3 style={{
-          fontFamily: '"Playfair Display", Georgia, serif',
-          fontWeight: 700,
-          fontSize: 20,
-          color: '#f0ece2',
-          marginBottom: 4,
+          fontFamily: '"Montserrat", sans-serif',
+          fontWeight: 700, fontSize: 18, letterSpacing: '-0.02em',
+          color: '#faf7f0', marginBottom: 4,
         }}>
           {label}
         </h3>
         <p style={{
-          fontFamily: '"Source Serif 4", Georgia, serif',
-          fontSize: 13,
-          color: 'rgba(240,236,226,0.55)',
-          lineHeight: 1.5,
+          fontFamily: '"Lora", serif',
+          fontSize: 13, color: 'rgba(250,247,240,0.50)', lineHeight: 1.5,
         }}>
           {description}
         </p>
       </div>
 
-      {/* Large number + +/- buttons */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 16,
-      }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
         <button
-          onClick={handleMinus}
+          onClick={() => value > min && onChange(value - 1)}
           disabled={value <= min}
           style={{
-            all: 'unset',
-            cursor: value > min ? 'pointer' : 'not-allowed',
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            border: '1.5px solid rgba(201,168,76,0.35)',
-            background: 'transparent',
-            color: '#c9a84c',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 20,
-            opacity: value <= min ? 0.3 : 1,
-            transition: 'background 0.15s',
+            all: 'unset', cursor: value > min ? 'pointer' : 'not-allowed',
+            width: 36, height: 36, borderRadius: '50%',
+            border: '1.5px solid rgba(74,222,128,0.25)',
+            background: 'transparent', color: '#4ade80',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 20, opacity: value <= min ? 0.25 : 1, transition: 'background 0.15s',
           }}
-          onMouseEnter={e => { if (value > min) e.currentTarget.style.background = 'rgba(201,168,76,0.10)'; }}
+          onMouseEnter={e => { if (value > min) e.currentTarget.style.background = 'rgba(74,222,128,0.08)'; }}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         >
           −
@@ -154,86 +110,65 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
 
         <motion.span
           key={value}
-          initial={{ scale: 1.2, color: '#c9a84c' }}
-          animate={{ scale: 1, color: '#c9a84c' }}
+          initial={{ scale: 1.2, color: '#4ade80' }}
+          animate={{ scale: 1, color: '#4ade80' }}
           style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 48,
-            fontWeight: 600,
-            color: '#c9a84c',
-            lineHeight: 1,
+            fontSize: 48, fontWeight: 600, color: '#4ade80', lineHeight: 1,
           }}
         >
           {value}
         </motion.span>
 
         <button
-          onClick={handlePlus}
+          onClick={() => value < max && onChange(value + 1)}
           disabled={value >= max}
           style={{
-            all: 'unset',
-            cursor: value < max ? 'pointer' : 'not-allowed',
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            border: '1.5px solid rgba(201,168,76,0.35)',
-            background: 'transparent',
-            color: '#c9a84c',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 20,
-            opacity: value >= max ? 0.3 : 1,
-            transition: 'background 0.15s',
+            all: 'unset', cursor: value < max ? 'pointer' : 'not-allowed',
+            width: 36, height: 36, borderRadius: '50%',
+            border: '1.5px solid rgba(74,222,128,0.25)',
+            background: 'transparent', color: '#4ade80',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 20, opacity: value >= max ? 0.25 : 1, transition: 'background 0.15s',
           }}
-          onMouseEnter={e => { if (value < max) e.currentTarget.style.background = 'rgba(201,168,76,0.10)'; }}
+          onMouseEnter={e => { if (value < max) e.currentTarget.style.background = 'rgba(74,222,128,0.08)'; }}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         >
           +
         </button>
       </div>
 
-      {/* Slider */}
       <div style={{ position: 'relative' }}>
         <div style={{
-          position: 'absolute',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          left: 0,
-          height: 2,
-          background: 'linear-gradient(135deg, #f3dc92, #c9a84c, #8e7426)',
+          position: 'absolute', top: '50%', transform: 'translateY(-50%)',
+          left: 0, height: 2,
+          background: 'linear-gradient(90deg, #4ade80, #22c55e)',
           width: `${((value - min) / (max - min)) * 100}%`,
-          pointerEvents: 'none',
-          transition: 'width 0.1s',
+          pointerEvents: 'none', transition: 'width 0.1s',
         }} />
         <input
-          type="range"
-          min={min}
-          max={max}
-          value={value}
+          type="range" min={min} max={max} value={value}
           onChange={e => onChange(parseInt(e.target.value))}
           style={{ position: 'relative', zIndex: 1, width: '100%' }}
         />
       </div>
 
       <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
+        display: 'flex', justifyContent: 'space-between',
         fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-        fontSize: 10,
-        color: 'rgba(240,236,226,0.38)',
-        letterSpacing: '0.12em',
+        fontSize: 10, color: 'rgba(250,247,240,0.28)', letterSpacing: '0.12em',
       }}>
         <span>{min}</span>
         <span>{max}</span>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { uploads } = useUploads();
+  const isMobile = useIsMobile();
   const [step, setStep] = useState(0);
   const [activeUpload, setActiveUpload] = useState(null);
   const [selectedPersonality, setSelectedPersonality] = useState(null);
@@ -281,11 +216,7 @@ export default function Dashboard() {
         personality={selectedPersonality}
         filename={activeUpload?.filename}
         uploadId={activeUpload?.id}
-        onExit={() => {
-          setShowQuiz(false);
-          setGeneratedContent(null);
-          setStep(0);
-        }}
+        onExit={() => { setShowQuiz(false); setGeneratedContent(null); setStep(0); }}
       />
     );
   }
@@ -303,36 +234,38 @@ export default function Dashboard() {
 
   return (
     <div style={{
-      padding: '48px 56px',
-      minHeight: '100%',
-      position: 'relative',
+      padding: isMobile ? '24px 16px' : '48px 56px',
+      minHeight: '100%', position: 'relative',
     }}>
       {/* Top atmosphere glow */}
       <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: 500,
-        background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(201,168,76,0.05) 0%, transparent 70%)',
-        pointerEvents: 'none',
-        zIndex: 0,
+        position: 'absolute', top: 0, left: 0, right: 0, height: 400,
+        background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(74,222,128,0.05) 0%, transparent 70%)',
+        pointerEvents: 'none', zIndex: 0,
       }} />
+      {/* Grain texture overlay */}
+      <svg aria-hidden="true" style={{
+        position: 'absolute', inset: 0, width: '100%', height: '100%',
+        pointerEvents: 'none', zIndex: 0, opacity: 0.035,
+      }}>
+        <filter id="dashGrain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#dashGrain)" />
+      </svg>
 
       <div style={{ position: 'relative', zIndex: 1 }}>
-        {/* HEADER */}
         <motion.header
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          style={{ marginBottom: 32 }}
+          transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+          style={{ marginBottom: 28 }}
         >
           <div style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 11,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: '#c9a84c',
-            marginBottom: 10,
+            fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
+            color: '#4ade80', marginBottom: 10,
           }}>
             Welcome back, {firstName.toUpperCase()}
           </div>
@@ -345,10 +278,10 @@ export default function Dashboard() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.3 }}
               style={{
-                fontFamily: '"Playfair Display", Georgia, serif',
+                fontFamily: '"Montserrat", sans-serif',
                 fontWeight: 900,
-                fontSize: 56,
-                color: '#f0ece2',
+                fontSize: isMobile ? 32 : 56,
+                color: '#faf7f0',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.0,
                 marginBottom: 10,
@@ -366,11 +299,10 @@ export default function Dashboard() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               style={{
-                fontFamily: '"Source Serif 4", Georgia, serif',
-                fontSize: 17,
-                color: 'rgba(240,236,226,0.68)',
-                lineHeight: 1.65,
-                maxWidth: 520,
+                fontFamily: '"Lora", serif',
+                fontSize: 16,
+                color: 'rgba(250,247,240,0.65)',
+                lineHeight: 1.75, maxWidth: 520,
               }}
             >
               {subheadings[step]}
@@ -378,56 +310,45 @@ export default function Dashboard() {
           </AnimatePresence>
         </motion.header>
 
-        {/* STEP INDICATOR */}
         <StepIndicator steps={steps} current={step} />
 
-        {/* STEP CONTENT */}
         <AnimatePresence mode="wait">
 
-          {/* STEP 0: Upload */}
           {step === 0 && (
             <motion.div
               key="step0"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
               style={{ display: 'flex', justifyContent: 'center' }}
             >
               <UploadZone onUploadComplete={handleUploadComplete} />
             </motion.div>
           )}
 
-          {/* STEP 1: Personality */}
           {step === 1 && (
             <motion.div
               key="step1"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
             >
-              {/* Back + continue row */}
               <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                 marginBottom: 24,
               }}>
                 <button
                   onClick={() => setStep(0)}
                   style={{
-                    all: 'unset',
-                    cursor: 'pointer',
+                    all: 'unset', cursor: 'pointer',
                     fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                    fontSize: 11,
-                    letterSpacing: '0.16em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(240,236,226,0.45)',
-                    transition: 'color 0.15s',
+                    fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase',
+                    color: 'rgba(250,247,240,0.35)', transition: 'color 0.15s',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#f0ece2'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(240,236,226,0.45)'}
+                  onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.35)'}
                 >
                   ← Back
                 </button>
@@ -442,18 +363,13 @@ export default function Dashboard() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setStep(2)}
                       style={{
-                        all: 'unset',
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 10,
-                        padding: '13px 24px',
-                        background: 'linear-gradient(135deg, #f3dc92 0%, #c9a84c 38%, #8e7426 72%, #d9be6a 100%)',
-                        color: '#1a1305',
-                        fontFamily: '"Playfair Display", Georgia, serif',
-                        fontWeight: 700,
-                        fontSize: 15,
-                        border: 'none',
+                        all: 'unset', cursor: 'pointer',
+                        display: 'inline-flex', alignItems: 'center', gap: 10,
+                        padding: '13px 24px', borderRadius: 8,
+                        background: CTA,
+                        color: '#0d1117',
+                        fontFamily: '"Montserrat", sans-serif',
+                        fontWeight: 700, fontSize: 15, border: 'none',
                       }}
                     >
                       Continue <IconArrow size={15} />
@@ -462,83 +378,62 @@ export default function Dashboard() {
                 </AnimatePresence>
               </div>
 
-              <PersonalitySelector
-                selected={selectedPersonality}
-                onSelect={setSelectedPersonality}
-              />
+              <PersonalitySelector selected={selectedPersonality} onSelect={setSelectedPersonality} />
             </motion.div>
           )}
 
-          {/* STEP 2: Configure */}
           {step === 2 && (
             <motion.div
               key="step2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              style={{ maxWidth: 600 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+              style={{ maxWidth: isMobile ? '100%' : 600 }}
             >
-              {/* Back button */}
               <button
                 onClick={() => setStep(1)}
                 style={{
-                  all: 'unset',
-                  cursor: 'pointer',
-                  marginBottom: 28,
+                  all: 'unset', cursor: 'pointer', marginBottom: 28,
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 11,
-                  letterSpacing: '0.16em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(240,236,226,0.45)',
-                  display: 'block',
-                  transition: 'color 0.15s',
+                  fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase',
+                  color: 'rgba(250,247,240,0.35)', display: 'block', transition: 'color 0.15s',
                 }}
-                onMouseEnter={e => e.currentTarget.style.color = '#f0ece2'}
-                onMouseLeave={e => e.currentTarget.style.color = 'rgba(240,236,226,0.45)'}
+                onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.35)'}
               >
                 ← Back
               </button>
 
-              {/* Selected lecturer summary bar */}
               {selectedPersonality && (
                 <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 14,
-                  background: 'rgba(201,168,76,0.06)',
-                  border: '1px solid rgba(201,168,76,0.2)',
-                  padding: '14px 18px',
-                  borderRadius: 6,
-                  marginBottom: 28,
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  background: 'rgba(74,222,128,0.06)',
+                  border: '1px solid rgba(74,222,128,0.15)',
+                  padding: '14px 18px', borderRadius: 8, marginBottom: 28,
                 }}>
                   <span style={{ color: selectedPersonality.accent }}>
                     <PersonaGlyph id={selectedPersonality.id} size={28} />
                   </span>
                   <span style={{
-                    fontFamily: '"Playfair Display", Georgia, serif',
-                    fontSize: 18,
-                    color: '#f0ece2',
+                    fontFamily: '"Montserrat", sans-serif',
+                    fontSize: 17, color: '#faf7f0', fontWeight: 700,
                   }}>
                     {selectedPersonality.title}
                   </span>
                   <span style={{
-                    fontFamily: '"Source Serif 4", Georgia, serif',
-                    fontStyle: 'italic',
-                    fontSize: 13,
-                    color: 'rgba(240,236,226,0.55)',
+                    fontFamily: '"Lora", serif',
+                    fontStyle: 'italic', fontSize: 13, color: 'rgba(250,247,240,0.45)',
                   }}>
                     — "{selectedPersonality.tagline}"
                   </span>
                 </div>
               )}
 
-              {/* Two question count cards side by side */}
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 16,
-                marginBottom: 24,
+                gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+                gap: 16, marginBottom: 24,
               }}>
                 <QuestionCountCard
                   label="Multiple Choice"
@@ -558,61 +453,44 @@ export default function Dashboard() {
                 />
               </div>
 
-              {/* Quiz summary row */}
               <div style={{
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                fontSize: 11,
-                letterSpacing: '0.14em',
-                color: 'rgba(240,236,226,0.45)',
-                textAlign: 'center',
-                marginBottom: 24,
+                fontSize: 11, letterSpacing: '0.14em', color: 'rgba(250,247,240,0.35)',
+                textAlign: 'center', marginBottom: 24,
               }}>
                 {mcqCount} MCQ + {theoryCount} Theory = {mcqCount + theoryCount} total questions
               </div>
 
-              {/* Error */}
               {generateError && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   style={{
-                    padding: '12px 16px',
-                    marginBottom: 16,
-                    background: 'rgba(156,43,43,0.15)',
-                    border: '1px solid rgba(156,43,43,0.4)',
-                    borderRadius: 4,
-                    color: '#c97272',
-                    fontSize: 13,
-                    fontFamily: '"Source Serif 4", Georgia, serif',
+                    padding: '12px 16px', marginBottom: 16,
+                    background: 'rgba(239,68,68,0.10)',
+                    border: '1px solid rgba(239,68,68,0.25)',
+                    borderRadius: 6, color: '#f87171',
+                    fontSize: 13, fontFamily: '"Lora", serif',
                   }}
                 >
                   {generateError}
                 </motion.div>
               )}
 
-              {/* Generate button */}
               <motion.button
                 whileHover={{ scale: generating ? 1 : 1.01 }}
                 whileTap={{ scale: generating ? 1 : 0.99 }}
                 onClick={handleGenerate}
                 disabled={generating}
                 style={{
-                  all: 'unset',
-                  cursor: generating ? 'wait' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 12,
-                  padding: '17px 28px',
-                  width: '100%',
-                  background: generating
-                    ? '#141b34'
-                    : 'linear-gradient(135deg, #f3dc92 0%, #c9a84c 38%, #8e7426 72%, #d9be6a 100%)',
-                  color: generating ? 'rgba(240,236,226,0.5)' : '#1a1305',
-                  fontFamily: '"Playfair Display", Georgia, serif',
-                  fontWeight: 700,
-                  fontSize: 16,
-                  border: generating ? '1px solid rgba(201,168,76,0.18)' : 'none',
+                  all: 'unset', cursor: generating ? 'wait' : 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+                  padding: '17px 28px', width: '100%', borderRadius: 8,
+                  background: generating ? '#161b22' : CTA,
+                  color: generating ? 'rgba(250,247,240,0.35)' : '#0d1117',
+                  fontFamily: '"Montserrat", sans-serif',
+                  fontWeight: 700, fontSize: 16,
+                  border: generating ? '1px solid rgba(74,222,128,0.15)' : 'none',
                   transition: 'background 0.2s, color 0.2s',
                 }}
               >
@@ -641,12 +519,9 @@ export default function Dashboard() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   style={{
-                    textAlign: 'center',
-                    marginTop: 14,
-                    fontFamily: '"Source Serif 4", Georgia, serif',
-                    fontStyle: 'italic',
-                    fontSize: 13,
-                    color: 'rgba(240,236,226,0.45)',
+                    textAlign: 'center', marginTop: 14,
+                    fontFamily: '"Lora", serif',
+                    fontStyle: 'italic', fontSize: 13, color: 'rgba(250,247,240,0.38)',
                   }}
                 >
                   The lecturer is reading your slides and composing questions...

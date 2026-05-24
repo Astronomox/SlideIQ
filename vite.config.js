@@ -16,7 +16,7 @@ export default defineConfig({
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'framer': ['framer-motion'],
-          'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+          'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
           'pdfjs': ['pdfjs-dist'],
         },
       },

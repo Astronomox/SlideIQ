@@ -3,11 +3,15 @@ import { Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { IconGoogle } from '../components/Icons/Icons';
+import { useIsMobile } from '../hooks/useIsMobile';
+
+const CTA = 'linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%)';
 
 export default function Login() {
   const { user, signInWithGoogle } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const isMobile = useIsMobile();
 
   if (user) return <Navigate to="/dashboard" replace />;
 
@@ -27,61 +31,64 @@ export default function Login() {
   return (
     <div style={{
       width: '100vw',
-      height: '100vh',
-      background: '#0a0f1e',
+      minHeight: '100vh',
+      background: '#0d1117',
       display: 'flex',
-      overflow: 'hidden',
+      flexDirection: isMobile ? 'column' : 'row',
+      overflow: isMobile ? 'auto' : 'hidden',
       position: 'relative',
     }}>
-      {/* Global atmosphere glow */}
+      {/* Animated pulsing blob */}
       <div style={{
-        position: 'absolute',
+        position: 'fixed',
+        top: '50%', left: '50%',
+        width: '70vmax', height: '70vmax',
+        marginTop: '-35vmax', marginLeft: '-35vmax',
+        pointerEvents: 'none',
+        background: 'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(74,222,128,0.06) 0%, transparent 65%)',
+        animation: 'pulse-glow 8s ease-in-out infinite',
+        willChange: 'transform, opacity',
+      }} />
+      {/* Static secondary atmosphere */}
+      <div style={{
+        position: 'fixed',
         inset: 0,
         pointerEvents: 'none',
-        background: `
-          radial-gradient(ellipse 80% 60% at 30% 50%, rgba(201,168,76,0.05) 0%, transparent 70%),
-          radial-gradient(ellipse 60% 50% at 80% 60%, rgba(201,168,76,0.03) 0%, transparent 70%),
-          radial-gradient(120% 90% at 50% 110%, rgba(0,0,0,0.5) 0%, transparent 60%)
-        `,
+        background: 'radial-gradient(ellipse 50% 50% at 80% 60%, rgba(74,222,128,0.025) 0%, transparent 70%)',
       }} />
 
-      {/* LEFT — brand statement (55%) */}
+      {/* LEFT — brand statement */}
       <motion.div
-        initial={{ opacity: 0, x: -40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ opacity: 0, x: isMobile ? 0 : -40, y: isMobile ? 20 : 0 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
         style={{
-          width: '55%',
+          width: isMobile ? '100%' : '55%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          padding: '0 64px 0 80px',
-          gap: 32,
+          padding: isMobile ? '48px 28px 36px' : '0 64px 0 80px',
+          gap: isMobile ? 20 : 32,
           position: 'relative',
           zIndex: 1,
-          borderRight: '1px solid rgba(201,168,76,0.12)',
+          borderRight: isMobile ? 'none' : '1px solid rgba(74,222,128,0.10)',
+          borderBottom: isMobile ? '1px solid rgba(74,222,128,0.10)' : 'none',
         }}
       >
-        {/* Left radial glow behind content */}
         <div style={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 80% 60% at 30% 50%, rgba(201,168,76,0.06) 0%, transparent 70%)',
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 80% 60% at 30% 50%, rgba(74,222,128,0.04) 0%, transparent 70%)',
         }} />
 
-        {/* Gold eyebrow */}
+        {/* Eyebrow */}
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.5 }}
           style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 11,
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: '#c9a84c',
-            position: 'relative',
+            fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
+            color: '#4ade80', position: 'relative',
           }}
         >
           Est. MMXXVI · A Reader's Companion
@@ -93,11 +100,9 @@ export default function Login() {
           animate={{ scaleX: 1, opacity: 1 }}
           transition={{ delay: 0.25, duration: 0.6, ease: 'easeOut' }}
           style={{
-            width: 280,
-            height: 1,
-            background: 'linear-gradient(90deg, #c9a84c, rgba(201,168,76,0.3))',
-            transformOrigin: 'left',
-            position: 'relative',
+            width: 280, height: 1,
+            background: 'linear-gradient(90deg, #4ade80, rgba(74,222,128,0.15))',
+            transformOrigin: 'left', position: 'relative',
           }}
         />
 
@@ -108,18 +113,18 @@ export default function Login() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              fontFamily: '"Playfair Display", Georgia, serif',
+              fontFamily: '"Montserrat", sans-serif',
               fontWeight: 900,
-              fontSize: 80,
-              lineHeight: 0.92,
-              letterSpacing: '-0.025em',
-              color: '#f0ece2',
+              fontSize: isMobile ? 32 : 76,
+              lineHeight: 0.95,
+              letterSpacing: '-0.02em',
+              color: '#faf7f0',
             }}
           >
             Your slides,
             <br />
             <span style={{
-              background: 'linear-gradient(135deg, #f3dc92 0%, #c9a84c 38%, #8e7426 72%, #d9be6a 100%)',
+              background: 'linear-gradient(135deg, #86efac 0%, #4ade80 40%, #22c55e 100%)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               color: 'transparent',
@@ -138,10 +143,9 @@ export default function Login() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
           style={{
-            fontFamily: '"Source Serif 4", Georgia, serif',
-            fontSize: 18,
-            lineHeight: 1.65,
-            color: 'rgba(240,236,226,0.72)',
+            fontFamily: '"Lora", serif',
+            fontSize: 16, lineHeight: 1.75,
+            color: 'rgba(250,247,240,0.65)',
             maxWidth: 440,
           }}
         >
@@ -155,120 +159,90 @@ export default function Login() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.55, duration: 0.5 }}
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
+            display: 'flex', alignItems: 'center', gap: 10,
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 11,
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: 'rgba(240,236,226,0.4)',
-            flexWrap: 'wrap',
+            fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+            color: 'rgba(250,247,240,0.35)', flexWrap: 'wrap',
           }}
         >
           <span>Eight lecturers</span>
-          <span style={{ color: '#c9a84c' }}>·</span>
+          <span style={{ color: '#4ade80' }}>·</span>
           <span>MCQ &amp; Theory</span>
-          <span style={{ color: '#c9a84c' }}>·</span>
+          <span style={{ color: '#4ade80' }}>·</span>
           <span>Scored</span>
         </motion.div>
       </motion.div>
 
-      {/* RIGHT — sign-in card (45%) */}
+      {/* RIGHT — sign-in card */}
       <div style={{
-        width: '45%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '0 48px',
-        position: 'relative',
-        zIndex: 1,
+        width: isMobile ? '100%' : '45%',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: isMobile ? '36px 20px 52px' : '0 48px',
+        position: 'relative', zIndex: 1,
       }}>
         <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, x: isMobile ? 0 : 40, y: isMobile ? 20 : 0 }}
+          animate={{ opacity: 1, x: 0, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
           style={{
-            width: '100%',
-            maxWidth: 420,
-            padding: '44px 40px',
-            background: '#141b34',
-            border: '1px solid rgba(201,168,76,0.25)',
-            position: 'relative',
-            overflow: 'hidden',
+            width: '100%', maxWidth: 420,
+            padding: isMobile ? '32px 24px' : '44px 40px',
+            background: '#161b22',
+            border: '1px solid rgba(74,222,128,0.14)',
+            borderRadius: 12,
+            boxShadow: '0 4px 32px rgba(0,0,0,0.40), 0 0 0 1px rgba(74,222,128,0.06)',
+            position: 'relative', overflow: 'hidden',
           }}
         >
-          {/* Corner radial glow */}
+          {/* Corner glow */}
           <div style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: 120,
-            height: 120,
-            background: 'radial-gradient(circle at 80% 20%, rgba(201,168,76,0.35), transparent 65%)',
+            position: 'absolute', top: 0, right: 0, width: 140, height: 140,
+            background: 'radial-gradient(circle at 80% 20%, rgba(74,222,128,0.08), transparent 65%)',
             pointerEvents: 'none',
           }} />
 
-          {/* Sign in eyebrow */}
           <div style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 10,
-            letterSpacing: '0.24em',
-            textTransform: 'uppercase',
-            color: '#c9a84c',
-            marginBottom: 0,
-            position: 'relative',
+            fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase',
+            color: '#4ade80', position: 'relative',
           }}>
             Sign in
           </div>
 
-          {/* Thin gold rule */}
           <div style={{
-            width: '100%',
-            height: 1,
-            background: 'rgba(201,168,76,0.3)',
+            width: '100%', height: 1,
+            background: 'rgba(74,222,128,0.14)',
             margin: '14px 0 24px',
           }} />
 
-          {/* Heading */}
           <h2 style={{
-            fontFamily: '"Playfair Display", Georgia, serif',
-            fontWeight: 700,
-            fontSize: 32,
-            color: '#f0ece2',
-            lineHeight: 1.1,
-            marginBottom: 10,
-            position: 'relative',
+            fontFamily: '"Montserrat", sans-serif',
+            fontWeight: 700, fontSize: 32, color: '#faf7f0',
+            lineHeight: 1.1, marginBottom: 10, position: 'relative',
           }}>
             Take your seat.
           </h2>
 
-          {/* Description */}
           <p style={{
-            fontFamily: '"Source Serif 4", Georgia, serif',
-            fontSize: 14,
-            color: 'rgba(240,236,226,0.65)',
-            lineHeight: 1.65,
-            marginBottom: 28,
-            position: 'relative',
+            fontFamily: '"Lora", serif',
+            fontSize: 14, color: 'rgba(250,247,240,0.55)',
+            lineHeight: 1.65, marginBottom: 28, position: 'relative',
           }}>
             Sign in with the Google account you use for university work. Your uploads
             and quiz history are saved privately under that account.
           </p>
 
-          {/* Error */}
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               style={{
-                padding: '10px 14px',
-                marginBottom: 16,
-                background: 'rgba(156,43,43,0.15)',
-                border: '1px solid rgba(156,43,43,0.4)',
-                color: '#c97272',
-                fontSize: 13,
-                fontFamily: '"Source Serif 4", Georgia, serif',
+                padding: '10px 14px', marginBottom: 16,
+                background: 'rgba(239,68,68,0.10)',
+                border: '1px solid rgba(239,68,68,0.30)',
+                borderRadius: 6,
+                color: '#f87171', fontSize: 13,
+                fontFamily: '"Lora", serif',
                 position: 'relative',
               }}
             >
@@ -276,28 +250,21 @@ export default function Login() {
             </motion.div>
           )}
 
-          {/* Google sign-in button */}
           <motion.button
-            whileHover={{ opacity: 0.92 }}
+            whileHover={{ opacity: 0.88 }}
             whileTap={{ scale: 0.99 }}
             onClick={handleSignIn}
             disabled={loading}
             style={{
               width: '100%',
               padding: '15px 20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 12,
-              background: '#f0ece2',
-              color: '#0a0f1e',
-              border: 'none',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+              background: CTA,
+              color: '#0d1117', border: 'none', borderRadius: 8,
               cursor: loading ? 'not-allowed' : 'pointer',
-              fontFamily: '"Source Serif 4", Georgia, serif',
-              fontWeight: 600,
-              fontSize: 15,
-              opacity: loading ? 0.7 : 1,
-              transition: 'opacity 0.2s',
+              fontFamily: '"Montserrat", sans-serif',
+              fontWeight: 700, fontSize: 15,
+              opacity: loading ? 0.65 : 1, transition: 'opacity 0.2s',
               position: 'relative',
             }}
           >
@@ -305,32 +272,22 @@ export default function Login() {
             {loading ? 'Signing in...' : 'Continue with Google'}
           </motion.button>
 
-          {/* Private & secure divider */}
           <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
+            display: 'flex', alignItems: 'center', gap: 12,
             margin: '22px 0 18px',
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 10,
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color: 'rgba(240,236,226,0.4)',
-            position: 'relative',
+            fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
+            color: 'rgba(250,247,240,0.28)', position: 'relative',
           }}>
-            <span style={{ flex: 1, height: 1, background: 'rgba(201,168,76,0.18)' }} />
+            <span style={{ flex: 1, height: 1, background: 'rgba(74,222,128,0.12)' }} />
             Private &amp; secure
-            <span style={{ flex: 1, height: 1, background: 'rgba(201,168,76,0.18)' }} />
+            <span style={{ flex: 1, height: 1, background: 'rgba(74,222,128,0.12)' }} />
           </div>
 
-          {/* Fine print */}
           <p style={{
-            fontFamily: '"Source Serif 4", Georgia, serif',
-            fontSize: 12,
-            color: 'rgba(240,236,226,0.4)',
-            lineHeight: 1.6,
-            textAlign: 'center',
-            position: 'relative',
+            fontFamily: '"Lora", serif',
+            fontSize: 12, color: 'rgba(250,247,240,0.30)',
+            lineHeight: 1.6, textAlign: 'center', position: 'relative',
           }}>
             No marketing email. Ever. Your slides stay in your account.
           </p>

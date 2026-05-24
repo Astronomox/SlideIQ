@@ -8,48 +8,33 @@
 
 :root {
   /* Backgrounds */
-  --bg:        #0a0f1e;
-  --sidebar:   #0e1428;
-  --card:      #141b34;
-  --card-deep: #1c2547;
+  --bg:        #0d1117;
+  --sidebar:   #0d1117;
+  --card:      #161b22;
+  --card-deep: #1c2128;
 
-  /* Accent — gold */
-  --accent:       #c9a84c;
-  --accent-deep:  #8e7426;
-  --accent-light: #f3dc92;
-  --accent-soft:  rgba(201, 168, 76, 0.14);
-  --accent-foil:  linear-gradient(135deg, #f3dc92 0%, #c9a84c 38%, #8e7426 72%, #d9be6a 100%);
+  /* Accent — bright lime-green, used sparingly */
+  --accent:       #4ade80;
+  --accent-deep:  #22c55e;
+  --accent-light: #86efac;
+  --accent-soft:  rgba(74, 222, 128, 0.10);
+  --accent-cta:   linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%);
 
   /* Borders */
-  --border:       rgba(201, 168, 76, 0.18);
-  --border-hover: rgba(201, 168, 76, 0.45);
-  --border-strong: rgba(201, 168, 76, 0.42);
+  --border:        rgba(74, 222, 128, 0.12);
+  --border-hover:  rgba(74, 222, 128, 0.35);
+  --border-strong: rgba(74, 222, 128, 0.28);
 
-  /* Text */
-  --text:       #f0ece2;
-  --text-dim:   rgba(240, 236, 226, 0.75);
-  --text-faint: rgba(240, 236, 226, 0.48);
-  --text-ghost: rgba(240, 236, 226, 0.22);
+  /* Text — cream */
+  --text:       #faf7f0;
+  --text-dim:   rgba(250, 247, 240, 0.60);
+  --text-faint: rgba(250, 247, 240, 0.40);
+  --text-ghost: rgba(250, 247, 240, 0.20);
 
   /* Typography */
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-body:    "Source Serif 4", Georgia, serif;
+  --font-display: "Montserrat", sans-serif;
+  --font-body:    "Lora", serif;
   --font-mono:    "JetBrains Mono", ui-monospace, monospace;
-
-  /* Semantic shorthands (keep compatibility) */
-  --ink:              #0a0f1e;
-  --ink-2:            #0e1428;
-  --ink-3:            #141b34;
-  --ink-4:            #1c2547;
-  --parchment:        #f0ece2;
-  --parchment-dim:    rgba(240, 236, 226, 0.75);
-  --parchment-faint:  rgba(240, 236, 226, 0.48);
-  --parchment-ghost:  rgba(240, 236, 226, 0.22);
-  --hairline:         rgba(201, 168, 76, 0.18);
-  --hairline-strong:  rgba(201, 168, 76, 0.42);
-  --serif-display:    "Playfair Display", Georgia, serif;
-  --serif-body:       "Source Serif 4", Georgia, serif;
-  --mono:             "JetBrains Mono", ui-monospace, monospace;
 }
 
 html, body {
@@ -77,22 +62,22 @@ html, body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
+  background: rgba(74, 222, 128, 0.22);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-deep);
+  background: #4ade80;
 }
 
 /* Text selection */
 ::selection {
-  background: var(--accent-soft);
-  color: var(--text);
+  background: rgba(74, 222, 128, 0.22);
+  color: #faf7f0;
 }
 
 /* Focus */
 :focus-visible {
-  outline: 1px solid var(--accent);
+  outline: 1px solid #4ade80;
   outline-offset: 2px;
 }
 
@@ -102,7 +87,7 @@ input[type="range"] {
   appearance: none;
   width: 100%;
   height: 2px;
-  background: var(--border-strong);
+  background: rgba(74, 222, 128, 0.18);
   border-radius: 1px;
   outline: none;
   cursor: pointer;
@@ -114,22 +99,22 @@ input[type="range"]::-webkit-slider-thumb {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #f3dc92 0%, #c9a84c 38%, #8e7426 72%, #d9be6a 100%);
+  background: linear-gradient(135deg, #4ade80, #22c55e);
   border: none;
   cursor: pointer;
-  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.18);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.18);
   transition: box-shadow 0.15s;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  box-shadow: 0 0 0 5px rgba(201, 168, 76, 0.22);
+  box-shadow: 0 0 0 5px rgba(74, 222, 128, 0.25);
 }
 
 input[type="range"]::-moz-range-thumb {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--accent);
+  background: #4ade80;
   border: none;
   cursor: pointer;
 }
@@ -160,8 +145,30 @@ textarea {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes foil-drift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(1.22); }
+}
+
+/* ── Mobile global fixes ── */
+@media (max-width: 768px) {
+  html, body, #root {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  button, a {
+    min-height: 44px;
+  }
+  textarea {
+    resize: vertical;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 }
