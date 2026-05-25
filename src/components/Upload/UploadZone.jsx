@@ -70,7 +70,7 @@ async function extractPDF(file, onProgress, onStatusMsg) {
 
   // Load Tesseract for OCR on image-only pages
   onStatusMsg('Image PDF detected — running OCR...');
-  const { createWorker } = await import('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js');
+  const { createWorker } = await import('tesseract.js');
   const worker = await createWorker('eng', 1, {
     logger: () => {},
   });
