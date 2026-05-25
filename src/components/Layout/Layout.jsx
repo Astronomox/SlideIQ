@@ -114,6 +114,16 @@ export default function Layout({ children }) {
     setSidebarOpen(false);
   }, [location.pathname]);
 
+  // Lock body scroll when sidebar open on mobile
+  React.useEffect(() => {
+    if (isMobile && sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobile, sidebarOpen]);
+
   const handleLogout = async () => {
     await logout();
     navigate('/login');
