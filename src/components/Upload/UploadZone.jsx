@@ -42,18 +42,70 @@ function getFileType(file) {
 
 // ── Extractors ────────────────────────────────────────────────────────────────
 
-async function extractPDF(file, onProgress) {
+async function extractPDF(file, onProgress, onStatusMsg) {
   const arrayBuffer = await file.arrayBuffer();
   const bufferCopy = arrayBuffer.slice(0);
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  let text = '';
+
+  let fullText = '';
+  let needsOCR = false;
+  const pageTexts = [];
+
+  // First pass — try native text extraction on every page
+  onStatusMsg('Extracting text...');
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    text += content.items.map(item => item.str).join(' ') + '\n\n';
-    onProgress(Math.round((i / pdf.numPages) * 100), i, pdf.numPages);
+    const pageText = content.items.map(item => item.str).join(' ').trim();
+    pageTexts.push({ page, index: i, text: pageText });
+    if (!pageText) needsOCR = true;
+    onProgress(Math.round((i / pdf.numPages) * 40), i, pdf.numPages);
   }
-  return { text, buffer: bufferCopy, pages: pdf.numPages };
+
+  // If all pages have text, we're done
+  if (!needsOCR) {
+    fullText = pageTexts.map(p => p.text).join('\n\n');
+    return { text: fullText, buffer: bufferCopy, pages: pdf.numPages };
+  }
+
+  // Load Tesseract for OCR on image-only pages
+  onStatusMsg('Image PDF detected — running OCR...');
+  const { createWorker } = await import('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js');
+  const worker = await createWorker('eng', 1, {
+    logger: () => {},
+  });
+
+  for (let i = 0; i < pageTexts.length; i++) {
+    const { page, index, text: existingText } = pageTexts[i];
+
+    if (existingText) {
+      // Page already has text
+      fullText += existingText + '\n\n';
+    } else {
+      // Render page to canvas and OCR it
+      onStatusMsg(`OCR: page ${index} of ${pdf.numPages}...`);
+      const viewport = page.getViewport({ scale: 2.0 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      const { data: { text: ocrText } } = await worker.recognize(canvas);
+      fullText += (ocrText || '').trim() + '\n\n';
+      canvas.remove?.();
+    }
+
+    onProgress(40 + Math.round(((i + 1) / pageTexts.length) * 60), index, pdf.numPages);
+  }
+
+  await worker.terminate();
+
+  if (!fullText.trim()) {
+    throw new Error('No text could be extracted. The PDF may be corrupted or encrypted.');
+  }
+
+  return { text: fullText, buffer: bufferCopy, pages: pdf.numPages };
 }
 
 async function extractDOCX(file, onProgress) {
@@ -154,6 +206,7 @@ export default function UploadZone({ onUploadComplete }) {
   const [errorMsg, setErrorMsg] = useState('');
   const [currentFile, setCurrentFile] = useState(null);
   const [fileType, setFileType] = useState(null);
+  const [statusMsg, setStatusMsg] = useState('');
 
   const processFile = useCallback(async (file) => {
     const type = getFileType(file);
@@ -173,6 +226,7 @@ export default function UploadZone({ onUploadComplete }) {
     setErrorMsg('');
     setProgress(0);
     setPagesRead(0);
+    setStatusMsg('');
     setStatus('extracting');
 
     const onProgress = (pct, read, total) => {
@@ -181,11 +235,13 @@ export default function UploadZone({ onUploadComplete }) {
       setPageCount(total);
     };
 
+    const onStatusMsg = (msg) => setStatusMsg(msg);
+
     try {
       let result;
 
       if (type === 'PDF') {
-        result = await extractPDF(file, onProgress);
+        result = await extractPDF(file, onProgress, onStatusMsg);
       } else if (type === 'DOCX' || type === 'DOC') {
         result = await extractDOCX(file, onProgress);
       } else if (type === 'PPTX' || type === 'PPT') {
@@ -202,7 +258,6 @@ export default function UploadZone({ onUploadComplete }) {
 
       const doc = await registerUpload(file.name);
 
-      // Save buffer to IndexedDB for local re-download
       if (result.buffer) {
         await savePDFLocally(doc.id, file.name, result.buffer);
       }
@@ -329,6 +384,13 @@ export default function UploadZone({ onUploadComplete }) {
             }}>
               Max 50 MB, text extracted in your browser
             </p>
+            <p style={{
+              fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+              fontSize: 9, letterSpacing: '0.12em',
+              color: 'rgba(250,247,240,0.18)', marginTop: 6,
+            }}>
+              Scanned or image PDFs are supported via OCR — may take longer
+            </p>
 
             <input
               ref={inputRef}
@@ -368,7 +430,7 @@ export default function UploadZone({ onUploadComplete }) {
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                   fontSize: 10, color: '#a855f7', letterSpacing: '0.12em', marginTop: 2,
                 }}>
-                  {labelText}...
+                  {statusMsg || `${labelText}...`}
                 </div>
               </div>
             </div>
