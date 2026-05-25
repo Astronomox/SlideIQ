@@ -184,7 +184,7 @@ export default function Dashboard() {
     'Reading your slides...',
     'The lecturer is composing questions...',
     'Crafting answer options...',
-    'Almost done — finalising quiz...',
+    'Almost done, finalising quiz...',
   ];
 
   const firstName = user?.displayName?.split(' ')[0] || 'Scholar';
@@ -244,7 +244,7 @@ export default function Dashboard() {
     'Configure the quiz.',
   ];
   const subheadings = [
-    'Upload a PDF — text is extracted in your browser and never stored on any server.',
+    'Upload a PDF. Text is extracted in your browser and never stored on any server.',
     'Each lecturer has a distinct teaching style. Choose the one you want today.',
     'Set the number of MCQ and theory questions for your quiz.',
   ];
@@ -367,7 +367,7 @@ export default function Dashboard() {
                   onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
                   onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.35)'}
                 >
-                  ← Back
+                  Back
                 </button>
 
                 <AnimatePresence>
@@ -419,7 +419,7 @@ export default function Dashboard() {
                 onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.35)'}
               >
-                ← Back
+                Back
               </button>
 
               {selectedPersonality && (
@@ -442,7 +442,7 @@ export default function Dashboard() {
                     fontFamily: '"Lora", serif',
                     fontStyle: 'italic', fontSize: 13, color: 'rgba(250,247,240,0.45)',
                   }}>
-                    — "{selectedPersonality.tagline}"
+                    "{selectedPersonality.tagline}"
                   </span>
                 </div>
               )}

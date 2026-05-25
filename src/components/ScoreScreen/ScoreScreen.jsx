@@ -23,15 +23,15 @@ function getScoreColor(pct) {
 function getPersonaRemark(personality, isHigh) {
   switch (personality.id) {
     case 'harsh':
-      return isHigh ? 'Acceptable. Do not let the score flatter you — the exam will be harder.' : 'Unsatisfactory. Return to the slides before attempting this again.';
+      return isHigh ? 'Acceptable. Do not let the score flatter you. The exam will be harder.' : 'Unsatisfactory. Return to the slides before attempting this again.';
     case 'harvard':
-      return isHigh ? 'Adequate performance. The standard remains high — continue.' : 'This performance is below threshold. A thorough review of the material is required.';
+      return isHigh ? 'Adequate performance. The standard remains high. Continue.' : 'This performance is below threshold. A thorough review of the material is required.';
     case 'nice':
-      return isHigh ? 'Wonderful work — you should feel genuinely proud of this result.' : "That's okay — every attempt is a lesson in itself. You'll do better next time.";
+      return isHigh ? 'Wonderful work. You should feel genuinely proud of this result.' : "That's okay. Every attempt is a lesson in itself. You'll do better next time.";
     case 'reassuring':
-      return isHigh ? "You've put in the work and it shows. Stay consistent." : "This is where the real learning begins. Don't be discouraged — you'll get there.";
+      return isHigh ? "You've put in the work and it shows. Stay consistent." : "This is where the real learning begins. Don't be discouraged. You'll get there.";
     case 'easy':
-      return isHigh ? "Great job! That's exactly what we were looking for." : 'Not quite there yet, but the questions were gentle — have another go.';
+      return isHigh ? "Great job! That's exactly what we were looking for." : 'Not quite there yet, but the questions were gentle. Have another go.';
     case 'cheap':
       return isHigh ? "Fine. I suppose that'll do." : "Even by my standards that could've been better. Another read won't kill you.";
     case 'vague':
@@ -370,7 +370,7 @@ export default function ScoreScreen({
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                   fontSize: 11, color: a.isCorrect ? '#a855f7' : '#ef4444', flexShrink: 0,
                 }}>
-                  {a.isCorrect ? `✓ ${a.correct}` : `✗ ${a.selected} → ${a.correct}`}
+                  {a.isCorrect ? `✓ ${a.correct}` : `✗ ${a.selected}, correct: ${a.correct}`}
                 </span>
               </motion.div>
             ))}

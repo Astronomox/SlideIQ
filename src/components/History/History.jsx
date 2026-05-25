@@ -131,7 +131,7 @@ async function downloadAsDOCX(entry, persona) {
 
   const run = (text, opts = {}) => new TextRun({ text: String(text || ''), ...opts });
 
-  children.push(h(`A SlideIQ Quiz — ${entry.filename || 'Quiz'}`, HeadingLevel.HEADING_1));
+  children.push(h(`A SlideIQ Quiz: ${entry.filename || 'Quiz'}`, HeadingLevel.HEADING_1));
   children.push(h(entry.filename || 'Quiz', HeadingLevel.HEADING_2));
   children.push(p([run('Lecturer: ', { bold: true }), run(persona.title)]));
   children.push(p([run('Date: ', { bold: true }), run(formatDate(entry.completedAt))]));
@@ -158,7 +158,7 @@ async function downloadAsDOCX(entry, persona) {
           }));
         });
       }
-      const verdict = ans?.isCorrect ? '✓ Correct' : ans ? `✗ Wrong — correct answer: ${correct}` : '';
+      const verdict = ans?.isCorrect ? '✓ Correct' : ans ? `✗ Wrong. Correct answer: ${correct}` : '';
       if (verdict) {
         children.push(new Paragraph({
           indent: { left: 360 },

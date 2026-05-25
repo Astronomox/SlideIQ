@@ -196,7 +196,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
           }}>
-            Explanation · Before the quiz
+            Explanation  Before the quiz
           </span>
         </div>
 
@@ -398,7 +398,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
               fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase',
               color: 'rgba(250,247,240,0.30)', textAlign: 'center',
             }}>
-              {mcqCount} MCQ · {theoryCount} Theory
+              {mcqCount} MCQ  {theoryCount} Theory
             </div>
           </aside>
         </div>

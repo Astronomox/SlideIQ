@@ -274,7 +274,7 @@ export default function Layout({ children }) {
                     if (stored) {
                       downloadPDFFromBuffer(stored.data, stored.filename);
                     } else {
-                      showToast('PDF not available — only PDFs uploaded on this device can be re-downloaded.');
+                      showToast('PDF not available. Only files uploaded on this device can be re-downloaded.');
                     }
                   }}
                   style={{

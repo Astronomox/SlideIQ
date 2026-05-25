@@ -125,7 +125,7 @@ export default function Login() {
           fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: '#a855f7', position: 'relative',
         }}>
-          Est. MMXXVI · A Reader's Companion
+          Est. MMXXVI  A Reader's Companion
         </motion.span>
 
         <motion.div
@@ -165,7 +165,7 @@ export default function Login() {
           fontFamily: '"Lora", serif',
           fontSize: 16, lineHeight: 1.75, color: 'rgba(250,247,240,0.65)', maxWidth: 440,
         }}>
-          Upload a lecture. Choose a lecturer — patient, vicious, Harvard-grade, lazy.
+          Upload a lecture. Choose a lecturer: patient, vicious, Harvard-grade, lazy.
           They'll explain your slides and quiz you in their own voice.
         </motion.p>
 

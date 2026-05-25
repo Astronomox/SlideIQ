@@ -327,7 +327,7 @@ export default function UploadZone({ onUploadComplete }) {
               fontSize: 10, letterSpacing: '0.16em',
               color: 'rgba(250,247,240,0.25)', textTransform: 'uppercase',
             }}>
-              Max 50 MB · text extracted in your browser
+              Max 50 MB, text extracted in your browser
             </p>
 
             <input
@@ -504,7 +504,7 @@ export default function UploadZone({ onUploadComplete }) {
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 10, color: '#a855f7', letterSpacing: '0.16em',
             }}>
-              Ready · text extracted
+              Ready
             </p>
           </motion.div>
         )}

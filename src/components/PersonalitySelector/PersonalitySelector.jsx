@@ -212,7 +212,7 @@ export default function PersonalitySelector({ selected, onSelect }) {
           fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
           color: '#a855f7', marginBottom: 8,
         }}>
-          Step 1 — Choose your lecturer
+          Step 1: Choose your lecturer
         </div>
         <h2 style={{
           fontFamily: '"Montserrat", sans-serif',
