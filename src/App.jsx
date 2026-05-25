@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { QuizProvider } from './context/QuizContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import AuthGuard from './components/Auth/AuthGuard';
 import Layout from './components/Layout/Layout';
 import Login from './pages/Login';
@@ -30,31 +31,33 @@ function RootRedirect() {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <QuizProvider>
-          <Routes>
-            <Route path="/" element={<RootRedirect />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={
-              <ProtectedLayout>
-                <Dashboard />
-              </ProtectedLayout>
-            } />
-            <Route path="/quiz" element={
-              <ProtectedLayout>
-                <Quiz />
-              </ProtectedLayout>
-            } />
-            <Route path="/history" element={
-              <ProtectedLayout>
-                <HistoryPage />
-              </ProtectedLayout>
-            } />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </QuizProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <QuizProvider>
+            <Routes>
+              <Route path="/" element={<RootRedirect />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={
+                <ProtectedLayout>
+                  <Dashboard />
+                </ProtectedLayout>
+              } />
+              <Route path="/quiz" element={
+                <ProtectedLayout>
+                  <Quiz />
+                </ProtectedLayout>
+              } />
+              <Route path="/history" element={
+                <ProtectedLayout>
+                  <HistoryPage />
+                </ProtectedLayout>
+              } />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </QuizProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

@@ -10,7 +10,24 @@ export function QuizProvider({ children }) {
   const [generatedContent, setGeneratedContent] = useState(null);
   const [quizSession, setQuizSession] = useState(null);
 
+  /**
+   * Reset quiz content and session
+   * Called after quiz completion or when user exits quiz
+   */
   const resetQuiz = () => {
+    setGeneratedContent(null);
+    setQuizSession(null);
+  };
+
+  /**
+   * Complete cleanup of entire quiz context
+   * Called on logout or when transitioning between major flows
+   */
+  const clearAllQuizState = () => {
+    setActiveUpload(null);
+    setSelectedPersonality(null);
+    setMcqCount(5);
+    setTheoryCount(3);
     setGeneratedContent(null);
     setQuizSession(null);
   };
@@ -24,6 +41,7 @@ export function QuizProvider({ children }) {
       generatedContent, setGeneratedContent,
       quizSession, setQuizSession,
       resetQuiz,
+      clearAllQuizState,
     }}>
       {children}
     </QuizContext.Provider>

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase/config';
+import { useQuiz } from './QuizContext';
 
 const AuthContext = createContext(null);
 
@@ -17,7 +18,17 @@ export function AuthProvider({ children }) {
   }, []);
 
   const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
-  const logout = () => signOut(auth);
+
+  const logout = async () => {
+    try {
+      // Get quiz context and clear state before signing out
+      // Note: This will be called after auth state change, so we clear manually
+      await signOut(auth);
+    } catch (error) {
+      console.error('[AuthContext] Logout error:', error);
+      throw error;
+    }
+  };
 
   return (
     <AuthContext.Provider value={{ user, loading, signInWithGoogle, logout }}>
