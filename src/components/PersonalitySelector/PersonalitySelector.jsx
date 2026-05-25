@@ -77,18 +77,27 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
   return (
     <motion.button
       onClick={() => onSelect(persona)}
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
       animate={{
-        opacity: isDimmed ? 0.45 : 1,
+        opacity: isDimmed ? 0.40 : 1,
         scale: isSelected ? 1.02 : isDimmed ? 0.97 : 1,
         y: 0,
+        filter: 'blur(0px)',
       }}
       transition={{
-        duration: 0.25,
-        delay: index * 0.05,
-        scale: { type: 'spring', stiffness: 280, damping: 22 },
+        opacity: { duration: 0.3, delay: index * 0.05 },
+        y: { type: 'spring', stiffness: 260, damping: 24, delay: index * 0.05 },
+        filter: { duration: 0.3, delay: index * 0.05 },
+        scale: { type: 'spring', stiffness: 300, damping: 22 },
       }}
-      whileHover={!isSelected ? { y: isDimmed ? 0 : -2, boxShadow: '0 8px 32px rgba(168, 85, 247,0.10)' } : {}}
+      whileHover={!isSelected ? {
+        y: -4,
+        scale: 1.02,
+        boxShadow: `0 12px 40px rgba(168,85,247,0.18), 0 0 0 1px ${persona.accent}44`,
+        borderColor: `${persona.accent}88`,
+        transition: { type: 'spring', stiffness: 400, damping: 22 },
+      } : {}}
+      whileTap={{ scale: 0.97 }}
       style={{
         all: 'unset',
         cursor: 'pointer',
@@ -142,9 +151,13 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
         marginBottom: 14,
       }}>
-        <span style={{ color: persona.accent }}>
+        <motion.span
+          animate={isSelected ? { scale: [1, 1.15, 1], rotate: [0, -8, 8, 0] } : {}}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ color: persona.accent }}
+        >
           <PersonaGlyph id={persona.id} size={compact ? 32 : 44} />
-        </span>
+        </motion.span>
         <span style={{
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase',

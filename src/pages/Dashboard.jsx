@@ -334,10 +334,10 @@ export default function Dashboard() {
           {step === 0 && (
             <motion.div
               key="step0"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+              initial={{ opacity: 0, y: 28, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -20, filter: 'blur(8px)', scale: 0.97 }}
+              transition={{ type: 'spring', stiffness: 240, damping: 26 }}
               style={{ display: 'flex', justifyContent: 'center' }}
             >
               <UploadZone onUploadComplete={handleUploadComplete} />
@@ -347,10 +347,10 @@ export default function Dashboard() {
           {step === 1 && (
             <motion.div
               key="step1"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+              initial={{ opacity: 0, x: 40, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, x: -40, filter: 'blur(8px)' }}
+              transition={{ type: 'spring', stiffness: 240, damping: 26 }}
             >
               <div style={{
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -402,10 +402,10 @@ export default function Dashboard() {
           {step === 2 && (
             <motion.div
               key="step2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
+              initial={{ opacity: 0, x: 40, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, x: -40, filter: 'blur(8px)' }}
+              transition={{ type: 'spring', stiffness: 240, damping: 26 }}
               style={{ maxWidth: isMobile ? '100%' : 600 }}
             >
               <button
