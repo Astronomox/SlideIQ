@@ -7,7 +7,7 @@ import { useQuizHistory } from '../../hooks/useQuizHistory';
 import { useAuth } from '../../context/AuthContext';
 import { useIsMobile } from '../../hooks/useIsMobile';
 
-const CTA = 'linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%)';
+const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
 
 function ExplanationScreen({ content, personality, filename, mcqCount, theoryCount, onBegin }) {
   const isMobile = useIsMobile();
@@ -30,20 +30,20 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
       >
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(60% 40% at 50% 0%, rgba(74,222,128,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(60% 40% at 50% 0%, rgba(168, 85, 247,0.06) 0%, transparent 70%)',
         }} />
 
         <div style={{
           position: 'relative', zIndex: 1, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '16px 16px 12px',
-          borderBottom: '1px solid rgba(74,222,128,0.10)',
+          borderBottom: '1px solid rgba(168, 85, 247,0.10)',
           color: '#faf7f0',
         }}>
           <Wordmark size={18} />
           <span style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#4ade80',
+            fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#a855f7',
           }}>
             Before the quiz
           </span>
@@ -53,13 +53,13 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
           position: 'relative', zIndex: 1, flexShrink: 0,
           display: 'flex', alignItems: 'center', gap: 12,
           padding: '12px 16px',
-          borderBottom: '1px solid rgba(74,222,128,0.08)',
-          background: 'rgba(74,222,128,0.02)',
+          borderBottom: '1px solid rgba(168, 85, 247,0.08)',
+          background: 'rgba(168, 85, 247,0.02)',
         }}>
           <div style={{
             width: 32, aspectRatio: '8.5/11',
             background: 'repeating-linear-gradient(180deg, #161b22 0px, #161b22 5px, #1c2128 5px, #1c2128 6px)',
-            border: '1px solid rgba(74,222,128,0.15)',
+            border: '1px solid rgba(168, 85, 247,0.15)',
             flexShrink: 0,
           }} />
           <div style={{ flex: 1, minWidth: 0 }}>
@@ -98,11 +98,11 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
           <div style={{
             display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16,
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#4ade80',
+            fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#a855f7',
           }}>
-            <span style={{ flex: 1, height: 1, background: 'rgba(74,222,128,0.22)' }} />
+            <span style={{ flex: 1, height: 1, background: 'rgba(168, 85, 247,0.22)' }} />
             Lecture Summary
-            <span style={{ flex: 1, height: 1, background: 'rgba(74,222,128,0.22)' }} />
+            <span style={{ flex: 1, height: 1, background: 'rgba(168, 85, 247,0.22)' }} />
           </div>
 
           <div style={{
@@ -141,7 +141,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
             color: 'rgba(250,247,240,0.35)',
           }}>
             <span>{mcqCount} MCQ</span>
-            <span style={{ color: '#4ade80' }}>·</span>
+            <span style={{ color: '#a855f7' }}>·</span>
             <span>{theoryCount} Theory</span>
           </div>
           <motion.button
@@ -176,7 +176,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: `
-          radial-gradient(60% 55% at 50% 35%, rgba(74,222,128,0.06) 0%, transparent 70%),
+          radial-gradient(60% 55% at 50% 35%, rgba(168, 85, 247,0.06) 0%, transparent 70%),
           radial-gradient(120% 90% at 50% 110%, rgba(0,0,0,0.20) 0%, transparent 60%)
         `,
       }} />
@@ -188,13 +188,13 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
       }}>
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          paddingBottom: 16, borderBottom: '1px solid rgba(74,222,128,0.10)', flexShrink: 0,
+          paddingBottom: 16, borderBottom: '1px solid rgba(168, 85, 247,0.10)', flexShrink: 0,
           color: '#faf7f0',
         }}>
           <Wordmark size={20} />
           <span style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+            fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
           }}>
             Explanation · Before the quiz
           </span>
@@ -209,7 +209,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
           <aside style={{ display: 'flex', flexDirection: 'column', gap: 16, overflowY: 'auto' }}>
             <div style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-              fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+              fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
             }}>
               Source
             </div>
@@ -217,12 +217,12 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
               <div style={{
                 width: 90, aspectRatio: '8.5/11',
                 background: `repeating-linear-gradient(180deg, #161b22 0px, #161b22 14px, #1c2128 14px, #1c2128 15px)`,
-                border: '1px solid rgba(74,222,128,0.15)', position: 'relative',
+                border: '1px solid rgba(168, 85, 247,0.15)', position: 'relative',
               }}>
                 <div style={{
                   position: 'absolute', bottom: 4, right: 5,
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 8, letterSpacing: '0.2em', color: '#4ade80',
+                  fontSize: 8, letterSpacing: '0.2em', color: '#a855f7',
                 }}>
                   PDF
                 </div>
@@ -235,11 +235,11 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
               </span>
             </div>
 
-            <div style={{ height: 1, background: 'rgba(74,222,128,0.14)' }} />
+            <div style={{ height: 1, background: 'rgba(168, 85, 247,0.14)' }} />
 
             <div style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-              fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+              fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
             }}>
               Read by
             </div>
@@ -273,16 +273,16 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
             <div style={{
               display: 'flex', alignItems: 'center', gap: 12,
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-              fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+              fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
               flexShrink: 0,
             }}>
-              <span style={{ flex: 1, height: 1, background: 'rgba(74,222,128,0.25)' }} />
+              <span style={{ flex: 1, height: 1, background: 'rgba(168, 85, 247,0.25)' }} />
               Lecture Summary
-              <span style={{ flex: 1, height: 1, background: 'rgba(74,222,128,0.25)' }} />
+              <span style={{ flex: 1, height: 1, background: 'rgba(168, 85, 247,0.25)' }} />
             </div>
             <div style={{
               height: 1,
-              background: 'linear-gradient(90deg, transparent, rgba(74,222,128,0.30) 50%, transparent)',
+              background: 'linear-gradient(90deg, transparent, rgba(168, 85, 247,0.30) 50%, transparent)',
               flexShrink: 0,
             }} />
             <div style={{
@@ -305,7 +305,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
                       <span style={{
                         fontFamily: '"Montserrat", sans-serif',
                         fontWeight: 900, float: 'left',
-                        fontSize: 72, lineHeight: 0.82, color: '#4ade80',
+                        fontSize: 72, lineHeight: 0.82, color: '#a855f7',
                         paddingRight: 10, paddingTop: 4,
                       }}>
                         {para[0]}
@@ -329,14 +329,14 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
           <aside style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-              fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+              fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
             }}>
               Quiz ahead
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{
                 padding: 16, background: '#161b22',
-                border: '1px solid rgba(74,222,128,0.12)', borderRadius: 8,
+                border: '1px solid rgba(168, 85, 247,0.12)', borderRadius: 8,
               }}>
                 <div style={{
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
@@ -356,7 +356,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
                 {[{ label: 'MCQ', val: mcqCount }, { label: 'Theory', val: theoryCount }].map(({ label, val }) => (
                   <div key={label} style={{
                     flex: 1, padding: '10px 12px', background: '#161b22',
-                    border: '1px solid rgba(74,222,128,0.12)', textAlign: 'center', borderRadius: 8,
+                    border: '1px solid rgba(168, 85, 247,0.12)', textAlign: 'center', borderRadius: 8,
                   }}>
                     <div style={{
                       fontFamily: '"JetBrains Mono", ui-monospace, monospace',
@@ -376,7 +376,7 @@ function ExplanationScreen({ content, personality, filename, mcqCount, theoryCou
               </div>
             </div>
 
-            <div style={{ height: 1, background: 'rgba(74,222,128,0.12)', marginTop: 'auto' }} />
+            <div style={{ height: 1, background: 'rgba(168, 85, 247,0.12)', marginTop: 'auto' }} />
 
             <motion.button
               whileHover={{ scale: 1.02 }}

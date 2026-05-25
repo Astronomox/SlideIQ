@@ -12,7 +12,7 @@ function NavSectionLabel({ children }) {
     <div style={{
       fontFamily: '"JetBrains Mono", ui-monospace, monospace',
       fontSize: 9, letterSpacing: '0.24em', textTransform: 'uppercase',
-      color: 'rgba(74,222,128,0.45)', padding: '0 12px', marginBottom: 8,
+      color: 'rgba(168, 85, 247,0.45)', padding: '0 12px', marginBottom: 8,
     }}>
       {children}
     </div>
@@ -26,8 +26,8 @@ function SidebarNavItem({ to, icon, label, count }) {
       style={({ isActive }) => ({
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '10px 12px', textDecoration: 'none',
-        borderLeft: `2px solid ${isActive ? '#4ade80' : 'transparent'}`,
-        background: isActive ? 'rgba(74,222,128,0.08)' : 'transparent',
+        borderLeft: `2px solid ${isActive ? '#a855f7' : 'transparent'}`,
+        background: isActive ? 'rgba(168, 85, 247,0.08)' : 'transparent',
         transition: 'all 0.15s', cursor: 'pointer',
         borderRadius: '0 6px 6px 0',
       })}
@@ -35,7 +35,7 @@ function SidebarNavItem({ to, icon, label, count }) {
       {({ isActive }) => (
         <>
           <span style={{
-            color: isActive ? '#4ade80' : 'rgba(250,247,240,0.30)',
+            color: isActive ? '#a855f7' : 'rgba(250,247,240,0.30)',
             display: 'flex', alignItems: 'center', flexShrink: 0,
           }}>
             {icon}
@@ -139,7 +139,7 @@ export default function Layout({ children }) {
     ) : (
       <div style={{
         width: size, height: size, borderRadius: '50%',
-        background: 'linear-gradient(135deg, #4ade80, #22c55e)',
+        background: 'linear-gradient(135deg, #a855f7, #9333ea)',
         color: '#0d1117',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontFamily: '"Montserrat", sans-serif',
@@ -154,13 +154,13 @@ export default function Layout({ children }) {
     <aside style={{
       width: 280, minWidth: 280, height: '100%',
       background: '#0d1117',
-      borderRight: '1px solid rgba(74,222,128,0.10)',
+      borderRight: '1px solid rgba(168, 85, 247,0.10)',
       display: 'flex', flexDirection: 'column', overflow: 'hidden',
     }}>
       {/* Wordmark + optional close (mobile) */}
       <div style={{
         padding: '24px 20px',
-        borderBottom: '1px solid rgba(74,222,128,0.08)',
+        borderBottom: '1px solid rgba(168, 85, 247,0.08)',
         flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         color: '#faf7f0',
@@ -224,13 +224,13 @@ export default function Layout({ children }) {
                 key={u.id}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 4,
-                  borderLeft: `2px solid ${i === 0 ? '#4ade80' : 'transparent'}`,
-                  background: i === 0 ? 'rgba(74,222,128,0.06)' : 'transparent',
+                  borderLeft: `2px solid ${i === 0 ? '#a855f7' : 'transparent'}`,
+                  background: i === 0 ? 'rgba(168, 85, 247,0.06)' : 'transparent',
                   borderRadius: '0 4px 4px 0',
                   transition: 'background 0.15s',
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(74,222,128,0.06)'}
-                onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(74,222,128,0.06)' : 'transparent'}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(168, 85, 247,0.06)'}
+                onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(168, 85, 247,0.06)' : 'transparent'}
               >
                 {/* Filename — click to go to dashboard */}
                 <button
@@ -274,7 +274,7 @@ export default function Layout({ children }) {
                     display: 'flex', alignItems: 'center',
                     transition: 'color 0.15s', flexShrink: 0,
                   }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#4ade80'}
+                  onMouseEnter={e => e.currentTarget.style.color = '#a855f7'}
                   onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.25)'}
                 >
                   <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
@@ -291,7 +291,7 @@ export default function Layout({ children }) {
       {/* BOTTOM USER */}
       <div style={{
         marginTop: 'auto', padding: '14px 16px',
-        borderTop: '1px solid rgba(74,222,128,0.08)',
+        borderTop: '1px solid rgba(168, 85, 247,0.08)',
         display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
       }}>
         <UserAvatar size={32} />
@@ -349,7 +349,7 @@ export default function Layout({ children }) {
               zIndex: 9999, display: 'flex', alignItems: 'center', gap: 12,
               padding: '12px 18px',
               background: toast.type === 'confirm' ? '#1c2128' : '#1c1015',
-              border: `1px solid ${toast.type === 'confirm' ? 'rgba(74,222,128,0.30)' : 'rgba(239,68,68,0.40)'}`,
+              border: `1px solid ${toast.type === 'confirm' ? 'rgba(168, 85, 247,0.30)' : 'rgba(239,68,68,0.40)'}`,
               borderRadius: 10,
               boxShadow: '0 8px 32px rgba(0,0,0,0.60)',
               maxWidth: 380, width: 'calc(100vw - 48px)',
@@ -406,8 +406,8 @@ export default function Layout({ children }) {
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
         background: `
-          radial-gradient(ellipse 60% 55% at 50% 30%, rgba(74,222,128,0.04) 0%, transparent 70%),
-          radial-gradient(120% 90% at 50% 110%, rgba(74,222,128,0.02) 0%, transparent 60%)
+          radial-gradient(ellipse 60% 55% at 50% 30%, rgba(168, 85, 247,0.04) 0%, transparent 70%),
+          radial-gradient(120% 90% at 50% 110%, rgba(168, 85, 247,0.02) 0%, transparent 60%)
         `,
       }} />
 
@@ -417,7 +417,7 @@ export default function Layout({ children }) {
           position: 'fixed', top: 0, left: 0, right: 0,
           height: MOBILE_TOP,
           background: '#0d1117',
-          borderBottom: '1px solid rgba(74,222,128,0.10)',
+          borderBottom: '1px solid rgba(168, 85, 247,0.10)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 16px',
           zIndex: 200, flexShrink: 0,

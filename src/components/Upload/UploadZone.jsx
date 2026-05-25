@@ -10,7 +10,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-const CTA = 'linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%)';
+const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
 
 export default function UploadZone({ onUploadComplete }) {
   const { registerUpload } = useUploads();
@@ -109,16 +109,16 @@ export default function UploadZone({ onUploadComplete }) {
         maxWidth: 680,
         padding: 'clamp(28px, 7vw, 60px) clamp(20px, 6vw, 48px)',
         border: isDragging
-          ? '1.5px solid #4ade80'
-          : '1.5px dashed rgba(74,222,128,0.22)',
+          ? '1.5px solid #a855f7'
+          : '1.5px dashed rgba(168, 85, 247,0.22)',
         background: isDragging
-          ? 'rgba(74,222,128,0.05)'
-          : 'rgba(74,222,128,0.02)',
+          ? 'rgba(168, 85, 247,0.05)'
+          : 'rgba(168, 85, 247,0.02)',
         borderRadius: 12,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         textAlign: 'center', gap: 24, position: 'relative',
         transition: 'border-color 0.2s, background 0.2s, box-shadow 0.2s',
-        boxShadow: isDragging ? '0 0 48px rgba(74,222,128,0.08)' : 'none',
+        boxShadow: isDragging ? '0 0 48px rgba(168, 85, 247,0.08)' : 'none',
       }}
     >
       <input
@@ -146,7 +146,7 @@ export default function UploadZone({ onUploadComplete }) {
                 transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
                 style={{
                   position: 'absolute', inset: -8, borderRadius: '50%',
-                  border: '1px dashed rgba(74,222,128,0.18)', pointerEvents: 'none',
+                  border: '1px dashed rgba(168, 85, 247,0.18)', pointerEvents: 'none',
                 }}
               />
               <motion.div
@@ -154,10 +154,10 @@ export default function UploadZone({ onUploadComplete }) {
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                 style={{
                   width: 88, height: 88,
-                  border: '1px solid rgba(74,222,128,0.25)',
+                  border: '1px solid rgba(168, 85, 247,0.25)',
                   borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#4ade80', background: 'rgba(74,222,128,0.05)',
+                  color: '#a855f7', background: 'rgba(168, 85, 247,0.05)',
                 }}
               >
                 <IconUpload size={34} stroke={1.4} />
@@ -201,9 +201,9 @@ export default function UploadZone({ onUploadComplete }) {
               color: 'rgba(250,247,240,0.28)', flexWrap: 'wrap', justifyContent: 'center',
             }}>
               <span>Max 50 MB</span>
-              <span style={{ color: '#4ade80' }}>·</span>
+              <span style={{ color: '#a855f7' }}>·</span>
               <span>Extracted in browser</span>
-              <span style={{ color: '#4ade80' }}>·</span>
+              <span style={{ color: '#a855f7' }}>·</span>
               <span>PDF never uploaded</span>
             </div>
           </motion.div>
@@ -218,7 +218,7 @@ export default function UploadZone({ onUploadComplete }) {
             exit={{ opacity: 0 }}
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '100%' }}
           >
-            <div style={{ color: '#4ade80' }}>
+            <div style={{ color: '#a855f7' }}>
               <IconDoc size={52} stroke={1} />
             </div>
 
@@ -249,13 +249,13 @@ export default function UploadZone({ onUploadComplete }) {
 
               <div style={{
                 width: '100%', height: 3,
-                background: 'rgba(74,222,128,0.12)',
+                background: 'rgba(168, 85, 247,0.12)',
                 borderRadius: 2, position: 'relative', overflow: 'hidden',
               }}>
                 <motion.div
                   style={{
                     position: 'absolute', left: 0, top: 0, bottom: 0,
-                    background: 'linear-gradient(90deg, #22c55e, #4ade80, #86efac)',
+                    background: 'linear-gradient(90deg, #9333ea, #a855f7, #d8b4fe)',
                     borderRadius: 2,
                   }}
                   animate={{ width: `${progress}%` }}
@@ -289,10 +289,10 @@ export default function UploadZone({ onUploadComplete }) {
               transition={{ type: 'spring', stiffness: 280, damping: 20 }}
               style={{
                 width: 68, height: 68, borderRadius: '50%',
-                border: '1.5px solid #4ade80',
-                background: 'rgba(74,222,128,0.10)',
+                border: '1.5px solid #a855f7',
+                background: 'rgba(168, 85, 247,0.10)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#4ade80',
+                color: '#a855f7',
               }}
             >
               <svg width={28} height={28} viewBox="0 0 24 24" fill="none"
@@ -320,7 +320,7 @@ export default function UploadZone({ onUploadComplete }) {
                 fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase',
                 color: 'rgba(250,247,240,0.35)',
                 padding: '6px 0',
-                borderBottom: '1px solid rgba(74,222,128,0.22)',
+                borderBottom: '1px solid rgba(168, 85, 247,0.22)',
                 transition: 'color 0.15s',
               }}
               onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
@@ -367,9 +367,9 @@ export default function UploadZone({ onUploadComplete }) {
                 all: 'unset', cursor: 'pointer',
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                 fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase',
-                color: '#4ade80',
+                color: '#a855f7',
                 padding: '6px 0',
-                borderBottom: '1px solid rgba(74,222,128,0.35)',
+                borderBottom: '1px solid rgba(168, 85, 247,0.35)',
               }}
             >
               Try again

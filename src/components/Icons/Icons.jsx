@@ -244,7 +244,7 @@ export function Wordmark({ size = 22 }) {
       display: 'inline-block',
       flexShrink: 0,
     }}>
-      Slide<span style={{ fontStyle: 'italic', fontWeight: 900, color: '#4ade80' }}>IQ</span>
+      Slide<span style={{ fontStyle: 'italic', fontWeight: 900, color: '#a855f7' }}>IQ</span>
     </span>
   );
 }

@@ -4,7 +4,7 @@ import { PersonaGlyph, Wordmark, IconX, IconArrow, IconCheck } from '../Icons/Ic
 import { generateFeedback } from '../../api/claude';
 import { useIsMobile } from '../../hooks/useIsMobile';
 
-const CTA = 'linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%)';
+const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
 
 function TopBar({ persona, phase, questionN, questionOf, progress, onExit }) {
   const isMobile = useIsMobile();
@@ -14,7 +14,7 @@ function TopBar({ persona, phase, questionN, questionOf, progress, onExit }) {
       position: 'sticky', top: 0,
       background: '#0d1117',
       padding: isMobile ? '12px 16px' : '20px 48px',
-      borderBottom: '1px solid rgba(74,222,128,0.10)',
+      borderBottom: '1px solid rgba(168, 85, 247,0.10)',
       zIndex: 10,
       display: 'flex', flexDirection: 'column',
       gap: isMobile ? 8 : 12,
@@ -22,7 +22,7 @@ function TopBar({ persona, phase, questionN, questionOf, progress, onExit }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, color: '#faf7f0' }}>
           {!isMobile && <Wordmark size={18} />}
-          {!isMobile && <span style={{ width: 1, height: 16, background: 'rgba(74,222,128,0.18)' }} />}
+          {!isMobile && <span style={{ width: 1, height: 16, background: 'rgba(168, 85, 247,0.18)' }} />}
           <span style={{ color: persona.accent, display: 'flex', alignItems: 'center' }}>
             <PersonaGlyph id={persona.id} size={isMobile ? 16 : 20} />
           </span>
@@ -38,14 +38,14 @@ function TopBar({ persona, phase, questionN, questionOf, progress, onExit }) {
 
         <div style={{
           flex: 2, height: 2,
-          background: 'rgba(74,222,128,0.12)',
+          background: 'rgba(168, 85, 247,0.12)',
           position: 'relative', overflow: 'hidden', borderRadius: 1,
         }}>
           <motion.div
             style={{
               position: 'absolute', left: 0, top: 0, bottom: 0,
-              background: 'linear-gradient(90deg, #22c55e, #4ade80, #86efac)',
-              boxShadow: '0 0 8px rgba(74,222,128,0.70), 0 0 20px rgba(74,222,128,0.30)',
+              background: 'linear-gradient(90deg, #9333ea, #a855f7, #d8b4fe)',
+              boxShadow: '0 0 8px rgba(168, 85, 247,0.70), 0 0 20px rgba(168, 85, 247,0.30)',
             }}
             animate={{ width: `${progress * 100}%` }}
             transition={{ type: 'spring', stiffness: 80, damping: 20 }}
@@ -84,29 +84,29 @@ function TopBar({ persona, phase, questionN, questionOf, progress, onExit }) {
 
 function MCQOption({ letter, text, selected, correct, showResult, onClick }) {
   const isMobile = useIsMobile();
-  let borderColor = 'rgba(74,222,128,0.14)';
+  let borderColor = 'rgba(168, 85, 247,0.14)';
   let bg = '#161b22';
-  let badgeBorder = 'rgba(74,222,128,0.25)';
-  let badgeColor = 'rgba(74,222,128,0.60)';
+  let badgeBorder = 'rgba(168, 85, 247,0.25)';
+  let badgeColor = 'rgba(168, 85, 247,0.60)';
 
   if (showResult) {
     if (letter === correct) {
-      borderColor = 'rgba(74,222,128,0.55)'; bg = 'rgba(74,222,128,0.08)';
-      badgeBorder = '#4ade80'; badgeColor = '#4ade80';
+      borderColor = 'rgba(168, 85, 247,0.55)'; bg = 'rgba(168, 85, 247,0.08)';
+      badgeBorder = '#a855f7'; badgeColor = '#a855f7';
     } else if (letter === selected && letter !== correct) {
       borderColor = 'rgba(239,68,68,0.55)'; bg = 'rgba(239,68,68,0.08)';
       badgeBorder = '#ef4444'; badgeColor = '#ef4444';
     }
   } else if (letter === selected) {
-    borderColor = '#4ade80'; bg = 'rgba(74,222,128,0.08)';
-    badgeBorder = '#4ade80'; badgeColor = '#4ade80';
+    borderColor = '#a855f7'; bg = 'rgba(168, 85, 247,0.08)';
+    badgeBorder = '#a855f7'; badgeColor = '#a855f7';
   }
 
   const badgeSize = isMobile ? 40 : 34;
 
   return (
     <motion.button
-      whileHover={!showResult ? { borderColor: 'rgba(74,222,128,0.40)', backgroundColor: 'rgba(74,222,128,0.04)' } : {}}
+      whileHover={!showResult ? { borderColor: 'rgba(168, 85, 247,0.40)', backgroundColor: 'rgba(168, 85, 247,0.04)' } : {}}
       onClick={!showResult ? onClick : undefined}
       style={{
         all: 'unset', cursor: showResult ? 'default' : 'pointer',
@@ -122,7 +122,7 @@ function MCQOption({ letter, text, selected, correct, showResult, onClick }) {
     >
       <div style={{
         width: badgeSize, height: badgeSize, borderRadius: '50%',
-        background: 'rgba(74,222,128,0.06)',
+        background: 'rgba(168, 85, 247,0.06)',
         border: `1px solid ${badgeBorder}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontFamily: '"JetBrains Mono", ui-monospace, monospace',
@@ -140,7 +140,7 @@ function MCQOption({ letter, text, selected, correct, showResult, onClick }) {
         {text}
       </span>
       {showResult && letter === correct && (
-        <IconCheck size={17} stroke={2.5} style={{ color: '#4ade80', flexShrink: 0 }} />
+        <IconCheck size={17} stroke={2.5} style={{ color: '#a855f7', flexShrink: 0 }} />
       )}
       {showResult && letter === selected && letter !== correct && (
         <IconX size={17} stroke={2.5} style={{ color: '#ef4444', flexShrink: 0 }} />
@@ -173,13 +173,13 @@ function FeedbackOverlay({ isCorrect, feedback, loadingFeedback, onNext, isLast 
         transition={{ type: 'spring', stiffness: 200, damping: 24 }}
         style={{
           background: '#161b22',
-          border: `1px solid ${isCorrect ? 'rgba(74,222,128,0.30)' : 'rgba(239,68,68,0.30)'}`,
+          border: `1px solid ${isCorrect ? 'rgba(168, 85, 247,0.30)' : 'rgba(239,68,68,0.30)'}`,
           borderRadius: 12,
           padding: isMobile ? '32px 24px' : 48,
           maxWidth: 520, width: '100%',
           textAlign: 'center',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
-          boxShadow: `0 20px 60px rgba(0,0,0,0.50), 0 0 0 1px ${isCorrect ? 'rgba(74,222,128,0.08)' : 'rgba(239,68,68,0.08)'}`,
+          boxShadow: `0 20px 60px rgba(0,0,0,0.50), 0 0 0 1px ${isCorrect ? 'rgba(168, 85, 247,0.08)' : 'rgba(239,68,68,0.08)'}`,
         }}
       >
         <motion.div
@@ -189,10 +189,10 @@ function FeedbackOverlay({ isCorrect, feedback, loadingFeedback, onNext, isLast 
           style={{
             width: isMobile ? 60 : 72, height: isMobile ? 60 : 72,
             borderRadius: '50%',
-            background: isCorrect ? 'rgba(74,222,128,0.12)' : 'rgba(239,68,68,0.12)',
-            border: `2px solid ${isCorrect ? '#4ade80' : '#ef4444'}`,
+            background: isCorrect ? 'rgba(168, 85, 247,0.12)' : 'rgba(239,68,68,0.12)',
+            border: `2px solid ${isCorrect ? '#a855f7' : '#ef4444'}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: isCorrect ? '#4ade80' : '#ef4444',
+            color: isCorrect ? '#a855f7' : '#ef4444',
             marginBottom: isMobile ? 16 : 20,
           }}
         >
@@ -209,7 +209,7 @@ function FeedbackOverlay({ isCorrect, feedback, loadingFeedback, onNext, isLast 
         <div style={{
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: isCorrect ? '#4ade80' : '#ef4444',
+          color: isCorrect ? '#a855f7' : '#ef4444',
           marginBottom: 12,
         }}>
           {isCorrect ? 'Correct' : 'Incorrect'}
@@ -377,7 +377,7 @@ export default function QuestionModal({
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: `
-          radial-gradient(ellipse 100% 60% at 50% 0%, rgba(74,222,128,0.04) 0%, transparent 60%),
+          radial-gradient(ellipse 100% 60% at 50% 0%, rgba(168, 85, 247,0.04) 0%, transparent 60%),
           linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.20) 100%)
         `,
       }} />
@@ -412,7 +412,7 @@ export default function QuestionModal({
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     <div style={{
                       fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                      fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+                      fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
                     }}>
                       Question {String(mcqIndex + 1).padStart(2, '0')}
                     </div>
@@ -422,7 +422,7 @@ export default function QuestionModal({
                     }}>
                       {currentQuestion.question}
                     </h2>
-                    <div style={{ height: 1, background: 'rgba(74,222,128,0.14)' }} />
+                    <div style={{ height: 1, background: 'rgba(168, 85, 247,0.14)' }} />
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -447,7 +447,7 @@ export default function QuestionModal({
                           color: selectedOption ? '#0d1117' : 'rgba(250,247,240,0.30)',
                           fontFamily: '"Montserrat", sans-serif',
                           fontWeight: 700, fontSize: 15,
-                          border: selectedOption ? 'none' : '1px solid rgba(74,222,128,0.14)',
+                          border: selectedOption ? 'none' : '1px solid rgba(168, 85, 247,0.14)',
                           borderRadius: 8,
                           opacity: selectedOption ? 1 : 0.6, width: '100%',
                         }}
@@ -462,7 +462,7 @@ export default function QuestionModal({
                   <div style={{ position: 'sticky', top: 80, display: 'flex', flexDirection: 'column', gap: 14 }}>
                     <div style={{
                       fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                      fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+                      fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
                     }}>
                       Question {String(mcqIndex + 1).padStart(2, '0')}
                     </div>
@@ -479,7 +479,7 @@ export default function QuestionModal({
                     }}>
                       1 of 4 options is correct
                     </div>
-                    <div style={{ height: 1, background: 'rgba(74,222,128,0.14)', marginTop: 4 }} />
+                    <div style={{ height: 1, background: 'rgba(168, 85, 247,0.14)', marginTop: 4 }} />
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -506,7 +506,7 @@ export default function QuestionModal({
                             color: selectedOption ? '#0d1117' : 'rgba(250,247,240,0.30)',
                             fontFamily: '"Montserrat", sans-serif',
                             fontWeight: 700, fontSize: 15,
-                            border: selectedOption ? 'none' : '1px solid rgba(74,222,128,0.14)',
+                            border: selectedOption ? 'none' : '1px solid rgba(168, 85, 247,0.14)',
                             borderRadius: 8,
                             opacity: selectedOption ? 1 : 0.6, transition: 'all 0.2s',
                           }}
@@ -529,7 +529,7 @@ export default function QuestionModal({
               }}>
                 <div style={{
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+                  fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
                 }}>
                   Theory Question {String(theoryIndex + 1).padStart(2, '0')}
                 </div>
@@ -541,7 +541,7 @@ export default function QuestionModal({
                   {currentQuestion.question}
                 </h2>
 
-                <div style={{ height: 1, background: 'rgba(74,222,128,0.14)' }} />
+                <div style={{ height: 1, background: 'rgba(168, 85, 247,0.14)' }} />
 
                 <div>
                   <div style={{
@@ -561,7 +561,7 @@ export default function QuestionModal({
                       width: '100%', minHeight: isMobile ? 160 : 220,
                       padding: isMobile ? 14 : 18,
                       background: '#161b22',
-                      border: '1.5px solid rgba(74,222,128,0.18)',
+                      border: '1.5px solid rgba(168, 85, 247,0.18)',
                       borderRadius: 8, color: '#faf7f0',
                       fontFamily: '"Lora", serif',
                       fontSize: isMobile ? 15 : 16, lineHeight: 1.7,
@@ -569,8 +569,8 @@ export default function QuestionModal({
                       boxSizing: 'border-box', maxWidth: '100%',
                       opacity: showResult ? 0.65 : 1, transition: 'border-color 0.15s',
                     }}
-                    onFocus={e => e.target.style.borderColor = '#4ade80'}
-                    onBlur={e => e.target.style.borderColor = 'rgba(74,222,128,0.18)'}
+                    onFocus={e => e.target.style.borderColor = '#a855f7'}
+                    onBlur={e => e.target.style.borderColor = 'rgba(168, 85, 247,0.18)'}
                   />
                 </div>
 
@@ -580,15 +580,15 @@ export default function QuestionModal({
                     animate={{ opacity: 1, y: 0 }}
                     style={{
                       padding: '20px 22px',
-                      background: 'rgba(74,222,128,0.05)',
-                      border: '1px solid rgba(74,222,128,0.22)',
+                      background: 'rgba(168, 85, 247,0.05)',
+                      border: '1px solid rgba(168, 85, 247,0.22)',
                       borderRadius: 8,
                     }}
                   >
                     <div style={{
                       fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                       fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
-                      color: '#4ade80', marginBottom: 10,
+                      color: '#a855f7', marginBottom: 10,
                     }}>
                       Model Answer
                     </div>
@@ -617,7 +617,7 @@ export default function QuestionModal({
                         color: theoryText.trim() ? '#0d1117' : 'rgba(250,247,240,0.30)',
                         fontFamily: '"Montserrat", sans-serif',
                         fontWeight: 700, fontSize: 15,
-                        border: theoryText.trim() ? 'none' : '1px solid rgba(74,222,128,0.14)',
+                        border: theoryText.trim() ? 'none' : '1px solid rgba(168, 85, 247,0.14)',
                         borderRadius: 8,
                         opacity: theoryText.trim() ? 1 : 0.6, transition: 'all 0.2s',
                       }}

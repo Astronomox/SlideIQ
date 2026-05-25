@@ -136,7 +136,7 @@ export default function HistoryPage() {
       {/* Top glow */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 400,
-        background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(74,222,128,0.05) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(168, 85, 247,0.05) 0%, transparent 70%)',
         pointerEvents: 'none', zIndex: 0,
       }} />
 
@@ -155,7 +155,7 @@ export default function HistoryPage() {
               <div style={{
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                 fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
-                color: '#4ade80', marginBottom: 10,
+                color: '#a855f7', marginBottom: 10,
               }}>
                 Your record
               </div>

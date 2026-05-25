@@ -41,7 +41,7 @@ export const PERSONALITIES = [
     title: 'Very Easy',
     tagline: 'Confidence-booster mode.',
     bio: 'Surface questions. Plain phrasing. Built to keep you moving and feeling capable.',
-    accent: '#4ade80',
+    accent: '#a855f7',
     gradeLabel: 'Generous',
   },
   {
@@ -88,18 +88,18 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
         delay: index * 0.05,
         scale: { type: 'spring', stiffness: 280, damping: 22 },
       }}
-      whileHover={!isSelected ? { y: isDimmed ? 0 : -2, boxShadow: '0 8px 32px rgba(74,222,128,0.10)' } : {}}
+      whileHover={!isSelected ? { y: isDimmed ? 0 : -2, boxShadow: '0 8px 32px rgba(168, 85, 247,0.10)' } : {}}
       style={{
         all: 'unset',
         cursor: 'pointer',
         position: 'relative',
         padding: compact ? '14px 12px' : '22px 20px',
-        background: isSelected ? 'rgba(74,222,128,0.07)' : '#161b22',
+        background: isSelected ? 'rgba(168, 85, 247,0.07)' : '#161b22',
         backdropFilter: isSelected ? 'blur(8px)' : 'none',
         WebkitBackdropFilter: isSelected ? 'blur(8px)' : 'none',
         border: isSelected
-          ? '1.5px solid rgba(74,222,128,0.60)'
-          : '1px solid rgba(74,222,128,0.10)',
+          ? '1.5px solid rgba(168, 85, 247,0.60)'
+          : '1px solid rgba(168, 85, 247,0.10)',
         borderRadius: 8,
         display: 'flex',
         flexDirection: 'column',
@@ -108,7 +108,7 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
         overflow: 'hidden',
         transition: 'border-color 0.2s, background 0.2s',
         boxShadow: isSelected
-          ? '0 0 0 1px rgba(74,222,128,0.30), 0 0 32px rgba(74,222,128,0.18), 0 4px 20px rgba(0,0,0,0.40)'
+          ? '0 0 0 1px rgba(168, 85, 247,0.30), 0 0 32px rgba(168, 85, 247,0.18), 0 4px 20px rgba(0,0,0,0.40)'
           : '0 1px 4px rgba(0,0,0,0.30)',
       }}
     >
@@ -116,7 +116,7 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
       {isSelected && (
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-          background: 'linear-gradient(90deg, transparent, #4ade80, transparent)',
+          background: 'linear-gradient(90deg, transparent, #a855f7, transparent)',
         }} />
       )}
 
@@ -129,7 +129,7 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
             position: 'absolute', top: 10, right: 10,
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: '#4ade80', background: 'rgba(74,222,128,0.12)',
+            color: '#a855f7', background: 'rgba(168, 85, 247,0.12)',
             padding: '3px 7px', borderRadius: 3,
           }}
         >
@@ -149,7 +149,7 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase',
           color: 'rgba(250,247,240,0.38)',
-          border: '1px solid rgba(74,222,128,0.18)',
+          border: '1px solid rgba(168, 85, 247,0.18)',
           padding: '3px 8px', alignSelf: 'flex-start', marginTop: 4, borderRadius: 3,
         }}>
           {persona.gradeLabel}
@@ -197,7 +197,7 @@ export default function PersonalitySelector({ selected, onSelect }) {
         <div style={{
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: '#4ade80', marginBottom: 8,
+          color: '#a855f7', marginBottom: 8,
         }}>
           Step 1 — Choose your lecturer
         </div>

@@ -3,19 +3,19 @@ import { motion } from 'framer-motion';
 import { PersonaGlyph, IconArrow } from '../Icons/Icons';
 import { useIsMobile } from '../../hooks/useIsMobile';
 
-const CTA = 'linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%)';
+const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
 
 function getGrade(pct) {
-  if (pct >= 90) return { letter: 'A+', label: 'Distinction',  color: '#4ade80' };
-  if (pct >= 80) return { letter: 'A',  label: 'First Class',  color: '#4ade80' };
-  if (pct >= 70) return { letter: 'B',  label: 'Upper Second', color: '#86efac' };
+  if (pct >= 90) return { letter: 'A+', label: 'Distinction',  color: '#a855f7' };
+  if (pct >= 80) return { letter: 'A',  label: 'First Class',  color: '#a855f7' };
+  if (pct >= 70) return { letter: 'B',  label: 'Upper Second', color: '#d8b4fe' };
   if (pct >= 60) return { letter: 'C',  label: 'Lower Second', color: '#60a5fa' };
   if (pct >= 50) return { letter: 'D',  label: 'Third Class',  color: '#eab308' };
   return             { letter: 'F',  label: 'Fail',          color: '#ef4444' };
 }
 
 function getScoreColor(pct) {
-  if (pct >= 70) return '#4ade80';
+  if (pct >= 70) return '#a855f7';
   if (pct >= 50) return '#eab308';
   return '#ef4444';
 }
@@ -125,7 +125,7 @@ export default function ScoreScreen({
           fontFamily: '"Montserrat", sans-serif',
           fontWeight: 900,
           fontSize: isMobile ? 'clamp(120px, 40vw, 180px)' : 'clamp(200px, 30vw, 280px)',
-          color: 'rgba(74,222,128,0.05)',
+          color: 'rgba(168, 85, 247,0.05)',
           top: '50%', left: '50%',
           transform: 'translate(-50%, -55%) rotate(-8deg)',
           pointerEvents: 'none', userSelect: 'none', lineHeight: 1,
@@ -138,7 +138,7 @@ export default function ScoreScreen({
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: `radial-gradient(80% 60% at 50% 30%, ${
-          isHigh ? 'rgba(74,222,128,0.07)' : 'rgba(239,68,68,0.05)'
+          isHigh ? 'rgba(168, 85, 247,0.07)' : 'rgba(239,68,68,0.05)'
         } 0%, transparent 70%)`,
       }} />
 
@@ -177,7 +177,7 @@ export default function ScoreScreen({
           transition={{ delay: 0.15 }}
           style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#4ade80',
+            fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
           }}
         >
           Quiz Complete
@@ -306,8 +306,8 @@ export default function ScoreScreen({
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 12,
                 padding: '7px 12px',
-                background: a.isCorrect ? 'rgba(74,222,128,0.07)' : 'rgba(239,68,68,0.07)',
-                border: `1px solid ${a.isCorrect ? 'rgba(74,222,128,0.25)' : 'rgba(239,68,68,0.25)'}`,
+                background: a.isCorrect ? 'rgba(168, 85, 247,0.07)' : 'rgba(239,68,68,0.07)',
+                border: `1px solid ${a.isCorrect ? 'rgba(168, 85, 247,0.25)' : 'rgba(239,68,68,0.25)'}`,
                 borderRadius: 4,
               }}>
                 <span style={{
@@ -327,7 +327,7 @@ export default function ScoreScreen({
                 </span>
                 <span style={{
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 11, color: a.isCorrect ? '#4ade80' : '#ef4444', flexShrink: 0,
+                  fontSize: 11, color: a.isCorrect ? '#a855f7' : '#ef4444', flexShrink: 0,
                 }}>
                   {a.isCorrect ? `✓ ${a.correct}` : `✗ ${a.selected} → ${a.correct}`}
                 </span>
@@ -367,17 +367,17 @@ export default function ScoreScreen({
               all: 'unset', cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '14px 24px',
-              border: '1px solid rgba(74,222,128,0.28)',
+              border: '1px solid rgba(168, 85, 247,0.28)',
               color: 'rgba(250,247,240,0.60)', borderRadius: 8,
               fontFamily: '"Montserrat", sans-serif',
               fontWeight: 600, fontSize: 15, transition: 'border-color 0.15s, color 0.15s',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.borderColor = 'rgba(74,222,128,0.55)';
+              e.currentTarget.style.borderColor = 'rgba(168, 85, 247,0.55)';
               e.currentTarget.style.color = '#faf7f0';
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.borderColor = 'rgba(74,222,128,0.28)';
+              e.currentTarget.style.borderColor = 'rgba(168, 85, 247,0.28)';
               e.currentTarget.style.color = 'rgba(250,247,240,0.60)';
             }}
           >

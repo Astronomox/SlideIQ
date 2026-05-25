@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { IconGoogle } from '../components/Icons/Icons';
 import { useIsMobile } from '../hooks/useIsMobile';
 
-const CTA = 'linear-gradient(135deg, #4ade80 0%, #22c55e 60%, #16a34a 100%)';
+const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
 
 export default function Login() {
   const { user, signInWithGoogle } = useAuth();
@@ -45,7 +45,7 @@ export default function Login() {
         width: '70vmax', height: '70vmax',
         marginTop: '-35vmax', marginLeft: '-35vmax',
         pointerEvents: 'none',
-        background: 'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(74,222,128,0.06) 0%, transparent 65%)',
+        background: 'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(168, 85, 247,0.06) 0%, transparent 65%)',
         animation: 'pulse-glow 8s ease-in-out infinite',
         willChange: 'transform, opacity',
       }} />
@@ -54,7 +54,7 @@ export default function Login() {
         position: 'fixed',
         inset: 0,
         pointerEvents: 'none',
-        background: 'radial-gradient(ellipse 50% 50% at 80% 60%, rgba(74,222,128,0.025) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse 50% 50% at 80% 60%, rgba(168, 85, 247,0.025) 0%, transparent 70%)',
       }} />
 
       {/* LEFT — brand statement */}
@@ -71,13 +71,13 @@ export default function Login() {
           gap: isMobile ? 20 : 32,
           position: 'relative',
           zIndex: 1,
-          borderRight: isMobile ? 'none' : '1px solid rgba(74,222,128,0.10)',
-          borderBottom: isMobile ? '1px solid rgba(74,222,128,0.10)' : 'none',
+          borderRight: isMobile ? 'none' : '1px solid rgba(168, 85, 247,0.10)',
+          borderBottom: isMobile ? '1px solid rgba(168, 85, 247,0.10)' : 'none',
         }}
       >
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 80% 60% at 30% 50%, rgba(74,222,128,0.04) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 80% 60% at 30% 50%, rgba(168, 85, 247,0.04) 0%, transparent 70%)',
         }} />
 
         {/* Eyebrow */}
@@ -88,7 +88,7 @@ export default function Login() {
           style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
-            color: '#4ade80', position: 'relative',
+            color: '#a855f7', position: 'relative',
           }}
         >
           Est. MMXXVI · A Reader's Companion
@@ -101,7 +101,7 @@ export default function Login() {
           transition={{ delay: 0.25, duration: 0.6, ease: 'easeOut' }}
           style={{
             width: 280, height: 1,
-            background: 'linear-gradient(90deg, #4ade80, rgba(74,222,128,0.15))',
+            background: 'linear-gradient(90deg, #a855f7, rgba(168, 85, 247,0.15))',
             transformOrigin: 'left', position: 'relative',
           }}
         />
@@ -124,7 +124,7 @@ export default function Login() {
             Your slides,
             <br />
             <span style={{
-              background: 'linear-gradient(135deg, #86efac 0%, #4ade80 40%, #22c55e 100%)',
+              background: 'linear-gradient(135deg, #d8b4fe 0%, #a855f7 40%, #9333ea 100%)',
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               color: 'transparent',
@@ -166,9 +166,9 @@ export default function Login() {
           }}
         >
           <span>Eight lecturers</span>
-          <span style={{ color: '#4ade80' }}>·</span>
+          <span style={{ color: '#a855f7' }}>·</span>
           <span>MCQ &amp; Theory</span>
-          <span style={{ color: '#4ade80' }}>·</span>
+          <span style={{ color: '#a855f7' }}>·</span>
           <span>Scored</span>
         </motion.div>
       </motion.div>
@@ -188,30 +188,30 @@ export default function Login() {
             width: '100%', maxWidth: 420,
             padding: isMobile ? '32px 24px' : '44px 40px',
             background: '#161b22',
-            border: '1px solid rgba(74,222,128,0.14)',
+            border: '1px solid rgba(168, 85, 247,0.14)',
             borderRadius: 12,
-            boxShadow: '0 4px 32px rgba(0,0,0,0.40), 0 0 0 1px rgba(74,222,128,0.06)',
+            boxShadow: '0 4px 32px rgba(0,0,0,0.40), 0 0 0 1px rgba(168, 85, 247,0.06)',
             position: 'relative', overflow: 'hidden',
           }}
         >
           {/* Corner glow */}
           <div style={{
             position: 'absolute', top: 0, right: 0, width: 140, height: 140,
-            background: 'radial-gradient(circle at 80% 20%, rgba(74,222,128,0.08), transparent 65%)',
+            background: 'radial-gradient(circle at 80% 20%, rgba(168, 85, 247,0.08), transparent 65%)',
             pointerEvents: 'none',
           }} />
 
           <div style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase',
-            color: '#4ade80', position: 'relative',
+            color: '#a855f7', position: 'relative',
           }}>
             Sign in
           </div>
 
           <div style={{
             width: '100%', height: 1,
-            background: 'rgba(74,222,128,0.14)',
+            background: 'rgba(168, 85, 247,0.14)',
             margin: '14px 0 24px',
           }} />
 
@@ -279,9 +279,9 @@ export default function Login() {
             fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
             color: 'rgba(250,247,240,0.28)', position: 'relative',
           }}>
-            <span style={{ flex: 1, height: 1, background: 'rgba(74,222,128,0.12)' }} />
+            <span style={{ flex: 1, height: 1, background: 'rgba(168, 85, 247,0.12)' }} />
             Private &amp; secure
-            <span style={{ flex: 1, height: 1, background: 'rgba(74,222,128,0.12)' }} />
+            <span style={{ flex: 1, height: 1, background: 'rgba(168, 85, 247,0.12)' }} />
           </div>
 
           <p style={{

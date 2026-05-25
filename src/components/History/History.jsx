@@ -13,7 +13,7 @@ function formatDate(ts) {
 
 function gradeColor(pct) {
   if (pct === null || pct === undefined) return 'rgba(250,247,240,0.45)';
-  if (pct >= 70) return '#4ade80';
+  if (pct >= 70) return '#a855f7';
   if (pct >= 50) return '#eab308';
   return '#ef4444';
 }
@@ -33,34 +33,34 @@ async function downloadAsPDF(entry, persona) {
 
   let html = `
     <div style="margin-bottom:24px">
-      <div style="color:#4ade80;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px">A SlideIQ Quiz</div>
-      <h1 style="margin:0 0 2px;font-size:22px;color:#faf7f0">A SlideIQ Quiz</h1><div style="font-size:14px;color:#4ade80;margin-bottom:4px">${esc(entry.filename)}</div>
-      <div style="height:1px;background:rgba(74,222,128,0.3);margin:12px 0"></div>
+      <div style="color:#a855f7;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px">A SlideIQ Quiz</div>
+      <h1 style="margin:0 0 2px;font-size:22px;color:#faf7f0">A SlideIQ Quiz</h1><div style="font-size:14px;color:#a855f7;margin-bottom:4px">${esc(entry.filename)}</div>
+      <div style="height:1px;background:rgba(168, 85, 247,0.3);margin:12px 0"></div>
       <div style="font-size:12px;color:#aaa;margin-bottom:4px">Lecturer: <span style="color:#faf7f0">${esc(persona.title)}</span></div>
       <div style="font-size:12px;color:#aaa;margin-bottom:4px">Date: <span style="color:#faf7f0">${esc(formatDate(entry.completedAt))}</span></div>
-      ${pct !== null ? `<div style="font-size:14px;font-weight:bold;color:#4ade80;margin-top:6px">Score: ${pct}% &nbsp;(${entry.mcqScore}/${entry.totalMCQ} MCQ correct)</div>` : ''}
+      ${pct !== null ? `<div style="font-size:14px;font-weight:bold;color:#a855f7;margin-top:6px">Score: ${pct}% &nbsp;(${entry.mcqScore}/${entry.totalMCQ} MCQ correct)</div>` : ''}
     </div>
   `;
 
   if (entry.mcqQuestions?.length > 0) {
-    html += `<div style="color:#4ade80;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px">Multiple Choice Questions</div>`;
+    html += `<div style="color:#a855f7;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px">Multiple Choice Questions</div>`;
     entry.mcqQuestions.forEach((q, i) => {
       const ans = entry.mcqAnswers?.[i];
       const correct = ans?.correct || q.answer;
-      html += `<div style="margin-bottom:20px;padding:14px 16px;background:#161b22;border-radius:6px;border:1px solid rgba(74,222,128,0.15)">
+      html += `<div style="margin-bottom:20px;padding:14px 16px;background:#161b22;border-radius:6px;border:1px solid rgba(168, 85, 247,0.15)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
           <span style="font-size:10px;color:rgba(250,247,240,0.4)">Q${i + 1}</span>
-          ${ans ? `<span style="font-size:10px;padding:2px 8px;border-radius:3px;background:${ans.isCorrect ? 'rgba(74,222,128,0.12)' : 'rgba(239,68,68,0.12)'};color:${ans.isCorrect ? '#4ade80' : '#ef4444'}">${ans.isCorrect ? '✓ Correct' : '✗ Wrong'}</span>` : ''}
+          ${ans ? `<span style="font-size:10px;padding:2px 8px;border-radius:3px;background:${ans.isCorrect ? 'rgba(168, 85, 247,0.12)' : 'rgba(239,68,68,0.12)'};color:${ans.isCorrect ? '#a855f7' : '#ef4444'}">${ans.isCorrect ? '✓ Correct' : '✗ Wrong'}</span>` : ''}
         </div>
         <div style="font-size:13px;color:#faf7f0;margin-bottom:12px;font-weight:600">${esc(q.question || q.text)}</div>`;
       if (q.options) {
         Object.entries(q.options).forEach(([letter, text]) => {
           const isThis = letter === correct;
           const isWrong = ans && letter === ans.selected && !isThis;
-          const bg = isThis ? 'rgba(74,222,128,0.10)' : isWrong ? 'rgba(239,68,68,0.10)' : 'transparent';
-          const border = isThis ? 'rgba(74,222,128,0.40)' : isWrong ? 'rgba(239,68,68,0.40)' : 'rgba(255,255,255,0.08)';
+          const bg = isThis ? 'rgba(168, 85, 247,0.10)' : isWrong ? 'rgba(239,68,68,0.10)' : 'transparent';
+          const border = isThis ? 'rgba(168, 85, 247,0.40)' : isWrong ? 'rgba(239,68,68,0.40)' : 'rgba(255,255,255,0.08)';
           const tc = isThis ? '#faf7f0' : isWrong ? '#fca5a5' : 'rgba(250,247,240,0.50)';
-          const lc = isThis ? '#4ade80' : isWrong ? '#ef4444' : 'rgba(250,247,240,0.30)';
+          const lc = isThis ? '#a855f7' : isWrong ? '#ef4444' : 'rgba(250,247,240,0.30)';
           html += `<div style="display:flex;align-items:flex-start;gap:10px;padding:7px 10px;border-radius:5px;background:${bg};border:1px solid ${border};margin-bottom:5px">
             <span style="color:${lc};font-size:11px;font-weight:600;min-width:16px">${esc(letter)}</span>
             <span style="color:${tc};font-size:12px">${esc(text)}${isThis ? ' &nbsp;✓' : isWrong ? ' &nbsp;✗' : ''}</span>
@@ -72,20 +72,20 @@ async function downloadAsPDF(entry, persona) {
   }
 
   if (entry.theoryQuestions?.length > 0) {
-    html += `<div style="color:#4ade80;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin:20px 0 14px">Theory Questions</div>`;
+    html += `<div style="color:#a855f7;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;margin:20px 0 14px">Theory Questions</div>`;
     entry.theoryQuestions.forEach((q, i) => {
       const ans = entry.theoryAnswers?.[i];
-      html += `<div style="margin-bottom:20px;background:#161b22;border-radius:6px;border:1px solid rgba(74,222,128,0.12);overflow:hidden">
-        <div style="padding:12px 16px;border-bottom:1px solid rgba(74,222,128,0.10)">
+      html += `<div style="margin-bottom:20px;background:#161b22;border-radius:6px;border:1px solid rgba(168, 85, 247,0.12);overflow:hidden">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(168, 85, 247,0.10)">
           <div style="font-size:10px;color:rgba(250,247,240,0.35);margin-bottom:6px">Q${i + 1}</div>
           <div style="font-size:13px;color:#faf7f0">${esc(q.question)}</div>
         </div>
-        ${ans ? `<div style="padding:12px 16px;border-bottom:1px solid rgba(74,222,128,0.08)">
+        ${ans ? `<div style="padding:12px 16px;border-bottom:1px solid rgba(168, 85, 247,0.08)">
           <div style="font-size:9px;color:rgba(250,247,240,0.30);text-transform:uppercase;letter-spacing:0.16em;margin-bottom:5px">Your answer</div>
           <div style="font-size:12px;color:rgba(250,247,240,0.65)">${esc(ans.answer || '(no answer recorded)')}</div>
         </div>` : ''}
-        <div style="padding:12px 16px;background:rgba(74,222,128,0.04)">
-          <div style="font-size:9px;color:#4ade80;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:5px">Model answer</div>
+        <div style="padding:12px 16px;background:rgba(168, 85, 247,0.04)">
+          <div style="font-size:9px;color:#a855f7;text-transform:uppercase;letter-spacing:0.16em;margin-bottom:5px">Model answer</div>
           <div style="font-size:12px;color:rgba(250,247,240,0.75)">${esc(q.modelAnswer || '—')}</div>
         </div>
       </div>`;
@@ -244,7 +244,7 @@ function DownloadModal({ entry, persona, onClose }) {
         onClick={e => e.stopPropagation()}
         style={{
           background: '#161b22',
-          border: '1px solid rgba(74,222,128,0.20)',
+          border: '1px solid rgba(168, 85, 247,0.20)',
           borderRadius: 12,
           padding: '32px 28px',
           maxWidth: 400, width: '100%',
@@ -257,7 +257,7 @@ function DownloadModal({ entry, persona, onClose }) {
             <div style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
-              color: '#4ade80', marginBottom: 6,
+              color: '#a855f7', marginBottom: 6,
             }}>
               Export Quiz
             </div>
@@ -289,7 +289,7 @@ function DownloadModal({ entry, persona, onClose }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* PDF */}
           <motion.button
-            whileHover={{ borderColor: 'rgba(74,222,128,0.50)', background: 'rgba(74,222,128,0.06)' }}
+            whileHover={{ borderColor: 'rgba(168, 85, 247,0.50)', background: 'rgba(168, 85, 247,0.06)' }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handle('pdf')}
             disabled={!!loading}
@@ -297,8 +297,8 @@ function DownloadModal({ entry, persona, onClose }) {
               all: 'unset', cursor: loading ? 'wait' : 'pointer',
               display: 'flex', alignItems: 'center', gap: 16,
               padding: '16px 18px',
-              background: 'rgba(74,222,128,0.03)',
-              border: '1px solid rgba(74,222,128,0.20)',
+              background: 'rgba(168, 85, 247,0.03)',
+              border: '1px solid rgba(168, 85, 247,0.20)',
               borderRadius: 8,
               transition: 'background 0.15s, border-color 0.15s',
               opacity: loading && loading !== 'pdf' ? 0.4 : 1,
@@ -327,7 +327,7 @@ function DownloadModal({ entry, persona, onClose }) {
 
           {/* DOCX */}
           <motion.button
-            whileHover={{ borderColor: 'rgba(74,222,128,0.50)', background: 'rgba(74,222,128,0.06)' }}
+            whileHover={{ borderColor: 'rgba(168, 85, 247,0.50)', background: 'rgba(168, 85, 247,0.06)' }}
             whileTap={{ scale: 0.98 }}
             onClick={() => handle('docx')}
             disabled={!!loading}
@@ -335,8 +335,8 @@ function DownloadModal({ entry, persona, onClose }) {
               all: 'unset', cursor: loading ? 'wait' : 'pointer',
               display: 'flex', alignItems: 'center', gap: 16,
               padding: '16px 18px',
-              background: 'rgba(74,222,128,0.03)',
-              border: '1px solid rgba(74,222,128,0.20)',
+              background: 'rgba(168, 85, 247,0.03)',
+              border: '1px solid rgba(168, 85, 247,0.20)',
               borderRadius: 8,
               transition: 'background 0.15s, border-color 0.15s',
               opacity: loading && loading !== 'docx' ? 0.4 : 1,
@@ -397,7 +397,7 @@ function MCQReviewCard({ q, ans, index }) {
     <div style={{
       padding: '16px',
       background: '#1c2128',
-      border: `1px solid ${!hasResult ? 'rgba(74,222,128,0.12)' : isCorrect ? 'rgba(74,222,128,0.25)' : 'rgba(239,68,68,0.25)'}`,
+      border: `1px solid ${!hasResult ? 'rgba(168, 85, 247,0.12)' : isCorrect ? 'rgba(168, 85, 247,0.25)' : 'rgba(239,68,68,0.25)'}`,
       borderRadius: 8,
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
@@ -408,8 +408,8 @@ function MCQReviewCard({ q, ans, index }) {
           <span style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase',
-            color: isCorrect ? '#4ade80' : '#ef4444',
-            background: isCorrect ? 'rgba(74,222,128,0.10)' : 'rgba(239,68,68,0.10)',
+            color: isCorrect ? '#a855f7' : '#ef4444',
+            background: isCorrect ? 'rgba(168, 85, 247,0.10)' : 'rgba(239,68,68,0.10)',
             padding: '3px 8px', borderRadius: 3,
           }}>
             {isCorrect ? '✓ Correct' : '✗ Wrong'}
@@ -430,7 +430,7 @@ function MCQReviewCard({ q, ans, index }) {
             let borderColor = 'rgba(250,247,240,0.08)';
             let textColor = 'rgba(250,247,240,0.50)';
             let letterColor = 'rgba(250,247,240,0.30)';
-            if (isThisCorrect) { bg = 'rgba(74,222,128,0.08)'; borderColor = 'rgba(74,222,128,0.40)'; textColor = '#faf7f0'; letterColor = '#4ade80'; }
+            if (isThisCorrect) { bg = 'rgba(168, 85, 247,0.08)'; borderColor = 'rgba(168, 85, 247,0.40)'; textColor = '#faf7f0'; letterColor = '#a855f7'; }
             if (isThisWrong) { bg = 'rgba(239,68,68,0.08)'; borderColor = 'rgba(239,68,68,0.40)'; textColor = '#fca5a5'; letterColor = '#ef4444'; }
             return (
               <div key={letter} style={{
@@ -444,14 +444,14 @@ function MCQReviewCard({ q, ans, index }) {
                 <span style={{ fontFamily: '"Lora", serif', fontSize: 13, color: textColor, lineHeight: 1.5, flex: 1 }}>
                   {text}
                 </span>
-                {isThisCorrect && <span style={{ color: '#4ade80', fontSize: 14, flexShrink: 0 }}>✓</span>}
+                {isThisCorrect && <span style={{ color: '#a855f7', fontSize: 14, flexShrink: 0 }}>✓</span>}
                 {isThisWrong && <span style={{ color: '#ef4444', fontSize: 14, flexShrink: 0 }}>✗</span>}
               </div>
             );
           })}
         </div>
       ) : (
-        <div style={{ padding: '8px 10px', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.35)', borderRadius: 5, fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 11, color: '#4ade80' }}>
+        <div style={{ padding: '8px 10px', background: 'rgba(168, 85, 247,0.08)', border: '1px solid rgba(168, 85, 247,0.35)', borderRadius: 5, fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 11, color: '#a855f7' }}>
           Correct answer: {correct || q.answer || '—'}
           {hasResult && selected && selected !== correct && (
             <span style={{ color: '#ef4444', marginLeft: 16 }}>Your answer: {selected}</span>
@@ -469,18 +469,18 @@ function HistoryCard({ entry, onClick }) {
 
   return (
     <motion.button
-      whileHover={{ y: -2, boxShadow: '0 8px 32px rgba(74,222,128,0.10)' }}
+      whileHover={{ y: -2, boxShadow: '0 8px 32px rgba(168, 85, 247,0.10)' }}
       onClick={onClick}
       style={{
         all: 'unset', cursor: 'pointer',
         width: '100%', display: 'flex', alignItems: 'center',
         gap: 16, padding: '16px 20px',
-        background: '#161b22', border: '1px solid rgba(74,222,128,0.10)',
+        background: '#161b22', border: '1px solid rgba(168, 85, 247,0.10)',
         borderRadius: 8, marginBottom: 8, transition: 'border-color 0.15s',
         boxSizing: 'border-box', boxShadow: '0 1px 4px rgba(0,0,0,0.30)',
       }}
-      onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(74,222,128,0.35)'}
-      onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(74,222,128,0.10)'}
+      onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(168, 85, 247,0.35)'}
+      onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(168, 85, 247,0.10)'}
     >
       <span style={{ color: persona.accent, flexShrink: 0 }}>
         <PersonaGlyph id={persona.id} size={32} />
@@ -493,7 +493,7 @@ function HistoryCard({ entry, onClick }) {
           <span style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.12em', color: 'rgba(250,247,240,0.40)' }}>
             {persona.title}
           </span>
-          <span style={{ width: 1, height: 10, background: 'rgba(74,222,128,0.18)' }} />
+          <span style={{ width: 1, height: 10, background: 'rgba(168, 85, 247,0.18)' }} />
           <span style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.1em', color: 'rgba(250,247,240,0.35)', display: 'flex', alignItems: 'center', gap: 4 }}>
             <IconClock size={11} /> {formatDate(entry.completedAt)}
           </span>
@@ -533,8 +533,8 @@ function HistoryDetail({ entry, onClose }) {
           width: isMobile ? '100%' : '100%',
           maxWidth: isMobile ? '100%' : 620,
           background: '#161b22',
-          borderLeft: isMobile ? 'none' : '1px solid rgba(74,222,128,0.12)',
-          borderTop: isMobile ? '1px solid rgba(74,222,128,0.12)' : 'none',
+          borderLeft: isMobile ? 'none' : '1px solid rgba(168, 85, 247,0.12)',
+          borderTop: isMobile ? '1px solid rgba(168, 85, 247,0.12)' : 'none',
           zIndex: 50,
           display: 'flex', flexDirection: 'column', overflowY: 'auto', overflowX: 'hidden',
           boxShadow: '-8px 0 40px rgba(0,0,0,0.50)',
@@ -543,13 +543,13 @@ function HistoryDetail({ entry, onClose }) {
         {/* Sticky header */}
         <div style={{
           padding: '20px 24px',
-          borderBottom: '1px solid rgba(74,222,128,0.10)',
+          borderBottom: '1px solid rgba(168, 85, 247,0.10)',
           display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12,
           position: 'sticky', top: 0,
           background: '#161b22', zIndex: 1, flexShrink: 0,
         }}>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#4ade80', marginBottom: 4 }}>
+            <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#a855f7', marginBottom: 4 }}>
               Quiz Review
             </div>
             <h2 style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: 700, fontSize: 17, letterSpacing: '-0.02em', color: '#faf7f0', lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -565,12 +565,12 @@ function HistoryDetail({ entry, onClose }) {
                 all: 'unset', cursor: 'pointer',
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 padding: '8px 14px',
-                background: 'rgba(74,222,128,0.08)',
-                border: '1px solid rgba(74,222,128,0.28)',
+                background: 'rgba(168, 85, 247,0.08)',
+                border: '1px solid rgba(168, 85, 247,0.28)',
                 borderRadius: 6,
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                 fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase',
-                color: '#4ade80',
+                color: '#a855f7',
               }}
             >
               <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -598,13 +598,13 @@ function HistoryDetail({ entry, onClose }) {
                 {persona.title}
               </span>
             </div>
-            <span style={{ width: 1, height: 16, background: 'rgba(74,222,128,0.18)', flexShrink: 0 }} />
+            <span style={{ width: 1, height: 16, background: 'rgba(168, 85, 247,0.18)', flexShrink: 0 }} />
             <span style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 11, color: 'rgba(250,247,240,0.40)', letterSpacing: '0.10em', display: 'flex', alignItems: 'center', gap: 5 }}>
               <IconClock size={11} /> {formatDate(entry.completedAt)}
             </span>
             {pct !== null && (
               <>
-                <span style={{ width: 1, height: 16, background: 'rgba(74,222,128,0.18)', flexShrink: 0 }} />
+                <span style={{ width: 1, height: 16, background: 'rgba(168, 85, 247,0.18)', flexShrink: 0 }} />
                 <span style={{ fontFamily: '"Montserrat", sans-serif', fontWeight: 700, fontSize: 18, color: gradeColor(pct) }}>
                   {pct}%
                 </span>
@@ -615,12 +615,12 @@ function HistoryDetail({ entry, onClose }) {
             )}
           </div>
 
-          <div style={{ height: 1, background: 'rgba(74,222,128,0.10)' }} />
+          <div style={{ height: 1, background: 'rgba(168, 85, 247,0.10)' }} />
 
           {/* MCQ review */}
           {entry.mcqQuestions?.length > 0 && (
             <div>
-              <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#4ade80', marginBottom: 12 }}>
+              <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#a855f7', marginBottom: 12 }}>
                 Multiple Choice · {entry.mcqQuestions.length} Questions
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -634,26 +634,26 @@ function HistoryDetail({ entry, onClose }) {
           {/* Theory review */}
           {entry.theoryQuestions?.length > 0 && (
             <div>
-              <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#4ade80', marginBottom: 12 }}>
+              <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#a855f7', marginBottom: 12 }}>
                 Theory · {entry.theoryQuestions.length} Questions
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                 {entry.theoryQuestions.map((q, i) => {
                   const ans = entry.theoryAnswers?.[i];
                   return (
-                    <div key={i} style={{ background: '#1c2128', border: '1px solid rgba(74,222,128,0.12)', borderRadius: 8, overflow: 'hidden' }}>
-                      <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(74,222,128,0.10)' }}>
+                    <div key={i} style={{ background: '#1c2128', border: '1px solid rgba(168, 85, 247,0.12)', borderRadius: 8, overflow: 'hidden' }}>
+                      <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(168, 85, 247,0.10)' }}>
                         <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(250,247,240,0.35)', marginBottom: 8 }}>Q{i + 1}</div>
                         <p style={{ fontFamily: '"Lora", serif', fontSize: 14, color: '#faf7f0', lineHeight: 1.55, margin: 0 }}>{q.question}</p>
                       </div>
                       {ans && (
-                        <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(74,222,128,0.08)' }}>
+                        <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(168, 85, 247,0.08)' }}>
                           <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(250,247,240,0.30)', marginBottom: 6 }}>Your answer</div>
                           <p style={{ fontFamily: '"Lora", serif', fontSize: 13, color: 'rgba(250,247,240,0.65)', lineHeight: 1.6, margin: 0 }}>{ans.answer || '(no answer recorded)'}</p>
                         </div>
                       )}
-                      <div style={{ padding: '12px 16px', background: 'rgba(74,222,128,0.04)' }}>
-                        <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#4ade80', marginBottom: 6 }}>Model answer</div>
+                      <div style={{ padding: '12px 16px', background: 'rgba(168, 85, 247,0.04)' }}>
+                        <div style={{ fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#a855f7', marginBottom: 6 }}>Model answer</div>
                         <p style={{ fontFamily: '"Lora", serif', fontSize: 13, color: 'rgba(250,247,240,0.75)', lineHeight: 1.6, margin: 0 }}>{q.modelAnswer || '—'}</p>
                       </div>
                     </div>
