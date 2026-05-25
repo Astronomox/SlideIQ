@@ -12,6 +12,137 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 
 const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
 
+// Supported file types
+const ACCEPTED_TYPES = {
+  'application/pdf': 'PDF',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'DOCX',
+  'application/msword': 'DOC',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'PPTX',
+  'application/vnd.ms-powerpoint': 'PPT',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'XLSX',
+  'application/vnd.ms-excel': 'XLS',
+  'text/plain': 'TXT',
+  'text/markdown': 'MD',
+  'text/x-markdown': 'MD',
+};
+
+const ACCEPTED_EXTENSIONS = ['.pdf', '.docx', '.doc', '.pptx', '.ppt', '.xlsx', '.xls', '.txt', '.md'];
+
+function getFileType(file) {
+  if (ACCEPTED_TYPES[file.type]) return ACCEPTED_TYPES[file.type];
+  const ext = '.' + file.name.split('.').pop().toLowerCase();
+  const extMap = {
+    '.pdf': 'PDF', '.docx': 'DOCX', '.doc': 'DOC',
+    '.pptx': 'PPTX', '.ppt': 'PPT',
+    '.xlsx': 'XLSX', '.xls': 'XLS',
+    '.txt': 'TXT', '.md': 'MD',
+  };
+  return extMap[ext] || null;
+}
+
+// ── Extractors ────────────────────────────────────────────────────────────────
+
+async function extractPDF(file, onProgress) {
+  const arrayBuffer = await file.arrayBuffer();
+  const bufferCopy = arrayBuffer.slice(0);
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(item => item.str).join(' ') + '\n\n';
+    onProgress(Math.round((i / pdf.numPages) * 100), i, pdf.numPages);
+  }
+  return { text, buffer: bufferCopy, pages: pdf.numPages };
+}
+
+async function extractDOCX(file, onProgress) {
+  onProgress(30, 0, 1);
+  const { default: mammoth } = await import('mammoth');
+  const arrayBuffer = await file.arrayBuffer();
+  onProgress(70, 0, 1);
+  const result = await mammoth.extractRawText({ arrayBuffer });
+  onProgress(100, 1, 1);
+  return { text: result.value, buffer: arrayBuffer, pages: 1 };
+}
+
+async function extractPPTX(file, onProgress) {
+  onProgress(20, 0, 1);
+  const JSZip = (await import('jszip')).default;
+  const arrayBuffer = await file.arrayBuffer();
+  const zip = await JSZip.loadAsync(arrayBuffer);
+  onProgress(50, 0, 1);
+
+  const slideFiles = Object.keys(zip.files)
+    .filter(name => name.match(/^ppt\/slides\/slide\d+\.xml$/))
+    .sort((a, b) => {
+      const na = parseInt(a.match(/slide(\d+)/)?.[1] || 0);
+      const nb = parseInt(b.match(/slide(\d+)/)?.[1] || 0);
+      return na - nb;
+    });
+
+  let text = '';
+  for (let i = 0; i < slideFiles.length; i++) {
+    const xml = await zip.files[slideFiles[i]].async('string');
+    // Extract text nodes from XML
+    const matches = xml.match(/<a:t[^>]*>([^<]+)<\/a:t>/g) || [];
+    const slideText = matches.map(m => m.replace(/<[^>]+>/g, '')).join(' ');
+    if (slideText.trim()) {
+      text += `--- Slide ${i + 1} ---\n${slideText}\n\n`;
+    }
+    onProgress(50 + Math.round((i / slideFiles.length) * 50), i + 1, slideFiles.length);
+  }
+
+  if (!text.trim()) throw new Error('No text found in presentation. Slides may be image-only.');
+  return { text, buffer: arrayBuffer, pages: slideFiles.length };
+}
+
+async function extractXLSX(file, onProgress) {
+  onProgress(30, 0, 1);
+  const XLSX = await import('xlsx');
+  const arrayBuffer = await file.arrayBuffer();
+  onProgress(60, 0, 1);
+  const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+  let text = '';
+  workbook.SheetNames.forEach((sheetName, i) => {
+    const sheet = workbook.Sheets[sheetName];
+    const csv = XLSX.utils.sheet_to_csv(sheet);
+    text += `--- Sheet: ${sheetName} ---\n${csv}\n\n`;
+  });
+  onProgress(100, 1, 1);
+  if (!text.trim()) throw new Error('No data found in spreadsheet.');
+  return { text, buffer: arrayBuffer, pages: workbook.SheetNames.length };
+}
+
+async function extractTXT(file, onProgress) {
+  onProgress(50, 0, 1);
+  const text = await file.text();
+  onProgress(100, 1, 1);
+  return { text, buffer: await file.arrayBuffer(), pages: 1 };
+}
+
+// ── File type icons ───────────────────────────────────────────────────────────
+function FileTypeIcon({ type, size = 32 }) {
+  const colors = {
+    PDF: '#ef4444', DOCX: '#3b82f6', DOC: '#3b82f6',
+    PPTX: '#f97316', PPT: '#f97316',
+    XLSX: '#22c55e', XLS: '#22c55e',
+    TXT: '#a855f7', MD: '#a855f7',
+  };
+  const color = colors[type] || '#a855f7';
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: 6, flexShrink: 0,
+      background: `${color}18`, border: `1px solid ${color}44`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+      fontSize: size * 0.28, fontWeight: 700, color, letterSpacing: '-0.02em',
+    }}>
+      {type}
+    </div>
+  );
+}
+
 export default function UploadZone({ onUploadComplete }) {
   const { registerUpload } = useUploads();
   const inputRef = useRef(null);
@@ -22,10 +153,12 @@ export default function UploadZone({ onUploadComplete }) {
   const [status, setStatus] = useState('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [currentFile, setCurrentFile] = useState(null);
+  const [fileType, setFileType] = useState(null);
 
   const processFile = useCallback(async (file) => {
-    if (!file || file.type !== 'application/pdf') {
-      setErrorMsg('Please upload a PDF file.');
+    const type = getFileType(file);
+    if (!type) {
+      setErrorMsg(`Unsupported file type. Please upload: ${ACCEPTED_EXTENSIONS.join(', ')}`);
       setStatus('error');
       return;
     }
@@ -36,176 +169,174 @@ export default function UploadZone({ onUploadComplete }) {
     }
 
     setCurrentFile(file);
+    setFileType(type);
     setErrorMsg('');
     setProgress(0);
     setPagesRead(0);
+    setStatus('extracting');
+
+    const onProgress = (pct, read, total) => {
+      setProgress(pct);
+      setPagesRead(read);
+      setPageCount(total);
+    };
 
     try {
-      setStatus('extracting');
-      const arrayBuffer = await file.arrayBuffer();
-      // Copy the buffer before pdfjs detaches it during parsing
-      const bufferCopy = arrayBuffer.slice(0);
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      setPageCount(pdf.numPages);
+      let result;
 
-      let text = '';
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        text += content.items.map(item => item.str).join(' ') + '\n\n';
-        setProgress(Math.round((i / pdf.numPages) * 100));
-        setPagesRead(i);
+      if (type === 'PDF') {
+        result = await extractPDF(file, onProgress);
+      } else if (type === 'DOCX' || type === 'DOC') {
+        result = await extractDOCX(file, onProgress);
+      } else if (type === 'PPTX' || type === 'PPT') {
+        result = await extractPPTX(file, onProgress);
+      } else if (type === 'XLSX' || type === 'XLS') {
+        result = await extractXLSX(file, onProgress);
+      } else if (type === 'TXT' || type === 'MD') {
+        result = await extractTXT(file, onProgress);
       }
 
-      if (!text.trim()) {
-        throw new Error('No text found in this PDF. It may be image-only or scanned.');
+      if (!result.text.trim()) {
+        throw new Error('No text could be extracted from this file.');
       }
 
       const doc = await registerUpload(file.name);
 
-      // Save the copied buffer to IndexedDB for local retrieval
-      await savePDFLocally(doc.id, file.name, bufferCopy);
+      // Save buffer to IndexedDB for local re-download
+      if (result.buffer) {
+        await savePDFLocally(doc.id, file.name, result.buffer);
+      }
 
       setProgress(100);
       setStatus('done');
 
       if (onUploadComplete) {
-        onUploadComplete({ ...doc, extractedText: text, numPages: pdf.numPages });
+        onUploadComplete({ ...doc, extractedText: result.text, numPages: result.pages });
       }
     } catch (err) {
       console.error(err);
-      setErrorMsg(err.message || 'Failed to read the PDF. Please try again.');
+      setErrorMsg(err.message || 'Failed to read this file. Please try again.');
       setStatus('error');
     }
   }, [registerUpload, onUploadComplete]);
 
-  const onDrop = useCallback((e) => {
+  const handleDrop = useCallback((e) => {
     e.preventDefault();
     setIsDragging(false);
-    const file = e.dataTransfer.files?.[0];
+    const file = e.dataTransfer.files[0];
     if (file) processFile(file);
   }, [processFile]);
 
-  const reset = () => {
-    setStatus('idle');
-    setProgress(0);
-    setPageCount(0);
-    setPagesRead(0);
-    setCurrentFile(null);
-    setErrorMsg('');
-    if (inputRef.current) inputRef.current.value = '';
-  };
+  const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true); };
+  const handleDragLeave = () => setIsDragging(false);
+
+  const labelText = {
+    PDF: 'Extracting pages',
+    PPTX: 'Reading slides', PPT: 'Reading slides',
+    DOCX: 'Reading document', DOC: 'Reading document',
+    XLSX: 'Reading sheets', XLS: 'Reading sheets',
+    TXT: 'Reading file', MD: 'Reading file',
+  }[fileType] || 'Extracting';
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      onDrop={onDrop}
-      onDragOver={e => { e.preventDefault(); setIsDragging(true); }}
-      onDragLeave={() => setIsDragging(false)}
-      style={{
-        width: '100%',
-        maxWidth: 680,
-        padding: 'clamp(28px, 7vw, 60px) clamp(20px, 6vw, 48px)',
-        border: isDragging
-          ? '1.5px solid #a855f7'
-          : '1.5px dashed rgba(168, 85, 247,0.22)',
-        background: isDragging
-          ? 'rgba(168, 85, 247,0.05)'
-          : 'rgba(168, 85, 247,0.02)',
-        borderRadius: 12,
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        textAlign: 'center', gap: 24, position: 'relative',
-        transition: 'border-color 0.2s, background 0.2s, box-shadow 0.2s',
-        boxShadow: isDragging ? '0 0 48px rgba(168, 85, 247,0.08)' : 'none',
-      }}
-    >
-      <input
-        ref={inputRef}
-        type="file"
-        accept="application/pdf"
-        onChange={e => { const file = e.target.files?.[0]; if (file) processFile(file); }}
-        style={{ display: 'none' }}
-      />
-
+    <div style={{ width: '100%', maxWidth: 680 }}>
       <AnimatePresence mode="wait">
 
         {/* IDLE */}
         {status === 'idle' && (
           <motion.div
             key="idle"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '100%' }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onClick={() => inputRef.current?.click()}
+            style={{
+              border: `2px dashed ${isDragging ? '#a855f7' : 'rgba(168,85,247,0.25)'}`,
+              borderRadius: 12,
+              padding: '52px 32px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              background: isDragging ? 'rgba(168,85,247,0.05)' : 'transparent',
+              transition: 'border-color 0.2s, background 0.2s',
+            }}
           >
-            <div style={{ position: 'relative', width: 88, height: 88 }}>
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                style={{
-                  position: 'absolute', inset: -8, borderRadius: '50%',
-                  border: '1px dashed rgba(168, 85, 247,0.18)', pointerEvents: 'none',
-                }}
-              />
-              <motion.div
-                animate={isDragging ? { scale: 1.08 } : { scale: 1 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                style={{
-                  width: 88, height: 88,
-                  border: '1px solid rgba(168, 85, 247,0.25)',
-                  borderRadius: '50%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#a855f7', background: 'rgba(168, 85, 247,0.05)',
-                }}
-              >
-                <IconUpload size={34} stroke={1.4} />
-              </motion.div>
-            </div>
+            <motion.div
+              animate={isDragging ? { scale: 1.1, y: -4 } : { scale: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              style={{
+                width: 56, height: 56, margin: '0 auto 20px',
+                borderRadius: 12,
+                background: 'rgba(168,85,247,0.10)',
+                border: '1px solid rgba(168,85,247,0.25)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#a855f7',
+              }}
+            >
+              <IconUpload size={24} />
+            </motion.div>
 
-            <h2 style={{
+            <h3 style={{
               fontFamily: '"Montserrat", sans-serif',
-              fontWeight: 700, fontSize: 'clamp(22px, 7vw, 32px)',
-              letterSpacing: '-0.02em',
-              color: '#faf7f0', lineHeight: 1.1, marginTop: 4,
+              fontWeight: 700, fontSize: 18, color: '#faf7f0',
+              letterSpacing: '-0.01em', marginBottom: 8,
             }}>
-              {isDragging ? 'Release to read.' : 'Drag a lecture in.'}
-            </h2>
+              Drop your lecture here
+            </h3>
 
             <p style={{
               fontFamily: '"Lora", serif',
-              fontSize: 15, color: 'rgba(250,247,240,0.50)', maxWidth: 400, lineHeight: 1.6,
+              fontSize: 14, color: 'rgba(250,247,240,0.50)', lineHeight: 1.6, marginBottom: 24,
             }}>
-              PDF only. Text is extracted in your browser — your file never leaves your device.
+              or click to browse your files
             </p>
 
-            <button
-              onClick={() => inputRef.current?.click()}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '13px 26px', borderRadius: 8,
-                background: CTA, color: '#0d1117',
-                border: 'none', cursor: 'pointer',
-                fontFamily: '"Montserrat", sans-serif',
-                fontWeight: 700, fontSize: 15, letterSpacing: '0.01em',
-              }}
-            >
-              <IconUpload size={16} stroke={2} /> Choose a PDF
-            </button>
-
+            {/* Supported formats */}
             <div style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-              fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase',
-              color: 'rgba(250,247,240,0.28)', flexWrap: 'wrap', justifyContent: 'center',
+              display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: 20,
             }}>
-              <span>Max 50 MB</span>
-              <span style={{ color: '#a855f7' }}>·</span>
-              <span>Extracted in browser</span>
-              <span style={{ color: '#a855f7' }}>·</span>
-              <span>PDF never uploaded</span>
+              {[
+                { type: 'PDF', color: '#ef4444' },
+                { type: 'PPTX', color: '#f97316' },
+                { type: 'DOCX', color: '#3b82f6' },
+                { type: 'XLSX', color: '#22c55e' },
+                { type: 'TXT', color: '#a855f7' },
+                { type: 'MD', color: '#a855f7' },
+              ].map(({ type, color }) => (
+                <motion.span
+                  key={type}
+                  whileHover={{ scale: 1.08, y: -1 }}
+                  style={{
+                    fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                    fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+                    color, background: `${color}14`,
+                    border: `1px solid ${color}30`,
+                    borderRadius: 4, padding: '4px 10px',
+                  }}
+                >
+                  {type}
+                </motion.span>
+              ))}
             </div>
+
+            <p style={{
+              fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+              fontSize: 10, letterSpacing: '0.16em',
+              color: 'rgba(250,247,240,0.25)', textTransform: 'uppercase',
+            }}>
+              Max 50 MB · text extracted in your browser
+            </p>
+
+            <input
+              ref={inputRef}
+              type="file"
+              accept={ACCEPTED_EXTENSIONS.join(',')}
+              style={{ display: 'none' }}
+              onChange={e => { const f = e.target.files?.[0]; if (f) processFile(f); }}
+            />
           </motion.div>
         )}
 
@@ -213,121 +344,59 @@ export default function UploadZone({ onUploadComplete }) {
         {status === 'extracting' && (
           <motion.div
             key="extracting"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, width: '100%' }}
-          >
-            <div style={{ color: '#a855f7' }}>
-              <IconDoc size={52} stroke={1} />
-            </div>
-
-            <div style={{ textAlign: 'center' }}>
-              <div style={{
-                fontFamily: '"Montserrat", sans-serif',
-                fontSize: 20, color: '#faf7f0', marginBottom: 6, fontWeight: 700,
-              }}>
-                Reading your slides...
-              </div>
-              <div style={{
-                fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                fontSize: 12, color: 'rgba(250,247,240,0.38)', letterSpacing: '0.12em',
-              }}>
-                {currentFile?.name}
-              </div>
-            </div>
-
-            <div style={{ width: '100%', maxWidth: 420 }}>
-              <div style={{
-                display: 'flex', justifyContent: 'space-between', marginBottom: 8,
-                fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                fontSize: 10, color: 'rgba(250,247,240,0.35)', letterSpacing: '0.12em',
-              }}>
-                <span>PAGE {pagesRead} OF {pageCount || '–'}</span>
-                <span>EXTRACTING TEXT</span>
-              </div>
-
-              <div style={{
-                width: '100%', height: 3,
-                background: 'rgba(168, 85, 247,0.12)',
-                borderRadius: 2, position: 'relative', overflow: 'hidden',
-              }}>
-                <motion.div
-                  style={{
-                    position: 'absolute', left: 0, top: 0, bottom: 0,
-                    background: 'linear-gradient(90deg, #9333ea, #a855f7, #d8b4fe)',
-                    borderRadius: 2,
-                  }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
-                />
-              </div>
-
-              <div style={{
-                textAlign: 'right', marginTop: 6,
-                fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                fontSize: 11, color: 'rgba(250,247,240,0.38)', letterSpacing: '0.1em',
-              }}>
-                {progress}%
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* DONE */}
-        {status === 'done' && (
-          <motion.div
-            key="done"
-            initial={{ opacity: 0, scale: 0.97 }}
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+            style={{
+              border: '1px solid rgba(168,85,247,0.20)',
+              borderRadius: 12, padding: '40px 32px',
+              background: '#161b22', textAlign: 'center',
+            }}
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 280, damping: 20 }}
-              style={{
-                width: 68, height: 68, borderRadius: '50%',
-                border: '1.5px solid #a855f7',
-                background: 'rgba(168, 85, 247,0.10)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#a855f7',
-              }}
-            >
-              <svg width={28} height={28} viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 13l4 4L19 7" />
-              </svg>
-            </motion.div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
+              <FileTypeIcon type={fileType} size={40} />
+              <div style={{ textAlign: 'left' }}>
+                <div style={{
+                  fontFamily: '"Montserrat", sans-serif',
+                  fontWeight: 600, fontSize: 14, color: '#faf7f0',
+                  maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                }}>
+                  {currentFile?.name}
+                </div>
+                <div style={{
+                  fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+                  fontSize: 10, color: '#a855f7', letterSpacing: '0.12em', marginTop: 2,
+                }}>
+                  {labelText}...
+                </div>
+              </div>
+            </div>
 
-            <div style={{ fontFamily: '"Montserrat", sans-serif', fontSize: 22, color: '#faf7f0', fontWeight: 700 }}>
-              Slides read.
+            {/* Progress bar */}
+            <div style={{
+              height: 3, background: 'rgba(168,85,247,0.12)',
+              borderRadius: 2, overflow: 'hidden', marginBottom: 12,
+            }}>
+              <motion.div
+                animate={{ width: `${progress}%` }}
+                transition={{ type: 'spring', stiffness: 60, damping: 16 }}
+                style={{
+                  height: '100%',
+                  background: 'linear-gradient(90deg, #9333ea, #a855f7, #d8b4fe)',
+                  boxShadow: '0 0 8px rgba(168,85,247,0.60)',
+                }}
+              />
             </div>
 
             <div style={{
-              fontFamily: '"Lora", serif',
-              fontSize: 14, color: 'rgba(250,247,240,0.50)',
+              fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+              fontSize: 11, color: 'rgba(250,247,240,0.40)', letterSpacing: '0.12em',
             }}>
-              Text extracted — choose your lecturer.
+              {pageCount > 1
+                ? `${pagesRead} / ${pageCount} ${fileType === 'PPTX' || fileType === 'PPT' ? 'slides' : fileType === 'XLSX' || fileType === 'XLS' ? 'sheets' : 'pages'}`
+                : `${progress}%`}
             </div>
-
-            <button
-              onClick={reset}
-              style={{
-                all: 'unset', cursor: 'pointer',
-                fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase',
-                color: 'rgba(250,247,240,0.35)',
-                padding: '6px 0',
-                borderBottom: '1px solid rgba(168, 85, 247,0.22)',
-                transition: 'color 0.15s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.35)'}
-            >
-              Use a different PDF
-            </button>
           </motion.div>
         )}
 
@@ -335,49 +404,112 @@ export default function UploadZone({ onUploadComplete }) {
         {status === 'error' && (
           <motion.div
             key="error"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+            style={{
+              border: '1px solid rgba(239,68,68,0.30)',
+              borderRadius: 12, padding: '48px 32px',
+              background: '#161b22', textAlign: 'center',
+            }}
           >
-            <div style={{
-              width: 68, height: 68, borderRadius: '50%',
-              border: '1.5px solid rgba(239,68,68,0.55)',
-              background: 'rgba(239,68,68,0.08)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#f87171',
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
+              style={{
+                width: 56, height: 56, borderRadius: '50%',
+                background: 'rgba(239,68,68,0.10)',
+                border: '1px solid rgba(239,68,68,0.35)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 20px', color: '#ef4444',
+              }}
+            >
+              <IconX size={24} />
+            </motion.div>
+
+            <h3 style={{
+              fontFamily: '"Montserrat", sans-serif',
+              fontWeight: 700, fontSize: 18, color: '#faf7f0', marginBottom: 8,
             }}>
-              <IconX size={28} stroke={2} />
-            </div>
-
-            <div style={{ fontFamily: '"Montserrat", sans-serif', fontSize: 18, color: '#faf7f0', fontWeight: 700 }}>
-              Could not read PDF.
-            </div>
-
-            <div style={{
+              Could not read file.
+            </h3>
+            <p style={{
               fontFamily: '"Lora", serif',
-              fontSize: 14, color: 'rgba(250,247,240,0.50)', maxWidth: 360, lineHeight: 1.6,
+              fontSize: 13, color: 'rgba(250,247,240,0.55)', lineHeight: 1.6, marginBottom: 24,
             }}>
               {errorMsg}
-            </div>
+            </p>
 
-            <button
-              onClick={reset}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => { setStatus('idle'); setCurrentFile(null); setFileType(null); }}
               style={{
                 all: 'unset', cursor: 'pointer',
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase',
-                color: '#a855f7',
-                padding: '6px 0',
-                borderBottom: '1px solid rgba(168, 85, 247,0.35)',
+                fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
+                color: '#a855f7', borderBottom: '1px solid rgba(168,85,247,0.40)',
+                paddingBottom: 2,
               }}
             >
               Try again
-            </button>
+            </motion.button>
+          </motion.div>
+        )}
+
+        {/* DONE */}
+        {status === 'done' && (
+          <motion.div
+            key="done"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+            style={{
+              border: '1px solid rgba(168,85,247,0.30)',
+              borderRadius: 12, padding: '40px 32px',
+              background: 'rgba(168,85,247,0.04)', textAlign: 'center',
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              style={{
+                width: 56, height: 56, borderRadius: '50%',
+                background: 'rgba(168,85,247,0.12)',
+                border: '2px solid #a855f7',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                margin: '0 auto 16px', color: '#a855f7',
+              }}
+            >
+              <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 13l4 4L19 7" />
+              </svg>
+            </motion.div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 6 }}>
+              <FileTypeIcon type={fileType} size={28} />
+              <h3 style={{
+                fontFamily: '"Montserrat", sans-serif',
+                fontWeight: 700, fontSize: 16, color: '#faf7f0',
+              }}>
+                {currentFile?.name}
+              </h3>
+            </div>
+
+            <p style={{
+              fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+              fontSize: 10, color: '#a855f7', letterSpacing: '0.16em',
+            }}>
+              Ready · text extracted
+            </p>
           </motion.div>
         )}
 
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
