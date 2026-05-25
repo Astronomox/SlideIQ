@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    { "source": "/landing.html", "destination": "/landing.html" },
+    { "source": "/((?!landing\\.html|og-image\\.png|favicon\\.svg).*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/og-image.png",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+      ]
+    }
+  ]
+}
