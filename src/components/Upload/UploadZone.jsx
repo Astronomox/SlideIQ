@@ -47,11 +47,10 @@ async function extractPDF(file, onProgress, onStatusMsg) {
   const bufferCopy = arrayBuffer.slice(0);
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-  let fullText = '';
   let needsOCR = false;
   const pageTexts = [];
 
-  // First pass — try native text extraction on every page
+  // First pass — native text extraction on all pages
   onStatusMsg('Extracting text...');
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
@@ -59,48 +58,60 @@ async function extractPDF(file, onProgress, onStatusMsg) {
     const pageText = content.items.map(item => item.str).join(' ').trim();
     pageTexts.push({ page, index: i, text: pageText });
     if (!pageText) needsOCR = true;
-    onProgress(Math.round((i / pdf.numPages) * 40), i, pdf.numPages);
+    onProgress(Math.round((i / pdf.numPages) * 30), i, pdf.numPages);
   }
 
-  // If all pages have text, we're done
+  // All pages have text — done
   if (!needsOCR) {
-    fullText = pageTexts.map(p => p.text).join('\n\n');
-    return { text: fullText, buffer: bufferCopy, pages: pdf.numPages };
+    return { text: pageTexts.map(p => p.text).join('\n\n'), buffer: bufferCopy, pages: pdf.numPages };
   }
 
-  // Load Tesseract for OCR on image-only pages
+  // Parallel OCR with a pool of workers
   onStatusMsg('Image PDF detected — running OCR...');
   const { createWorker } = await import('tesseract.js');
-  const worker = await createWorker('eng', 1, {
-    logger: () => {},
-  });
 
-  for (let i = 0; i < pageTexts.length; i++) {
-    const { page, index, text: existingText } = pageTexts[i];
+  const imagePagesOnly = pageTexts.filter(p => !p.text);
+  const POOL_SIZE = Math.min(4, imagePagesOnly.length); // up to 4 parallel workers
+  const workers = await Promise.all(
+    Array.from({ length: POOL_SIZE }, () => createWorker('eng', 1, { logger: () => {} }))
+  );
 
-    if (existingText) {
-      // Page already has text
-      fullText += existingText + '\n\n';
-    } else {
-      // Render page to canvas and OCR it
-      onStatusMsg(`OCR: page ${index} of ${pdf.numPages}...`);
-      const viewport = page.getViewport({ scale: 2.0 });
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-      await page.render({ canvasContext: ctx, viewport }).promise;
+  let completed = 0;
+  const results = new Array(pageTexts.length);
 
-      const { data: { text: ocrText } } = await worker.recognize(canvas);
-      fullText += (ocrText || '').trim() + '\n\n';
-      canvas.remove?.();
-    }
+  // Fill in text pages immediately
+  pageTexts.forEach((p, i) => { if (p.text) results[i] = p.text; });
 
-    onProgress(40 + Math.round(((i + 1) / pageTexts.length) * 60), index, pdf.numPages);
-  }
+  // OCR image pages in parallel batches
+  const imagePageQueue = imagePagesOnly.map((p, qi) => ({ ...p, queueIndex: qi }));
 
-  await worker.terminate();
+  await Promise.all(
+    workers.map(async (worker, workerIndex) => {
+      while (true) {
+        const task = imagePageQueue.shift();
+        if (!task) break;
 
+        const { page, index } = task;
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+
+        const { data: { text: ocrText } } = await worker.recognize(canvas);
+        results[index - 1] = (ocrText || '').trim();
+        canvas.width = 0; // free memory
+
+        completed++;
+        onStatusMsg(`OCR: ${completed} of ${imagePagesOnly.length} pages done...`);
+        onProgress(30 + Math.round((completed / imagePagesOnly.length) * 70), completed, imagePagesOnly.length);
+      }
+    })
+  );
+
+  await Promise.all(workers.map(w => w.terminate()));
+
+  const fullText = results.join('\n\n');
   if (!fullText.trim()) {
     throw new Error('No text could be extracted. The PDF may be corrupted or encrypted.');
   }
