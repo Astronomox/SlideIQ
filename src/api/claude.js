@@ -1,5 +1,6 @@
 const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
 const MODEL = 'claude-sonnet-4-20250514';
+const FAST_MODEL = 'claude-haiku-4-5-20251001'; // Fast model for feedback
 
 const PERSONALITY_DESCRIPTIONS = {
   vague: 'Vague — You wander the topic. You half-explain things and leave students guessing. Your questions are confusing and your feedback is noncommittal. You rarely say what you actually mean.',
@@ -9,55 +10,49 @@ const PERSONALITY_DESCRIPTIONS = {
   easy: 'Very Easy — You ask simple, surface-level questions with plain phrasing. Your questions are confidence-boosters. You never challenge, never trick. Students should feel good after every question.',
   reassuring: 'Reassuring — You are warm and steady. You acknowledge difficulty and reframe mistakes as stepping stones. After wrong answers you pick the student up. You are their academic support system.',
   cheap: 'Cheap — You made minimal effort. Your questions are recycled, surface-level, lazily phrased. You probably wrote this on the bus. Your feedback is terse and careless.',
-  harvard: 'Harvard Grade — You hold students to an elite, internationally benchmarked standard. Precise terminology is required. Mastery is the floor, not the goal. Your feedback after wrong answers is curt and exacting. Your feedback after correct answers is measured approval, never effusive.',
+  harvard: 'Harvard Grade — You hold students to an elite, internationally benchmarked standard. Precise terminology is required. Mastery is the floor, not the goal. Your feedback after wrong answers is curt and exacting.',
+};
+
+// Compact personality hint for feedback calls — shorter = faster
+const PERSONALITY_HINTS = {
+  vague: 'Vague, noncommittal, wandering. Never direct.',
+  harsh: 'Blunt, tough love, no sympathy. Direct and cutting.',
+  fail: 'Smug, unsurprised by failure. Subtly gloating.',
+  nice: 'Warm, encouraging, kind even when wrong.',
+  easy: 'Cheerful, supportive, always positive.',
+  reassuring: 'Steady, picks you up, reframes mistakes as growth.',
+  cheap: 'Terse, minimal effort, careless.',
+  harvard: 'Exacting, measured, elite standards.',
 };
 
 export async function generateQuizContent({ pdfText, personality, mcqCount, theoryCount }) {
   const personalityDesc = PERSONALITY_DESCRIPTIONS[personality.id] || personality.title;
 
-  // Scale max_tokens based on question count — each MCQ ~150 tokens, theory ~300 tokens
-  const estimatedOutputTokens = 800 + (mcqCount * 160) + (theoryCount * 320);
-  const maxTokens = Math.min(Math.max(estimatedOutputTokens + 1000, 4096), 16000);
+  // Tight token budget — Sonnet is fast but we don't want to overshoot
+  const estimatedOutputTokens = 600 + (mcqCount * 140) + (theoryCount * 280);
+  const maxTokens = Math.min(Math.max(estimatedOutputTokens + 800, 3072), 16000);
 
-  // Scale PDF text budget inversely — more questions means less room for context
-  const pdfBudget = Math.max(12000, 80000 - (mcqCount * 800) - (theoryCount * 1200));
+  // PDF text budget — trim aggressively, Claude doesn't need the whole thing
+  const pdfBudget = Math.max(8000, 60000 - (mcqCount * 600) - (theoryCount * 900));
 
-  const systemPrompt = `You are a university lecturer with this personality: ${personalityDesc}
+  const systemPrompt = `You are a university lecturer: ${personalityDesc}
 
-Your task is to read lecture slide content and produce educational material in your personality voice.
+RULES (follow exactly):
+- Base ALL questions ONLY on provided content. Never invent.
+- Return ONLY valid JSON. No markdown fences, no preamble, no trailing text.
+- Exactly ${mcqCount} MCQ questions, exactly ${theoryCount} theory questions.
+- MCQ options: exactly A, B, C, D. One correct answer.
+- Be concise. Short explanations, direct questions, tight answers.`;
 
-CRITICAL RULES:
-- Base ALL questions ONLY on the content provided. Never invent facts.
-- Return ONLY valid JSON — no markdown, no code blocks, no explanation outside the JSON.
-- The explanation must sound unmistakably like your personality voice.
-- MCQ options must have exactly 4 choices (A, B, C, D) with exactly one correct answer.
-- Theory model answers should be detailed and lecture-grounded.
-- You MUST produce exactly ${mcqCount} MCQ questions and exactly ${theoryCount} theory questions. Do not stop early.`;
+  const userPrompt = `Lecture content below. Produce:
+1. Brief 2-3 paragraph explanation in your personality voice
+2. Exactly ${mcqCount} MCQ with 4 options
+3. Exactly ${theoryCount} theory questions with model answers
 
-  const userPrompt = `Based ONLY on the following lecture slide content, produce:
-1. A 3-5 paragraph explanation of the main topics in your personality voice
-2. Exactly ${mcqCount} MCQ questions with 4 options each
-3. Exactly ${theoryCount} theory questions with detailed model answers
+JSON only — no other text:
+{"explanation":"...","mcq":[{"question":"...","options":{"A":"...","B":"...","C":"...","D":"..."},"answer":"A"}],"theory":[{"question":"...","modelAnswer":"..."}]}
 
-Return ONLY this JSON structure with no text before or after:
-{
-  "explanation": "3-5 paragraphs as a single string with paragraph breaks using \\n\\n",
-  "mcq": [
-    {
-      "question": "...",
-      "options": { "A": "...", "B": "...", "C": "...", "D": "..." },
-      "answer": "A"
-    }
-  ],
-  "theory": [
-    {
-      "question": "...",
-      "modelAnswer": "..."
-    }
-  ]
-}
-
-LECTURE SLIDE CONTENT:
+CONTENT:
 ${pdfText.slice(0, pdfBudget)}`;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -84,29 +79,38 @@ ${pdfText.slice(0, pdfBudget)}`;
   const data = await response.json();
   const raw = data.content[0].text.trim();
 
-  // Strip any accidental markdown code fences
-  const cleaned = raw.replace(/^```(?:json)?\n?/i, '').replace(/\n?```$/i, '').trim();
+  // Strip any accidental markdown fences
+  const cleaned = raw
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
+
+  // Find the JSON object in the response even if there's surrounding text
+  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    console.error('No JSON found in Claude response:', cleaned.slice(0, 400));
+    throw new Error('Claude returned invalid JSON. Please try again.');
+  }
 
   try {
-    return JSON.parse(cleaned);
+    return JSON.parse(jsonMatch[0]);
   } catch {
-    // Log the raw response to help debug future issues
-    console.error('Invalid JSON from Claude:', cleaned.slice(0, 500));
-    throw new Error('Claude returned invalid JSON. Please try again.');
+    console.error('JSON parse failed:', jsonMatch[0].slice(0, 400));
+    throw new Error('Claude returned malformed JSON. Please try again.');
   }
 }
 
+// Feedback uses Haiku — 3-5x faster than Sonnet, much cheaper
 export async function generateFeedback({ personality, question, userAnswer, correctAnswer, isCorrect, questionType }) {
-  const personalityDesc = PERSONALITY_DESCRIPTIONS[personality.id] || personality.title;
+  const hint = PERSONALITY_HINTS[personality.id] || personality.title;
 
-  const prompt = `You are a university lecturer with this personality: ${personalityDesc}
-
-A student just answered a ${questionType} question.
+  const prompt = `Personality: ${hint}
 Question: ${question}
-${questionType === 'mcq' ? `Correct answer: ${correctAnswer}\nStudent's answer: ${userAnswer}` : `Model answer summary: ${correctAnswer?.slice(0, 300)}\nStudent's answer: ${userAnswer?.slice(0, 300)}`}
-The student was: ${isCorrect ? 'CORRECT' : 'INCORRECT'}
+${questionType === 'mcq'
+  ? `Correct: ${correctAnswer} | Student: ${userAnswer} | ${isCorrect ? 'CORRECT' : 'WRONG'}`
+  : `Model answer: ${(correctAnswer || '').slice(0, 200)} | Student: ${(userAnswer || '').slice(0, 200)}`}
 
-Write a short (2-4 sentence) feedback response in your personality voice. Be authentic to your character. Return ONLY the feedback text, no JSON, no labels.`;
+Write 2-3 sentences of feedback in this personality's voice. Return only the feedback text.`;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -117,8 +121,8 @@ Write a short (2-4 sentence) feedback response in your personality voice. Be aut
       'anthropic-dangerous-direct-browser-access': 'true',
     },
     body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 256,
+      model: FAST_MODEL,
+      max_tokens: 180,
       messages: [{ role: 'user', content: prompt }],
     }),
   });
