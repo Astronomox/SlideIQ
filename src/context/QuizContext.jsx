@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/config';
 
 const QuizContext = createContext(null);
 
@@ -10,19 +12,28 @@ export function QuizProvider({ children }) {
   const [generatedContent, setGeneratedContent] = useState(null);
   const [quizSession, setQuizSession] = useState(null);
 
-  /**
-   * Reset quiz content and session
-   * Called after quiz completion or when user exits quiz
-   */
+  // Fix #3 — clear all quiz state the moment Firebase reports the user signed out.
+  // QuizProvider renders inside AuthProvider, so it can't use useAuth().
+  // Instead we subscribe to the same Firebase auth stream directly.
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      if (!u) {
+        setActiveUpload(null);
+        setSelectedPersonality(null);
+        setMcqCount(5);
+        setTheoryCount(3);
+        setGeneratedContent(null);
+        setQuizSession(null);
+      }
+    });
+    return unsub;
+  }, []);
+
   const resetQuiz = () => {
     setGeneratedContent(null);
     setQuizSession(null);
   };
 
-  /**
-   * Complete cleanup of entire quiz context
-   * Called on logout or when transitioning between major flows
-   */
   const clearAllQuizState = () => {
     setActiveUpload(null);
     setSelectedPersonality(null);

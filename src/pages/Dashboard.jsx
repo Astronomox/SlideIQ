@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { useQuiz } from '../context/QuizContext';
 import { useUploads } from '../hooks/useUploads';
 import { useIsMobile } from '../hooks/useIsMobile';
 import UploadZone from '../components/Upload/UploadZone';
@@ -170,15 +171,23 @@ export default function Dashboard() {
   const { uploads } = useUploads();
   const isMobile = useIsMobile();
   const [step, setStep] = useState(0);
-  const [activeUpload, setActiveUpload] = useState(null);
-  const [selectedPersonality, setSelectedPersonality] = useState(null);
-  const [mcqCount, setMcqCount] = useState(5);
-  const [theoryCount, setTheoryCount] = useState(3);
+
+  // Fix #8 — use QuizContext so state survives navigation and clears on logout
+  const {
+    activeUpload, setActiveUpload,
+    selectedPersonality, setSelectedPersonality,
+    mcqCount, setMcqCount,
+    theoryCount, setTheoryCount,
+  } = useQuiz();
   const [generating, setGenerating] = useState(false);
   const [generationPhase, setGenerationPhase] = useState(0);
   const [generatedContent, setGeneratedContent] = useState(null);
   const [generateError, setGenerateError] = useState('');
   const [showQuiz, setShowQuiz] = useState(false);
+
+  // Fix #4 — stable ref for the phase interval so we can clear it on unmount
+  const phaseIntervalRef = useRef(null);
+  useEffect(() => () => { if (phaseIntervalRef.current) clearInterval(phaseIntervalRef.current); }, []);
 
   const GENERATION_MESSAGES = [
     'Reading your slides...',
@@ -196,12 +205,14 @@ export default function Dashboard() {
 
   const handleGenerate = async () => {
     if (!activeUpload?.extractedText || !selectedPersonality) return;
+    // Fix #5 — prevent double-submit: bail if already generating
+    if (generating) return;
     setGenerating(true);
     setGenerateError('');
     setGenerationPhase(0);
 
-    // Cycle through loading messages every 6 seconds
-    const phaseInterval = setInterval(() => {
+    // Fix #4 — store interval in ref so unmount cleanup can reach it
+    phaseIntervalRef.current = setInterval(() => {
       setGenerationPhase(p => Math.min(p + 1, 3));
     }, 6000);
 
@@ -218,7 +229,8 @@ export default function Dashboard() {
       console.error(err);
       setGenerateError(err.message || 'Generation failed. Please try again.');
     } finally {
-      clearInterval(phaseInterval);
+      clearInterval(phaseIntervalRef.current);
+      phaseIntervalRef.current = null;
       setGenerating(false);
       setGenerationPhase(0);
     }
@@ -233,7 +245,13 @@ export default function Dashboard() {
         personality={selectedPersonality}
         filename={activeUpload?.filename}
         uploadId={activeUpload?.id}
-        onExit={() => { setShowQuiz(false); setGeneratedContent(null); setStep(0); }}
+        onExit={() => {
+          setShowQuiz(false);
+          setGeneratedContent(null);
+          setActiveUpload(null);        // Fix #7 — don't leave previous session state
+          setSelectedPersonality(null); // so step indicator resets cleanly
+          setStep(0);
+        }}
       />
     );
   }
@@ -496,7 +514,7 @@ export default function Dashboard() {
                     </svg>
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: '"Newsreader", serif', fontSize: 13, color: '#fca5a5', lineHeight: 1.5, marginBottom: 8 }}>
+                    <div style={{ fontFamily: '"Newsreader", serif', fontSize: 13, color: '#dc2626', lineHeight: 1.5, marginBottom: 8 }}>
                       {generateError}
                     </div>
                     <button
@@ -515,20 +533,21 @@ export default function Dashboard() {
               )}
 
               <motion.button
-                whileHover={{ scale: generating ? 1 : 1.01 }}
-                whileTap={{ scale: generating ? 1 : 0.99 }}
+                whileHover={{ scale: (generating || generateError) ? 1 : 1.01 }}
+                whileTap={{ scale: (generating || generateError) ? 1 : 0.99 }}
                 onClick={handleGenerate}
-                disabled={generating}
+                disabled={generating || !!generateError}
                 style={{
-                  all: 'unset', cursor: generating ? 'wait' : 'pointer',
+                  all: 'unset', cursor: generating ? 'wait' : (generateError ? 'not-allowed' : 'pointer'),
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
                   padding: '17px 28px', width: '100%', borderRadius: 8,
-                  background: generating ? '#ffffff' : CTA,
-                  color: generating ? 'rgba(33,26,46,0.48)' : '#ffffff',
+                  background: (generating || generateError) ? '#ffffff' : CTA,
+                  color: (generating || generateError) ? 'rgba(33,26,46,0.38)' : '#ffffff',
                   fontFamily: '"Instrument Sans", sans-serif',
                   fontWeight: 700, fontSize: 16,
-                  border: generating ? '1px solid rgba(124, 58, 237,0.15)' : 'none',
-                  transition: 'background 0.2s, color 0.2s',
+                  border: (generating || generateError) ? '1px solid rgba(124, 58, 237,0.15)' : 'none',
+                  opacity: generateError ? 0.55 : 1,
+                  transition: 'background 0.2s, color 0.2s, opacity 0.2s',
                   boxSizing: 'border-box',
                 }}
               >

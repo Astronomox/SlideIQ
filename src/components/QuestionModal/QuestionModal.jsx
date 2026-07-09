@@ -149,8 +149,14 @@ function MCQOption({ letter, text, selected, correct, showResult, onClick }) {
   );
 }
 
-function FeedbackOverlay({ isCorrect, feedback, loadingFeedback, onNext, isLast }) {
+function FeedbackOverlay({ isCorrect, isTheory, feedback, loadingFeedback, onNext, isLast }) {
   const isMobile = useIsMobile();
+
+  // Fix #6 — theory answers are always "submitted", never graded correct/incorrect
+  const accentColor = isTheory ? '#7c3aed' : (isCorrect ? '#7c3aed' : '#dc2626');
+  const borderColor = isTheory ? 'rgba(124,58,237,0.30)' : (isCorrect ? 'rgba(124,58,237,0.30)' : 'rgba(220,38,38,0.30)');
+  const bgColor     = isTheory ? 'rgba(124,58,237,0.10)' : (isCorrect ? 'rgba(124,58,237,0.12)' : 'rgba(220,38,38,0.12)');
+  const label       = isTheory ? 'Submitted' : (isCorrect ? 'Correct' : 'Incorrect');
 
   return (
     <motion.div
@@ -173,13 +179,13 @@ function FeedbackOverlay({ isCorrect, feedback, loadingFeedback, onNext, isLast 
         transition={{ type: 'spring', stiffness: 200, damping: 24 }}
         style={{
           background: '#ffffff',
-          border: `1px solid ${isCorrect ? 'rgba(124, 58, 237,0.30)' : 'rgba(220,38,38,0.30)'}`,
+          border: `1px solid ${borderColor}`,
           borderRadius: 12,
           padding: isMobile ? '32px 24px' : 48,
           maxWidth: 520, width: '100%',
           textAlign: 'center',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0,
-          boxShadow: `0 20px 60px rgba(33,26,46,0.26), 0 0 0 1px ${isCorrect ? 'rgba(124, 58, 237,0.08)' : 'rgba(220,38,38,0.08)'}`,
+          boxShadow: `0 20px 60px rgba(33,26,46,0.26), 0 0 0 1px rgba(124,58,237,0.06)`,
         }}
       >
         <motion.div
@@ -189,14 +195,20 @@ function FeedbackOverlay({ isCorrect, feedback, loadingFeedback, onNext, isLast 
           style={{
             width: isMobile ? 60 : 72, height: isMobile ? 60 : 72,
             borderRadius: '50%',
-            background: isCorrect ? 'rgba(124, 58, 237,0.12)' : 'rgba(220,38,38,0.12)',
-            border: `2px solid ${isCorrect ? '#7c3aed' : '#dc2626'}`,
+            background: bgColor,
+            border: `2px solid ${accentColor}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: isCorrect ? '#7c3aed' : '#dc2626',
+            color: accentColor,
             marginBottom: isMobile ? 16 : 20,
           }}
         >
-          {isCorrect ? (
+          {isTheory ? (
+            /* Pen/write icon for theory — neutral submission indicator */
+            <svg width={isMobile ? 24 : 28} height={isMobile ? 24 : 28} viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+          ) : isCorrect ? (
             <svg width={isMobile ? 24 : 30} height={isMobile ? 24 : 30} viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 13l4 4L19 7" />
@@ -209,10 +221,10 @@ function FeedbackOverlay({ isCorrect, feedback, loadingFeedback, onNext, isLast 
         <div style={{
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: isCorrect ? '#7c3aed' : '#dc2626',
+          color: accentColor,
           marginBottom: 12,
         }}>
-          {isCorrect ? 'Correct' : 'Incorrect'}
+          {label}
         </div>
 
         <div style={{
@@ -635,7 +647,8 @@ export default function QuestionModal({
       <AnimatePresence>
         {showFeedbackOverlay && (
           <FeedbackOverlay
-            isCorrect={phase === 'theory' ? true : mcqAnswers[mcqAnswers.length - 1]?.isCorrect}
+            isCorrect={mcqAnswers[mcqAnswers.length - 1]?.isCorrect ?? false}
+            isTheory={phase === 'theory'}
             feedback={feedback}
             loadingFeedback={loadingFeedback}
             onNext={handleNext}

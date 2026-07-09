@@ -10,7 +10,7 @@ export default function AuthGuard({ children }) {
   if (loading) {
     return (
       <div style={{
-        width: '100vw', height: '100vh', background: 'var(--ink)',
+        width: '100vw', height: '100vh', background: '#f7f5fb',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexDirection: 'column', gap: 24,
       }}>
@@ -23,7 +23,7 @@ export default function AuthGuard({ children }) {
         <motion.div
           style={{
             width: 200, height: 1,
-            background: 'linear-gradient(90deg, transparent, var(--accent), transparent)',
+            background: 'linear-gradient(90deg, transparent, #7c3aed, transparent)',
           }}
           animate={{ scaleX: [0, 1, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
