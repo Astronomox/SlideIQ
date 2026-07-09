@@ -234,17 +234,17 @@ export function PersonaGlyph({ id, size = 48 }) {
 export function Wordmark({ size = 22 }) {
   return (
     <span style={{
-      fontFamily: '"Montserrat", sans-serif',
-      fontWeight: 900,
+      fontFamily: '"Instrument Sans", sans-serif',
+      fontWeight: 700,
       fontSize: size,
       letterSpacing: '-0.02em',
       lineHeight: 1.15,
-      color: '#faf7f0',
+      color: '#211a2e',
       whiteSpace: 'nowrap',
       display: 'inline-block',
       flexShrink: 0,
     }}>
-      Slide<span style={{ fontStyle: 'italic', fontWeight: 900, color: '#a855f7' }}>IQ</span>
+      Slide<span style={{ fontStyle: 'italic', fontWeight: 700, color: '#7c3aed' }}>IQ</span>
     </span>
   );
 }

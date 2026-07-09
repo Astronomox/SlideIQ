@@ -3,21 +3,21 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, stagg
 import { PersonaGlyph, IconArrow } from '../Icons/Icons';
 import { useIsMobile } from '../../hooks/useIsMobile';
 
-const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
+const CTA = 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 60%, #5b21b6 100%)';
 
 function getGrade(pct) {
-  if (pct >= 90) return { letter: 'A+', label: 'Distinction',  color: '#a855f7' };
-  if (pct >= 80) return { letter: 'A',  label: 'First Class',  color: '#a855f7' };
-  if (pct >= 70) return { letter: 'B',  label: 'Upper Second', color: '#d8b4fe' };
-  if (pct >= 60) return { letter: 'C',  label: 'Lower Second', color: '#60a5fa' };
-  if (pct >= 50) return { letter: 'D',  label: 'Third Class',  color: '#eab308' };
-  return             { letter: 'F',  label: 'Fail',          color: '#ef4444' };
+  if (pct >= 90) return { letter: 'A+', label: 'Distinction',  color: '#7c3aed' };
+  if (pct >= 80) return { letter: 'A',  label: 'First Class',  color: '#7c3aed' };
+  if (pct >= 70) return { letter: 'B',  label: 'Upper Second', color: '#8b5cf6' };
+  if (pct >= 60) return { letter: 'C',  label: 'Lower Second', color: '#3b82f6' };
+  if (pct >= 50) return { letter: 'D',  label: 'Third Class',  color: '#ca8a04' };
+  return             { letter: 'F',  label: 'Fail',          color: '#dc2626' };
 }
 
 function getScoreColor(pct) {
-  if (pct >= 70) return '#a855f7';
-  if (pct >= 50) return '#eab308';
-  return '#ef4444';
+  if (pct >= 70) return '#7c3aed';
+  if (pct >= 50) return '#ca8a04';
+  return '#dc2626';
 }
 
 function getPersonaRemark(personality, isHigh) {
@@ -144,7 +144,7 @@ export default function ScoreScreen({
       transition={{ duration: 0.4 }}
       style={{
         position: 'fixed', inset: 0, zIndex: 100,
-        background: '#0d1117',
+        background: '#f7f5fb',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden', overflowX: 'hidden',
@@ -157,9 +157,9 @@ export default function ScoreScreen({
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
         style={{
           position: 'absolute',
-          fontFamily: '"Montserrat", sans-serif', fontWeight: 900,
+          fontFamily: '"Instrument Sans", sans-serif', fontWeight: 700,
           fontSize: isMobile ? 'clamp(140px, 50vw, 200px)' : 'clamp(220px, 32vw, 320px)',
-          color: 'rgba(168,85,247,0.05)',
+          color: 'rgba(124,58,237,0.05)',
           top: '50%', left: '50%',
           transform: 'translate(-50%, -55%) rotate(-8deg)',
           pointerEvents: 'none', userSelect: 'none', lineHeight: 1,
@@ -175,7 +175,7 @@ export default function ScoreScreen({
         style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: `radial-gradient(80% 60% at 50% 30%, ${
-            isHigh ? 'rgba(168,85,247,0.08)' : 'rgba(239,68,68,0.06)'
+            isHigh ? 'rgba(124,58,237,0.08)' : 'rgba(220,38,38,0.06)'
           } 0%, transparent 70%)`,
         }}
       />
@@ -203,7 +203,7 @@ export default function ScoreScreen({
           >
             <PersonaGlyph id={personality.id} size={24} />
           </motion.span>
-          <span style={{ fontFamily: '"Lora", serif', fontStyle: 'italic', fontSize: 15, color: personality.accent }}>
+          <span style={{ fontFamily: '"Newsreader", serif', fontStyle: 'italic', fontSize: 15, color: personality.accent }}>
             {personality.title}
           </span>
         </motion.div>
@@ -211,7 +211,7 @@ export default function ScoreScreen({
         {/* QUIZ COMPLETE eyebrow */}
         <motion.div variants={itemVariants} style={{
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-          fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#a855f7',
+          fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#7c3aed',
         }}>
           Quiz Complete
         </motion.div>
@@ -225,7 +225,7 @@ export default function ScoreScreen({
             }}
             style={{
               position: 'relative',
-              fontFamily: '"Montserrat", sans-serif', fontWeight: 900,
+              fontFamily: '"Instrument Sans", sans-serif', fontWeight: 700,
               fontSize: 'clamp(44px, 18vw, 100px)',
               letterSpacing: '-0.02em', lineHeight: 1, color: scoreColor,
               display: 'flex', alignItems: 'baseline', gap: 4,
@@ -236,9 +236,9 @@ export default function ScoreScreen({
               target={pct}
               duration={1400}
               style={{
-                fontFamily: '"Montserrat", sans-serif', fontWeight: 900,
-                fontSize: 'clamp(44px, 18vw, 100px)',
-                letterSpacing: '-0.02em', lineHeight: 1, color: scoreColor,
+                fontFamily: '"Instrument Serif", serif', fontWeight: 400,
+                fontSize: 'clamp(48px, 18vw, 110px)',
+                letterSpacing: '-0.015em', lineHeight: 1, color: scoreColor,
               }}
             />
             <span style={{ fontSize: 36 }}>%</span>
@@ -254,8 +254,8 @@ export default function ScoreScreen({
             animate={{ scale: [1, 1.08, 1] }}
             transition={{ delay: 1.4, duration: 0.4, ease: 'easeOut' }}
             style={{
-              fontFamily: '"Montserrat", sans-serif',
-              fontWeight: 900, fontSize: 'clamp(20px, 6vw, 28px)',
+              fontFamily: '"Instrument Sans", sans-serif',
+              fontWeight: 700, fontSize: 'clamp(20px, 6vw, 28px)',
               letterSpacing: '-0.02em', color: scoreColor,
             }}
           >
@@ -273,8 +273,8 @@ export default function ScoreScreen({
         <motion.p
           variants={itemVariants}
           style={{
-            fontFamily: '"Lora", serif', fontStyle: 'italic', fontSize: 18,
-            color: 'rgba(250,247,240,0.75)', maxWidth: 480, lineHeight: 1.55, margin: 0,
+            fontFamily: '"Newsreader", serif', fontStyle: 'italic', fontSize: 18,
+            color: 'rgba(33,26,46,0.80)', maxWidth: 480, lineHeight: 1.55, margin: 0,
           }}
         >
           "{remark}"
@@ -302,21 +302,21 @@ export default function ScoreScreen({
               whileHover={{ y: -2, transition: { type: 'spring', stiffness: 400 } }}
               style={{
                 textAlign: 'center', padding: '14px 8px',
-                background: 'rgba(168,85,247,0.05)',
-                border: '1px solid rgba(168,85,247,0.14)',
+                background: 'rgba(124,58,237,0.05)',
+                border: '1px solid rgba(124,58,237,0.14)',
                 borderRadius: 8,
               }}
             >
               <div style={{
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                 fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase',
-                color: 'rgba(250,247,240,0.35)', marginBottom: 6,
+                color: 'rgba(33,26,46,0.48)', marginBottom: 6,
               }}>
                 {stat.label}
               </div>
               <div style={{
-                fontFamily: '"Montserrat", sans-serif',
-                fontWeight: 700, fontSize: 24, color: '#faf7f0',
+                fontFamily: '"Instrument Sans", sans-serif',
+                fontWeight: 700, fontSize: 24, color: '#211a2e',
               }}>
                 {stat.value}
               </div>
@@ -337,7 +337,7 @@ export default function ScoreScreen({
             <div style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
-              color: 'rgba(250,247,240,0.35)', marginBottom: 4, textAlign: 'left',
+              color: 'rgba(33,26,46,0.48)', marginBottom: 4, textAlign: 'left',
             }}>
               MCQ Review
             </div>
@@ -350,25 +350,25 @@ export default function ScoreScreen({
                 style={{
                   display: 'flex', alignItems: 'center', gap: 12,
                   padding: '7px 12px',
-                  background: a.isCorrect ? 'rgba(168,85,247,0.07)' : 'rgba(239,68,68,0.07)',
-                  border: `1px solid ${a.isCorrect ? 'rgba(168,85,247,0.25)' : 'rgba(239,68,68,0.25)'}`,
+                  background: a.isCorrect ? 'rgba(124,58,237,0.07)' : 'rgba(220,38,38,0.07)',
+                  border: `1px solid ${a.isCorrect ? 'rgba(124,58,237,0.25)' : 'rgba(220,38,38,0.25)'}`,
                   borderRadius: 4,
                 }}
               >
                 <span style={{
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 10, color: 'rgba(250,247,240,0.40)', minWidth: 24, flexShrink: 0,
+                  fontSize: 10, color: 'rgba(33,26,46,0.52)', minWidth: 24, flexShrink: 0,
                 }}>Q{i + 1}</span>
                 <span style={{
-                  flex: 1, fontFamily: '"Lora", serif', fontSize: 12,
-                  color: 'rgba(250,247,240,0.60)',
+                  flex: 1, fontFamily: '"Newsreader", serif', fontSize: 12,
+                  color: 'rgba(33,26,46,0.68)',
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left',
                 }}>
                   {mcqQuestions[i]?.question}
                 </span>
                 <span style={{
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 11, color: a.isCorrect ? '#a855f7' : '#ef4444', flexShrink: 0,
+                  fontSize: 11, color: a.isCorrect ? '#7c3aed' : '#dc2626', flexShrink: 0,
                 }}>
                   {a.isCorrect ? `✓ ${a.correct}` : `✗ ${a.selected}, correct: ${a.correct}`}
                 </span>
@@ -383,7 +383,7 @@ export default function ScoreScreen({
           style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}
         >
           <motion.button
-            whileHover={{ scale: 1.04, boxShadow: '0 0 32px rgba(168,85,247,0.40)' }}
+            whileHover={{ scale: 1.04, boxShadow: '0 0 32px rgba(124,58,237,0.40)' }}
             whileTap={{ scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 400, damping: 22 }}
             onClick={onRetry}
@@ -391,15 +391,15 @@ export default function ScoreScreen({
               all: 'unset', cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '14px 28px', background: CTA,
-              color: '#0d1117', borderRadius: 8,
-              fontFamily: '"Montserrat", sans-serif', fontWeight: 700, fontSize: 15,
+              color: '#ffffff', borderRadius: 8,
+              fontFamily: '"Instrument Sans", sans-serif', fontWeight: 700, fontSize: 15,
             }}
           >
             Try again <IconArrow size={16} />
           </motion.button>
 
           <motion.button
-            whileHover={{ scale: 1.04, borderColor: 'rgba(168,85,247,0.55)', color: '#faf7f0' }}
+            whileHover={{ scale: 1.04, borderColor: 'rgba(124,58,237,0.55)', color: '#211a2e' }}
             whileTap={{ scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 400, damping: 22 }}
             onClick={onDone}
@@ -407,9 +407,9 @@ export default function ScoreScreen({
               all: 'unset', cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', gap: 10,
               padding: '14px 28px',
-              border: '1px solid rgba(168,85,247,0.28)',
-              color: 'rgba(250,247,240,0.60)', borderRadius: 8,
-              fontFamily: '"Montserrat", sans-serif', fontWeight: 600, fontSize: 15,
+              border: '1px solid rgba(124,58,237,0.28)',
+              color: 'rgba(33,26,46,0.68)', borderRadius: 8,
+              fontFamily: '"Instrument Sans", sans-serif', fontWeight: 600, fontSize: 15,
               transition: 'border-color 0.2s, color 0.2s',
             }}
           >

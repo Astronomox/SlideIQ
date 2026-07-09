@@ -91,7 +91,7 @@ VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 VITE_FIREBASE_PROJECT_ID=your_project_id
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 VITE_FIREBASE_APP_ID=your_app_id
-VITE_ANTHROPIC_API_KEY=your_anthropic_key
+VITE_GEMINI_API_KEY=your_gemini_key
 ```
 
 ```bash

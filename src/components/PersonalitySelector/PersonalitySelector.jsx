@@ -9,7 +9,7 @@ export const PERSONALITIES = [
     title: 'Vague',
     tagline: 'Figure it out yourself.',
     bio: 'Wanders the topic. Half-explains. You\'ll be guessing what was even asked.',
-    accent: '#94a3b8',
+    accent: '#64748b',
     gradeLabel: 'Murky',
   },
   {
@@ -17,7 +17,7 @@ export const PERSONALITIES = [
     title: 'Harsh',
     tagline: 'Tough love. No sugar.',
     bio: 'Calls out errors directly. Zero hand-holding. If you didn\'t read the slides, it shows.',
-    accent: '#f87171',
+    accent: '#ef4444',
     gradeLabel: 'Brutal',
   },
   {
@@ -25,7 +25,7 @@ export const PERSONALITIES = [
     title: 'Out to Fail You',
     tagline: 'Designed to expose weakness.',
     bio: 'Trick questions, out-of-syllabus traps, ambiguous phrasing. They want you to fall.',
-    accent: '#a78bfa',
+    accent: '#8b5cf6',
     gradeLabel: 'Adversarial',
   },
   {
@@ -33,7 +33,7 @@ export const PERSONALITIES = [
     title: 'Nice',
     tagline: 'Warm, gentle, encouraging.',
     bio: 'Explains carefully. Celebrates effort. Even wrong answers get a kind redirect.',
-    accent: '#fb923c',
+    accent: '#f97316',
     gradeLabel: 'Kind',
   },
   {
@@ -41,7 +41,7 @@ export const PERSONALITIES = [
     title: 'Very Easy',
     tagline: 'Confidence-booster mode.',
     bio: 'Surface questions. Plain phrasing. Built to keep you moving and feeling capable.',
-    accent: '#a855f7',
+    accent: '#7c3aed',
     gradeLabel: 'Generous',
   },
   {
@@ -49,7 +49,7 @@ export const PERSONALITIES = [
     title: 'Reassuring',
     tagline: 'Picks you back up after a fall.',
     bio: 'Warm and steady. Acknowledges difficulty. Reframes mistakes as the path to mastery.',
-    accent: '#60a5fa',
+    accent: '#3b82f6',
     gradeLabel: 'Steady',
   },
   {
@@ -57,7 +57,7 @@ export const PERSONALITIES = [
     title: 'Cheap',
     tagline: 'Bare-minimum effort.',
     bio: 'Lazy phrasing, recycled stems, surface-level recall. Probably wrote this on the bus.',
-    accent: '#eab308',
+    accent: '#ca8a04',
     gradeLabel: 'Lazy',
   },
   {
@@ -65,7 +65,7 @@ export const PERSONALITIES = [
     title: 'Harvard Grade',
     tagline: 'Elite, rigorous, unforgiving.',
     bio: 'International benchmark standard. Precise terminology required. Mastery is the floor.',
-    accent: '#f87171',
+    accent: '#ef4444',
     gradeLabel: 'Rigorous',
   },
 ];
@@ -93,7 +93,7 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
       whileHover={!isSelected ? {
         y: -4,
         scale: 1.02,
-        boxShadow: `0 12px 40px rgba(168,85,247,0.18), 0 0 0 1px ${persona.accent}44`,
+        boxShadow: `0 12px 40px rgba(124,58,237,0.18), 0 0 0 1px ${persona.accent}44`,
         borderColor: `${persona.accent}88`,
         transition: { type: 'spring', stiffness: 400, damping: 22 },
       } : {}}
@@ -103,12 +103,12 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
         cursor: 'pointer',
         position: 'relative',
         padding: compact ? '14px 12px' : '22px 20px',
-        background: isSelected ? 'rgba(168, 85, 247,0.07)' : '#161b22',
+        background: isSelected ? 'rgba(124, 58, 237,0.07)' : '#ffffff',
         backdropFilter: isSelected ? 'blur(8px)' : 'none',
         WebkitBackdropFilter: isSelected ? 'blur(8px)' : 'none',
         border: isSelected
-          ? '1.5px solid rgba(168, 85, 247,0.60)'
-          : '1px solid rgba(168, 85, 247,0.10)',
+          ? '1.5px solid rgba(124, 58, 237,0.60)'
+          : '1px solid rgba(124, 58, 237,0.10)',
         borderRadius: 8,
         display: 'flex',
         flexDirection: 'column',
@@ -117,15 +117,15 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
         overflow: 'hidden',
         transition: 'border-color 0.2s, background 0.2s',
         boxShadow: isSelected
-          ? '0 0 0 1px rgba(168, 85, 247,0.30), 0 0 32px rgba(168, 85, 247,0.18), 0 4px 20px rgba(0,0,0,0.40)'
-          : '0 1px 4px rgba(0,0,0,0.30)',
+          ? '0 0 0 1px rgba(124, 58, 237,0.30), 0 0 32px rgba(124, 58, 237,0.18), 0 4px 20px rgba(41,28,66,0.14)'
+          : '0 1px 4px rgba(41,28,66,0.10)',
       }}
     >
       {/* Green top edge when selected */}
       {isSelected && (
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-          background: 'linear-gradient(90deg, transparent, #a855f7, transparent)',
+          background: 'linear-gradient(90deg, transparent, #7c3aed, transparent)',
         }} />
       )}
 
@@ -138,7 +138,7 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
             position: 'absolute', top: 10, right: 10,
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: '#a855f7', background: 'rgba(168, 85, 247,0.12)',
+            color: '#7c3aed', background: 'rgba(124, 58, 237,0.12)',
             padding: '3px 7px', borderRadius: 3,
           }}
         >
@@ -161,8 +161,8 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
         <span style={{
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase',
-          color: 'rgba(250,247,240,0.38)',
-          border: '1px solid rgba(168, 85, 247,0.18)',
+          color: 'rgba(33,26,46,0.50)',
+          border: '1px solid rgba(124, 58, 237,0.18)',
           padding: '3px 8px', alignSelf: 'flex-start', marginTop: 4, borderRadius: 3,
         }}>
           {persona.gradeLabel}
@@ -171,18 +171,18 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
 
       {/* Title */}
       <h3 style={{
-        fontFamily: '"Montserrat", sans-serif',
+        fontFamily: '"Instrument Sans", sans-serif',
         fontWeight: 700,
         fontSize: compact ? 15 : 18,
         letterSpacing: '-0.02em',
-        color: '#faf7f0', lineHeight: 1.1, marginBottom: 4,
+        color: '#211a2e', lineHeight: 1.1, marginBottom: 4,
       }}>
         {persona.title}
       </h3>
 
       {/* Tagline */}
       <p style={{
-        fontFamily: '"Lora", serif',
+        fontFamily: '"Newsreader", serif',
         fontStyle: 'italic', fontSize: 12,
         color: persona.accent, lineHeight: 1.4, marginBottom: 8,
       }}>
@@ -191,8 +191,8 @@ function PersonaCard({ persona, index, selected, onSelect, compact }) {
 
       {/* Bio */}
       <p style={{
-        fontFamily: '"Lora", serif',
-        fontSize: 12, color: 'rgba(250,247,240,0.42)',
+        fontFamily: '"Newsreader", serif',
+        fontSize: 12, color: 'rgba(33,26,46,0.54)',
         lineHeight: 1.5, margin: 0,
       }}>
         {persona.bio}
@@ -210,20 +210,20 @@ export default function PersonalitySelector({ selected, onSelect }) {
         <div style={{
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: '#a855f7', marginBottom: 8,
+          color: '#7c3aed', marginBottom: 8,
         }}>
           Step 1: Choose your lecturer
         </div>
         <h2 style={{
-          fontFamily: '"Montserrat", sans-serif',
-          fontWeight: 900, fontSize: 32,
-          color: '#faf7f0', lineHeight: 1.05, marginBottom: 10,
+          fontFamily: '"Instrument Serif", serif',
+          fontWeight: 400, fontSize: 36,
+          color: '#211a2e', lineHeight: 1.05, marginBottom: 10,
         }}>
           Choose your lecturer.
         </h2>
         <p style={{
-          fontFamily: '"Lora", serif',
-          fontSize: 15, color: 'rgba(250,247,240,0.55)',
+          fontFamily: '"Newsreader", serif',
+          fontSize: 15, color: 'rgba(33,26,46,0.64)',
           maxWidth: 520, lineHeight: 1.6,
         }}>
           Each lecturer has a distinct voice, teaching style, and way of responding to your answers.

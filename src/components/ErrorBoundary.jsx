@@ -100,8 +100,8 @@ const styles = {
     padding: '40px',
     maxWidth: '500px',
     width: '100%',
-    border: '1px solid #2a2f3e',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+    border: '1px solid #e8e3f3',
+    boxShadow: '0 4px 6px rgba(41,28,66,0.10)',
   },
   title: {
     fontSize: '24px',
@@ -112,7 +112,7 @@ const styles = {
   },
   message: {
     fontSize: '14px',
-    color: '#b0b8c1',
+    color: '#6b6480',
     marginBottom: '24px',
     lineHeight: '1.6',
   },
@@ -121,7 +121,7 @@ const styles = {
     padding: '12px',
     backgroundColor: '#0f1419',
     borderRadius: '8px',
-    border: '1px solid #2a2f3e',
+    border: '1px solid #e8e3f3',
   },
   summary: {
     cursor: 'pointer',
@@ -155,8 +155,8 @@ const styles = {
     transition: 'background-color 0.2s',
   },
   secondaryButton: {
-    backgroundColor: '#2a2f3e',
-    color: '#b0b8c1',
+    backgroundColor: '#e8e3f3',
+    color: '#6b6480',
   },
 };
 

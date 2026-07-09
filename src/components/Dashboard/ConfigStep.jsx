@@ -7,34 +7,34 @@ import { motion } from 'framer-motion';
 function QuestionCountCard({ label, description, value, onChange, min, max }) {
   return (
     <motion.div
-      whileHover={{ y: -2, boxShadow: '0 8px 32px rgba(168, 85, 247,0.10)' }}
+      whileHover={{ y: -2, boxShadow: '0 8px 32px rgba(124, 58, 237,0.10)' }}
       transition={{ type: 'spring', stiffness: 300, damping: 28 }}
       style={{
-        background: '#161b22',
-        border: '1px solid rgba(168, 85, 247,0.12)',
+        background: '#ffffff',
+        border: '1px solid rgba(124, 58, 237,0.12)',
         borderRadius: 10,
         padding: 24,
         display: 'flex',
         flexDirection: 'column',
         gap: 14,
-        boxShadow: '0 1px 8px rgba(0,0,0,0.30)',
+        boxShadow: '0 1px 8px rgba(41,28,66,0.10)',
       }}
     >
       <div>
         <h3 style={{
-          fontFamily: '"Montserrat", sans-serif',
+          fontFamily: '"Instrument Sans", sans-serif',
           fontWeight: 700,
           fontSize: 18,
           letterSpacing: '-0.02em',
-          color: '#faf7f0',
+          color: '#211a2e',
           marginBottom: 4,
         }}>
           {label}
         </h3>
         <p style={{
-          fontFamily: '"Lora", serif',
+          fontFamily: '"Newsreader", serif',
           fontSize: 13,
-          color: 'rgba(250,247,240,0.50)',
+          color: 'rgba(33,26,46,0.60)',
           lineHeight: 1.5,
         }}>
           {description}
@@ -51,9 +51,9 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
             width: 36,
             height: 36,
             borderRadius: '50%',
-            border: '1.5px solid rgba(168, 85, 247,0.25)',
+            border: '1.5px solid rgba(124, 58, 237,0.25)',
             background: 'transparent',
-            color: '#a855f7',
+            color: '#7c3aed',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -62,7 +62,7 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
             transition: 'background 0.15s',
           }}
           onMouseEnter={e => {
-            if (value > min) e.currentTarget.style.background = 'rgba(168, 85, 247,0.08)';
+            if (value > min) e.currentTarget.style.background = 'rgba(124, 58, 237,0.08)';
           }}
           onMouseLeave={e => {
             e.currentTarget.style.background = 'transparent';
@@ -73,13 +73,13 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
 
         <motion.span
           key={value}
-          initial={{ scale: 1.2, color: '#a855f7' }}
-          animate={{ scale: 1, color: '#a855f7' }}
+          initial={{ scale: 1.2, color: '#7c3aed' }}
+          animate={{ scale: 1, color: '#7c3aed' }}
           style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 48,
             fontWeight: 600,
-            color: '#a855f7',
+            color: '#7c3aed',
             lineHeight: 1,
           }}
         >
@@ -95,9 +95,9 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
             width: 36,
             height: 36,
             borderRadius: '50%',
-            border: '1.5px solid rgba(168, 85, 247,0.25)',
+            border: '1.5px solid rgba(124, 58, 237,0.25)',
             background: 'transparent',
-            color: '#a855f7',
+            color: '#7c3aed',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -106,7 +106,7 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
             transition: 'background 0.15s',
           }}
           onMouseEnter={e => {
-            if (value < max) e.currentTarget.style.background = 'rgba(168, 85, 247,0.08)';
+            if (value < max) e.currentTarget.style.background = 'rgba(124, 58, 237,0.08)';
           }}
           onMouseLeave={e => {
             e.currentTarget.style.background = 'transparent';
@@ -123,7 +123,7 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
           transform: 'translateY(-50%)',
           left: 0,
           height: 2,
-          background: 'linear-gradient(90deg, #a855f7, #9333ea)',
+          background: 'linear-gradient(90deg, #7c3aed, #6d28d9)',
           width: `${((value - min) / (max - min)) * 100}%`,
           pointerEvents: 'none',
           transition: 'width 0.1s',
@@ -143,7 +143,7 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
         justifyContent: 'space-between',
         fontFamily: '"JetBrains Mono", ui-monospace, monospace',
         fontSize: 10,
-        color: 'rgba(250,247,240,0.28)',
+        color: 'rgba(33,26,46,0.42)',
         letterSpacing: '0.12em',
       }}>
         <span>{min}</span>

@@ -26,25 +26,26 @@
 <meta name="twitter:image:alt" content="SlideIQ — AI-powered lecture quiz generator" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #0d1117;
-  --card: #161b22;
-  --card-deep: #1c2128;
-  --accent: #a855f7;
-  --accent-deep: #9333ea;
-  --border: rgba(168, 85, 247,0.12);
-  --border-hover: rgba(168, 85, 247,0.35);
-  --text: #faf7f0;
-  --text-dim: rgba(250,247,240,0.60);
-  --text-faint: rgba(250,247,240,0.35);
-  --font-display: "Montserrat", sans-serif;
-  --font-body: "Lora", serif;
+  --bg: #f7f5fb;
+  --card: #ffffff;
+  --card-deep: #f1edf9;
+  --accent: #7c3aed;
+  --accent-deep: #6d28d9;
+  --border: rgba(124, 58, 237,0.12);
+  --border-hover: rgba(124, 58, 237,0.35);
+  --text: #211a2e;
+  --text-dim: rgba(33,26,46,0.68);
+  --text-faint: rgba(33,26,46,0.48);
+  --font-display: "Instrument Sans", sans-serif;
+  --font-serif: "Instrument Serif", serif;
+  --font-body: "Newsreader", serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
-  --cta: linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%);
+  --cta: linear-gradient(135deg, #7c3aed 0%, #6d28d9 60%, #5b21b6 100%);
 }
 
 html { scroll-behavior: smooth; }
@@ -57,24 +58,25 @@ body {
   overflow-x: hidden;
 }
 
-::selection { background: rgba(168, 85, 247,0.22); color: #faf7f0; }
+::selection { background: rgba(124, 58, 237,0.16); color: #211a2e; }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(168, 85, 247,0.22); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(124, 58, 237,0.28); border-radius: 2px; }
 
 /* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 48px; height: 64px;
-  background: rgba(13,17,23,0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(247,245,251,0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
 
 .wordmark {
   font-family: var(--font-display);
-  font-weight: 900; font-size: 20px;
+  font-weight: 700; font-size: 20px;
   color: var(--text); letter-spacing: -0.02em;
   text-decoration: none; white-space: nowrap;
 }
@@ -96,15 +98,15 @@ nav .nav-links a:hover { color: var(--text); }
   font-family: var(--font-mono);
   font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
   padding: 9px 20px;
-  background: rgba(168, 85, 247,0.08);
-  border: 1px solid rgba(168, 85, 247,0.30);
+  background: rgba(124, 58, 237,0.08);
+  border: 1px solid rgba(124, 58, 237,0.30);
   border-radius: 6px; color: var(--accent);
   text-decoration: none; cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
 }
 .btn-nav:hover {
-  background: rgba(168, 85, 247,0.14);
-  border-color: rgba(168, 85, 247,0.55);
+  background: rgba(124, 58, 237,0.14);
+  border-color: rgba(124, 58, 237,0.55);
 }
 
 /* ── HERO ── */
@@ -117,22 +119,19 @@ nav .nav-links a:hover { color: var(--text); }
   overflow: hidden;
 }
 
+#rubble-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; display: block;
+}
+
 .hero-glow {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 60% at 50% 10%, rgba(168, 85, 247,0.08) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(168, 85, 247,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 35% at 80% 75%, rgba(168, 85, 247,0.03) 0%, transparent 60%);
+    radial-gradient(ellipse 70% 60% at 50% 8%, rgba(124, 58, 237,0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 90% 50% at 50% 100%, rgba(247,245,251,1) 0%, rgba(247,245,251,0) 55%);
 }
 
-.hero-grid {
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(168, 85, 247,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(168, 85, 247,0.04) 1px, transparent 1px);
-  background-size: 80px 80px;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 70%);
-}
+.hero > *:not(#rubble-canvas):not(.hero-glow) { position: relative; z-index: 2; }
 
 .hero-eyebrow {
   font-family: var(--font-mono);
@@ -142,16 +141,17 @@ nav .nav-links a:hover { color: var(--text); }
 }
 
 .hero-headline {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(48px, 8vw, 96px);
-  line-height: 0.95; letter-spacing: -0.03em;
-  color: var(--text); max-width: 900px;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(52px, 8.4vw, 104px);
+  line-height: 0.98; letter-spacing: -0.015em;
+  color: var(--text); max-width: 940px;
   opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
 }
 
 .hero-headline em {
   font-style: italic; color: var(--accent);
+  letter-spacing: -0.005em;
 }
 
 .hero-sub {
@@ -175,26 +175,26 @@ nav .nav-links a:hover { color: var(--text); }
   background: var(--cta);
   border: none; border-radius: 8px;
   font-family: var(--font-display);
-  font-weight: 700; font-size: 15px;
-  color: #0d1117; text-decoration: none;
-  cursor: pointer; transition: opacity 0.2s, transform 0.15s;
-  box-shadow: 0 0 40px rgba(168, 85, 247,0.25);
+  font-weight: 600; font-size: 15px; letter-spacing: 0.01em;
+  color: #ffffff; text-decoration: none;
+  cursor: pointer; transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.28), 0 1px 3px rgba(124, 58, 237, 0.20);
 }
-.btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+.btn-primary:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 14px 32px rgba(124, 58, 237, 0.32), 0 2px 4px rgba(124, 58, 237, 0.20); }
 .btn-primary:active { transform: translateY(0) scale(0.99); }
 
 .btn-secondary {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 15px 28px;
   background: transparent;
-  border: 1px solid rgba(250,247,240,0.18);
+  border: 1px solid rgba(33,26,46,0.18);
   border-radius: 8px;
   font-family: var(--font-mono);
   font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--text-dim); text-decoration: none;
   cursor: pointer; transition: border-color 0.2s, color 0.2s;
 }
-.btn-secondary:hover { border-color: rgba(250,247,240,0.40); color: var(--text); }
+.btn-secondary:hover { border-color: rgba(33,26,46,0.52); color: var(--text); }
 
 .hero-badge {
   display: flex; align-items: center; gap: 8px;
@@ -216,13 +216,13 @@ nav .nav-links a:hover { color: var(--text); }
   padding: 40px 48px;
   display: flex; align-items: center; justify-content: center;
   gap: 80px; flex-wrap: wrap;
-  background: rgba(22,27,34,0.50);
+  background: rgba(124,58,237,0.03);
 }
 
 .stat-item { text-align: center; }
 .stat-number {
-  font-family: var(--font-display);
-  font-weight: 900; font-size: 36px;
+  font-family: var(--font-serif);
+  font-weight: 400; font-size: 40px;
   color: var(--accent); letter-spacing: -0.02em; line-height: 1;
 }
 .stat-label {
@@ -242,10 +242,11 @@ section { padding: 120px 24px; }
 }
 
 .section-heading {
-  font-family: var(--font-display);
-  font-weight: 900; font-size: clamp(32px, 5vw, 56px);
-  color: var(--text); letter-spacing: -0.02em; line-height: 1.0;
+  font-family: var(--font-serif);
+  font-weight: 400; font-size: clamp(36px, 5.4vw, 62px);
+  color: var(--text); letter-spacing: -0.01em; line-height: 1.02;
 }
+.section-heading em { font-style: italic; }
 
 .section-sub {
   font-family: var(--font-body);
@@ -264,19 +265,21 @@ section { padding: 120px 24px; }
   padding: 32px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   position: relative; overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s;
+  box-shadow: 0 1px 2px rgba(41,28,66,0.04), 0 6px 20px rgba(41,28,66,0.05);
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 .step-card:hover {
   border-color: var(--border-hover);
   transform: translateY(-3px);
+  box-shadow: 0 2px 4px rgba(41,28,66,0.05), 0 14px 34px rgba(124,58,237,0.10);
 }
 
 .step-number {
-  font-family: var(--font-display);
-  font-weight: 900; font-size: 72px;
-  color: rgba(168, 85, 247,0.08);
+  font-family: var(--font-serif);
+  font-weight: 400; font-size: 76px;
+  color: rgba(124, 58, 237,0.10);
   line-height: 1; position: absolute;
   top: 16px; right: 24px;
   letter-spacing: -0.04em;
@@ -284,8 +287,8 @@ section { padding: 120px 24px; }
 
 .step-icon {
   width: 44px; height: 44px; border-radius: 10px;
-  background: rgba(168, 85, 247,0.10);
-  border: 1px solid rgba(168, 85, 247,0.22);
+  background: rgba(124, 58, 237,0.10);
+  border: 1px solid rgba(124, 58, 237,0.22);
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 20px;
 }
@@ -306,7 +309,7 @@ section { padding: 120px 24px; }
 }
 
 /* ── PERSONALITIES ── */
-.personas-section { background: rgba(22,27,34,0.30); }
+.personas-section { background: rgba(124,58,237,0.04); }
 
 .personas-grid {
   display: grid;
@@ -318,13 +321,15 @@ section { padding: 120px 24px; }
   padding: 20px 22px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  transition: border-color 0.2s, transform 0.2s;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(41,28,66,0.04), 0 4px 14px rgba(41,28,66,0.04);
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   cursor: default;
 }
 .persona-card:hover {
   border-color: var(--border-hover);
   transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(41,28,66,0.05), 0 10px 26px rgba(124,58,237,0.09);
 }
 
 .persona-glyph {
@@ -347,9 +352,11 @@ section { padding: 120px 24px; }
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2px; margin-top: 64px;
+  gap: 1px; margin-top: 64px;
+  background: var(--border);
   border: 1px solid var(--border);
-  border-radius: 12px; overflow: hidden;
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 1px 2px rgba(41,28,66,0.04), 0 8px 26px rgba(41,28,66,0.05);
 }
 
 .feature-cell {
@@ -390,7 +397,8 @@ section { padding: 120px 24px; }
   padding: 28px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(41,28,66,0.04), 0 6px 20px rgba(41,28,66,0.05);
 }
 
 .testimonial-quote {
@@ -406,8 +414,8 @@ section { padding: 120px 24px; }
 
 .testimonial-avatar {
   width: 36px; height: 36px; border-radius: 50%;
-  background: rgba(168, 85, 247,0.15);
-  border: 1px solid rgba(168, 85, 247,0.25);
+  background: rgba(124, 58, 237,0.15);
+  border: 1px solid rgba(124, 58, 237,0.25);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-mono); font-size: 12px;
   font-weight: 500; color: var(--accent); flex-shrink: 0;
@@ -433,21 +441,21 @@ section { padding: 120px 24px; }
 
 .cta-glow {
   position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(168, 85, 247,0.06) 0%, transparent 65%);
+  background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(124, 58, 237,0.06) 0%, transparent 65%);
 }
 
 .cta-ring {
   position: absolute;
-  border: 1px solid rgba(168, 85, 247,0.08);
+  border: 1px solid rgba(124, 58, 237,0.08);
   border-radius: 50%;
   top: 50%; left: 50%; transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
 .cta-heading {
-  font-family: var(--font-display);
-  font-weight: 900; font-size: clamp(40px, 7vw, 80px);
-  letter-spacing: -0.03em; line-height: 1.0;
+  font-family: var(--font-serif);
+  font-weight: 400; font-size: clamp(44px, 7.4vw, 88px);
+  letter-spacing: -0.015em; line-height: 1.02;
   color: var(--text); position: relative; z-index: 1;
 }
 
@@ -508,6 +516,11 @@ footer {
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .reveal { opacity: 1; transform: none; }
+}
+
 /* ── MOBILE ── */
 @media (max-width: 768px) {
   nav { padding: 0 20px; }
@@ -534,8 +547,8 @@ footer {
 
 <!-- HERO -->
 <section class="hero">
+  <canvas id="rubble-canvas" aria-hidden="true"></canvas>
   <div class="hero-glow"></div>
-  <div class="hero-grid"></div>
 
   <p class="hero-eyebrow">AI-powered lecture revision</p>
 
@@ -641,33 +654,33 @@ footer {
 
     <div class="personas-grid">
       <div class="persona-card reveal">
-        <span class="persona-glyph" style="color:#94a3b8"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <span class="persona-glyph" style="color:#64748b"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
           <circle cx="28" cy="28" r="22" stroke-dasharray="2 6"/>
           <circle cx="26" cy="29" r="14" stroke-dasharray="2 4" opacity="0.7"/>
           <circle cx="30" cy="27" r="6" stroke-dasharray="1 3" opacity="0.5"/>
         </svg></span>
-        <div class="persona-name" style="color:#94a3b8">Vague</div>
+        <div class="persona-name" style="color:#64748b">Vague</div>
         <div class="persona-quote">"Figure it out yourself."</div>
       </div>
       <div class="persona-card reveal reveal-delay-1">
-        <span class="persona-glyph" style="color:#f87171"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <span class="persona-glyph" style="color:#ef4444"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
           <path d="M8 14 L48 14 L28 48 Z"/>
           <path d="M14 22 L42 40" stroke-width="1.2"/>
         </svg></span>
-        <div class="persona-name" style="color:#f87171">Harsh</div>
+        <div class="persona-name" style="color:#ef4444">Harsh</div>
         <div class="persona-quote">"No excuses. No mercy."</div>
       </div>
       <div class="persona-card reveal reveal-delay-2">
-        <span class="persona-glyph" style="color:#a78bfa"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <span class="persona-glyph" style="color:#8b5cf6"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
           <path d="M28 8 L48 42 L8 42 Z"/>
           <path d="M28 48 L8 14 L48 14 Z" opacity="0.65"/>
           <circle cx="28" cy="28" r="2.5" fill="currentColor" stroke="none"/>
         </svg></span>
-        <div class="persona-name" style="color:#a78bfa">Out to Fail You</div>
+        <div class="persona-name" style="color:#8b5cf6">Out to Fail You</div>
         <div class="persona-quote">"I write traps."</div>
       </div>
       <div class="persona-card reveal reveal-delay-3">
-        <span class="persona-glyph" style="color:#fb923c"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <span class="persona-glyph" style="color:#f97316"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
           <circle cx="28" cy="28" r="9"/>
           <line x1="28" y1="28" x2="28" y2="6" opacity="0.85"/>
           <line x1="28" y1="28" x2="43.56" y2="15.56" opacity="0.85"/>
@@ -678,42 +691,42 @@ footer {
           <line x1="28" y1="28" x2="6" y2="28" opacity="0.85"/>
           <line x1="28" y1="28" x2="12.44" y2="15.56" opacity="0.85"/>
         </svg></span>
-        <div class="persona-name" style="color:#fb923c">Nice</div>
+        <div class="persona-name" style="color:#f97316">Nice</div>
         <div class="persona-quote">"You're doing great!"</div>
       </div>
       <div class="persona-card reveal">
-        <span class="persona-glyph" style="color:#a855f7"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <span class="persona-glyph" style="color:#7c3aed"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
           <path d="M6 28 Q14 18 22 28 T38 28 T50 28"/>
           <path d="M6 36 Q14 26 22 36 T38 36 T50 36" opacity="0.5"/>
         </svg></span>
-        <div class="persona-name" style="color:#a855f7">Very Easy</div>
+        <div class="persona-name" style="color:#7c3aed">Very Easy</div>
         <div class="persona-quote">"Basically a gift."</div>
       </div>
       <div class="persona-card reveal reveal-delay-1">
-        <span class="persona-glyph" style="color:#60a5fa"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <span class="persona-glyph" style="color:#3b82f6"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
           <circle cx="22" cy="28" r="14"/>
           <circle cx="34" cy="28" r="14"/>
           <line x1="28" y1="14" x2="28" y2="42" opacity="0.4"/>
         </svg></span>
-        <div class="persona-name" style="color:#60a5fa">Reassuring</div>
+        <div class="persona-name" style="color:#3b82f6">Reassuring</div>
         <div class="persona-quote">"Mistakes are growth."</div>
       </div>
       <div class="persona-card reveal reveal-delay-2">
-        <span class="persona-glyph" style="color:#eab308"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <span class="persona-glyph" style="color:#ca8a04"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
           <path d="M28 8 A20 20 0 0 1 28 48"/>
           <line x1="28" y1="8" x2="28" y2="48" stroke-dasharray="2 4" opacity="0.7"/>
           <line x1="14" y1="28" x2="42" y2="28" stroke-dasharray="2 4" opacity="0.4"/>
         </svg></span>
-        <div class="persona-name" style="color:#eab308">Cheap</div>
+        <div class="persona-name" style="color:#ca8a04">Cheap</div>
         <div class="persona-quote">"I wrote this on the bus."</div>
       </div>
       <div class="persona-card reveal reveal-delay-3">
-        <span class="persona-glyph" style="color:#f87171"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <span class="persona-glyph" style="color:#ef4444"><svg width="48" height="48" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
           <path d="M14 12 L28 44 L42 12"/>
           <path d="M20 22 L28 40 L36 22" opacity="0.6"/>
           <circle cx="28" cy="46" r="2" fill="currentColor" stroke="none"/>
         </svg></span>
-        <div class="persona-name" style="color:#f87171">Harvard Grade</div>
+        <div class="persona-name" style="color:#ef4444">Harvard Grade</div>
         <div class="persona-quote">"Mastery is the floor."</div>
       </div>
     </div>
@@ -794,7 +807,7 @@ footer {
 </section>
 
 <!-- TESTIMONIALS -->
-<section style="background: rgba(22,27,34,0.30); padding: 100px 24px;">
+<section style="background: rgba(124,58,237,0.04); padding: 100px 24px;">
   <div class="section-inner">
     <div class="reveal">
       <p class="section-eyebrow">Real students</p>
@@ -866,6 +879,393 @@ footer {
 </footer>
 
 <script>
+/* ── RUBBLE v2 — faceted-rock WebGL field with seismic rumble ──
+   Large irregular violet boulders and fine debris tumble above the
+   paper. Each rock has a procedurally-cut polygonal silhouette,
+   voronoi facets lit by a directional light, fracture cracks,
+   surface grain, a cast shadow, and atmospheric haze with depth.
+   Every few seconds a quake ripples outward — heavy rocks resist
+   the shake (inertia), light debris rattles hard. Pure WebGL. */
+(function () {
+  const canvas = document.getElementById('rubble-canvas');
+  if (!canvas) return;
+  const gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: true });
+  if (!gl) { canvas.style.display = 'none'; return; }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile    = window.matchMedia('(max-width: 768px)').matches;
+  const BOULDERS = isMobile ? 10 : 20;
+  const DEBRIS   = isMobile ? 28 : 58;
+  const COUNT    = BOULDERS + DEBRIS;
+
+  /* ── VERTEX SHADER ── */
+  const VERT = `
+precision highp float;
+attribute vec2 aCorner;
+attribute vec4 aSeed;    /* x: xpos  y: style  z: phase  w: sizeNorm */
+attribute vec2 aSeed2;   /* shape + facet seeds */
+uniform float uTime;
+uniform float uQuake;
+uniform float uRippleR;
+uniform vec2  uMouse;
+uniform float uAspect;
+uniform float uPass;     /* 0 = shadow, 1 = rock */
+varying vec2  vUv;
+varying float vTint;
+varying float vBright;
+varying vec2  vShapeSeed;
+varying float vRot;
+varying float vFade;
+varying float vSizeNorm;
+varying float vTumble;
+
+void main() {
+  float s1 = aSeed.x, s2 = aSeed.y, s3 = aSeed.z, sizeNorm = aSeed.w;
+  float isBoulder = step(0.5, sizeNorm);
+
+  /* size: debris 0.012..0.040,  boulders 0.085..0.210 */
+  float size = mix(
+    mix(0.012, 0.040, sizeNorm / 0.45),
+    mix(0.085, 0.210, (sizeNorm - 0.6) / 0.4),
+    isBoulder
+  );
+  float depth = mix(0.45, 1.0, sizeNorm);
+  float speed = mix(0.032, 0.007, sizeNorm);
+
+  float x = s1 * 2.0 - 1.0;
+  float y = mod(s3 * 2.6 + uTime * speed, 2.6) - 1.3;
+  x += sin(uTime * 0.07 + s2 * 6.2831) * 0.045 * (1.0 - sizeNorm * 0.6);
+
+  /* seismic jitter — heavy rocks barely move, chips rattle */
+  float inertia = mix(1.30, 0.28, sizeNorm);
+  float ph = s2 * 40.0;
+  vec2 jitter = vec2(sin(uTime * 57.0 + ph), cos(uTime * 46.0 + ph))
+                * uQuake * 0.013 * inertia;
+
+  /* ripple ring push */
+  vec2 fromCenter = vec2(x * uAspect, y);
+  float d = length(fromCenter);
+  float band = exp(-pow((d - uRippleR) * 5.0, 2.0));
+  vec2 push = (d > 0.001 ? normalize(fromCenter) / vec2(uAspect, 1.0) : vec2(0.0))
+              * band * uQuake * 0.048 * inertia;
+
+  /* mouse parallax */
+  vec2 parallax = uMouse * 0.045 * depth;
+
+  /* spin + 3-D tumble squash */
+  float rotSpeed = mix(0.70, 0.10, sizeNorm) * (step(0.5, s2) * 2.0 - 1.0);
+  float ang   = s3 * 6.2831 + uTime * rotSpeed
+                + uQuake * sin(uTime * 29.0 + ph) * 0.32 * inertia;
+  float tumble = sin(uTime * mix(0.50, 0.10, sizeNorm) + s1 * 6.2831);
+  float squash  = mix(1.0, 0.60 + 0.40 * abs(tumble), isBoulder);
+
+  float cv = cos(ang), sv = sin(ang);
+  vec2 local  = aCorner * vec2(1.0, squash);
+  vec2 corner = vec2(local.x * cv - local.y * sv,
+                     local.x * sv + local.y * cv) * size;
+  corner.x /= uAspect;
+
+  vec2 pos = vec2(x, y) + corner + jitter + push + parallax;
+
+  /* shadow pass: offset along light direction */
+  float shadowOffset = (1.0 - uPass);
+  pos += vec2(0.011 / uAspect, -0.018) * size * 9.0 * shadowOffset;
+
+  gl_Position = vec4(pos, 0.0, 1.0);
+
+  /* fade boulders near headline zone so text stays readable */
+  float centerD = length(vec2(x * uAspect * 0.80, (y - 0.05) * 1.20));
+  float centerFade = mix(smoothstep(0.16, 0.80, centerD),
+                         1.0, 1.0 - isBoulder * 0.88);
+
+  vUv        = aCorner;
+  vTint      = s2;
+  vBright    = band * uQuake;
+  vShapeSeed = aSeed2;
+  vRot       = ang;
+  vFade      = centerFade * mix(0.50, 1.0, depth);
+  vSizeNorm  = sizeNorm;
+  vTumble    = tumble;
+}`;
+
+  /* ── FRAGMENT SHADER ── */
+  const FRAG = `
+precision highp float;
+varying vec2  vUv;
+varying float vTint;
+varying float vBright;
+varying vec2  vShapeSeed;
+varying float vRot;
+varying float vFade;
+varying float vSizeNorm;
+varying float vTumble;
+uniform float uPass;
+
+float hash1(float n) { return fract(sin(n) * 43758.5453123); }
+vec2  hash2(vec2  p) {
+  return fract(sin(vec2(dot(p, vec2(127.1, 311.7)),
+                        dot(p, vec2(269.5, 183.3)))) * 43758.5453);
+}
+
+/* irregular convex rock silhouette via per-segment radius variation */
+float rockMask(vec2 uv, float seed, float soft) {
+  float a  = atan(uv.y, uv.x) + 3.14159265;
+  float N  = 6.0 + floor(hash1(seed * 7.13) * 4.0);
+  float seg = a * N / 6.2831853;
+  float i  = floor(seg), f = fract(seg);
+  f = f * f * (3.0 - 2.0 * f);                           /* smoothstep */
+  float r0 = 0.58 + hash1(seed + mod(i,       N)) * 0.40;
+  float r1 = 0.58 + hash1(seed + mod(i + 1.0, N)) * 0.40;
+  float rad = mix(r0, r1, f);
+  return smoothstep(rad, rad - soft, length(uv));
+}
+
+/* cellular / voronoi — returns (cell_center.xy, edge_dist) */
+vec3 voronoi(vec2 p) {
+  vec2 n = floor(p), f = fract(p);
+  vec2 mid = vec2(0.0);
+  float f1 = 8.0, f2 = 8.0;
+  for (int j = -1; j <= 1; j++)
+  for (int i = -1; i <= 1; i++) {
+    vec2 g = vec2(float(i), float(j));
+    vec2 o = hash2(n + g);
+    float d = length(g + o - f);
+    if (d < f1) { f2 = f1; f1 = d; mid = n + g + o; }
+    else if (d < f2) { f2 = d; }
+  }
+  return vec3(mid, f2 - f1);
+}
+
+void main() {
+  float isBoulder = step(0.5, vSizeNorm);
+  float soft  = mix(0.12, 0.030, isBoulder);
+  float mask  = rockMask(vUv, vShapeSeed.x * 61.7, soft);
+  if (mask < 0.003) discard;
+
+  /* ── SHADOW PASS: soft blurred plum ellipse beneath rock ── */
+  if (uPass < 0.5) {
+    float sm = rockMask(vUv * 0.80, vShapeSeed.x * 61.7, 0.50);
+    float a  = sm * 0.18 * vFade * (0.30 + 0.70 * isBoulder);
+    vec3  sc = vec3(0.14, 0.08, 0.24);
+    gl_FragColor = vec4(sc * a, a);
+    return;
+  }
+
+  /* ── ROCK PASS ── */
+
+  /* voronoi facets — denser on boulders */
+  float fscale = mix(2.2, 4.0, isBoulder);
+  vec3  vor  = voronoi(vUv * fscale + vShapeSeed.y * 17.0);
+  vec2  cid  = vor.xy;
+  float edge = vor.z;                                      /* crack width */
+
+  /* per-facet micro-normal, rotated with the rock so light shifts as it tumbles */
+  vec2  h   = hash2(cid);
+  vec3  nrm = normalize(vec3((h - 0.5) * 1.40, 0.70));
+  float cr  = cos(vRot), sr = sin(vRot);
+  nrm.xy = vec2(nrm.x * cr - nrm.y * sr,
+                nrm.x * sr + nrm.y * cr);
+  nrm = normalize(nrm + vec3(0.0, vTumble * 0.38, 0.0));
+
+  /* directional light from upper-left */
+  vec3 L    = normalize(vec3(-0.40, 0.65, 0.65));
+  float diff = max(dot(nrm, L), 0.0);
+  vec3  H   = normalize(L + vec3(0.0, 0.0, 1.0));
+  float spec = pow(max(dot(nrm, H), 0.0), 32.0);
+
+  /* violet stone palette */
+  vec3 hi  = vec3(0.92, 0.88, 0.98);    /* pale lavender highlight  */
+  vec3 mid = mix(vec3(0.72, 0.62, 0.92), vec3(0.55, 0.40, 0.88), vTint);
+  vec3 drk = vec3(0.24, 0.14, 0.38);    /* deep plum shadow         */
+
+  vec3 col = mix(drk, mid, diff * diff);
+  col = mix(col, hi, smoothstep(0.68, 1.0, diff) * 0.82);
+  col += spec * vec3(0.85, 0.78, 1.00) * 0.28;
+
+  /* fracture cracks — dark lines between voronoi cells */
+  float crackWidth = mix(0.06, 0.12, isBoulder);
+  float crackMask  = smoothstep(0.0, crackWidth, edge);
+  col *= mix(0.48, 1.0, crackMask);
+
+  /* high-frequency surface grain */
+  float grain = hash1(dot(floor(vUv * 110.0 + vShapeSeed), vec2(1.0, 57.0)));
+  col *= 0.92 + grain * 0.08;
+
+  /* silhouette rim: lit edge toward light, shadowed away from it */
+  float r    = length(vUv);
+  float side = dot(normalize(vUv + 1e-5), L.xy);
+  col *= 1.0 - smoothstep(0.42, 1.0, r) * (0.35 - side * 0.25);
+  col += smoothstep(0.68, 0.96, r) * max(side, 0.0) * vec3(0.70, 0.60, 1.00) * 0.20;
+
+  /* quake ripple flash */
+  col += vec3(0.52, 0.36, 0.96) * vBright * 0.40;
+
+  /* atmospheric depth haze — small chips fade toward paper tint */
+  vec3 paper = vec3(0.969, 0.961, 0.984);
+  float haze = mix(0.68, 0.04, smoothstep(0.0, 1.0, vSizeNorm));
+  col = mix(col, paper, haze);
+
+  float alpha = mask * vFade * mix(0.52, 0.97, isBoulder);
+  gl_FragColor = vec4(col * alpha, alpha);
+}`;
+
+  function compile(type, src) {
+    const sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+      console.warn('Rubble shader error:', gl.getShaderInfoLog(sh));
+      return null;
+    }
+    return sh;
+  }
+
+  const vs = compile(gl.VERTEX_SHADER,   VERT);
+  const fs = compile(gl.FRAGMENT_SHADER, FRAG);
+  if (!vs || !fs) { canvas.style.display = 'none'; return; }
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.warn('Rubble link error:', gl.getProgramInfoLog(prog));
+    canvas.style.display = 'none'; return;
+  }
+  gl.useProgram(prog);
+
+  /* geometry: two-triangle quad per shard, sorted far→near */
+  const shards = [];
+  for (let i = 0; i < DEBRIS;   i++)
+    shards.push({ sizeNorm: Math.random() * 0.45,
+                  seed: [Math.random(), Math.random(), Math.random()],
+                  cuts: [Math.random(), Math.random()] });
+  for (let i = 0; i < BOULDERS; i++)
+    shards.push({ sizeNorm: 0.60 + Math.random() * 0.40,
+                  seed: [Math.random(), Math.random(), Math.random()],
+                  cuts: [Math.random(), Math.random()] });
+  shards.sort((a, b) => a.sizeNorm - b.sizeNorm);
+
+  const corners = [[-1,-1],[1,-1],[1,1], [-1,-1],[1,1],[-1,1]];
+  const buf = new Float32Array(COUNT * 6 * 8);
+  let o = 0;
+  for (const sh of shards)
+    for (let v = 0; v < 6; v++) {
+      buf[o++] = corners[v][0]; buf[o++] = corners[v][1];
+      buf[o++] = sh.seed[0];   buf[o++] = sh.seed[1];
+      buf[o++] = sh.seed[2];   buf[o++] = sh.sizeNorm;
+      buf[o++] = sh.cuts[0];   buf[o++] = sh.cuts[1];
+    }
+
+  const vbo = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+  gl.bufferData(gl.ARRAY_BUFFER, buf, gl.STATIC_DRAW);
+
+  const STRIDE = 8 * 4;
+  function attr(name, size, offset) {
+    const loc = gl.getAttribLocation(prog, name);
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, size, gl.FLOAT, false, STRIDE, offset * 4);
+  }
+  attr('aCorner', 2, 0);
+  attr('aSeed',   4, 2);
+  attr('aSeed2',  2, 6);
+
+  const uTime    = gl.getUniformLocation(prog, 'uTime');
+  const uQuake   = gl.getUniformLocation(prog, 'uQuake');
+  const uRippleR = gl.getUniformLocation(prog, 'uRippleR');
+  const uMouse   = gl.getUniformLocation(prog, 'uMouse');
+  const uAspect  = gl.getUniformLocation(prog, 'uAspect');
+  const uPass    = gl.getUniformLocation(prog, 'uPass');
+
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  gl.clearColor(0, 0, 0, 0);
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+      canvas.width  = w * dpr;
+      canvas.height = h * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+  }
+  window.addEventListener('resize', resize, { passive: true });
+
+  let mx = 0, my = 0, tx = 0, ty = 0;
+  if (!isMobile) {
+    window.addEventListener('mousemove', e => {
+      tx = (e.clientX / window.innerWidth)  * 2 - 1;
+      ty = -((e.clientY / window.innerHeight) * 2 - 1);
+    }, { passive: true });
+  }
+
+  let quake = 0, ripple = 0, nextQuake = 2.2;
+  let visible = true, raf = null;
+
+  const io = new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible && raf === null && !reduceMotion)
+      raf = requestAnimationFrame(frame);
+  }, { threshold: 0 });
+  io.observe(canvas);
+
+  const t0 = performance.now();
+  let last = t0;
+
+  function drawScene(t) {
+    const asp = canvas.height > 0 ? canvas.width / canvas.height : 1;
+    resize();
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(uTime,    t);
+    gl.uniform1f(uQuake,   quake + 0.055);
+    gl.uniform1f(uRippleR, ripple);
+    gl.uniform2f(uMouse,   mx, my);
+    gl.uniform1f(uAspect,  asp);
+    /* shadows first so they sit beneath all rocks */
+    gl.uniform1f(uPass, 0.0);
+    gl.drawArrays(gl.TRIANGLES, 0, COUNT * 6);
+    /* rocks on top */
+    gl.uniform1f(uPass, 1.0);
+    gl.drawArrays(gl.TRIANGLES, 0, COUNT * 6);
+  }
+
+  function frame(now) {
+    raf = null;
+    if (!visible) return;
+    const t  = (now - t0) / 1000;
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+
+    if (t > nextQuake) {
+      quake  = 1.0;
+      ripple = 0.0;
+      nextQuake = t + 4.5 + Math.random() * 3.0;
+    }
+    quake  *= Math.pow(0.24, dt);
+    ripple += dt * 1.5;
+
+    mx += (tx - mx) * 0.05;
+    my += (ty - my) * 0.05;
+
+    drawScene(t);
+    raf = requestAnimationFrame(frame);
+  }
+
+  resize();
+  if (reduceMotion) {
+    quake = 0; ripple = 9.0;
+    drawScene(8.0);
+  } else {
+    raf = requestAnimationFrame(frame);
+  }
+
+  canvas.addEventListener('webglcontextlost',
+    () => { canvas.style.display = 'none'; }, false);
+})();
+
+
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) {

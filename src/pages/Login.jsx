@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { IconGoogle } from '../components/Icons/Icons';
 import { useIsMobile } from '../hooks/useIsMobile';
 
-const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
+const CTA = 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 60%, #5b21b6 100%)';
 
 // Floating particle for background
 function Particle({ x, y, size, delay, duration }) {
@@ -17,7 +17,7 @@ function Particle({ x, y, size, delay, duration }) {
       style={{
         position: 'absolute', left: `${x}%`, top: `${y}%`,
         width: size, height: size, borderRadius: '50%',
-        background: '#a855f7', pointerEvents: 'none',
+        background: '#7c3aed', pointerEvents: 'none',
       }}
     />
   );
@@ -75,7 +75,7 @@ export default function Login() {
   return (
     <div style={{
       width: '100vw', minHeight: '100vh',
-      background: '#0d1117',
+      background: '#f7f5fb',
       display: 'flex',
       flexDirection: isMobile ? 'column' : 'row',
       overflow: isMobile ? 'auto' : 'hidden',
@@ -95,7 +95,7 @@ export default function Login() {
           width: '70vmax', height: '70vmax',
           marginTop: '-35vmax', marginLeft: '-35vmax',
           pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(168,85,247,0.07) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(124,58,237,0.07) 0%, transparent 65%)',
           willChange: 'transform, opacity',
         }}
       />
@@ -111,19 +111,19 @@ export default function Login() {
           padding: isMobile ? '48px 28px 36px' : '0 64px 0 80px',
           gap: isMobile ? 20 : 28,
           position: 'relative', zIndex: 1,
-          borderRight: isMobile ? 'none' : '1px solid rgba(168,85,247,0.10)',
-          borderBottom: isMobile ? '1px solid rgba(168,85,247,0.10)' : 'none',
+          borderRight: isMobile ? 'none' : '1px solid rgba(124,58,237,0.10)',
+          borderBottom: isMobile ? '1px solid rgba(124,58,237,0.10)' : 'none',
         }}
       >
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 80% 60% at 30% 50%, rgba(168,85,247,0.04) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 80% 60% at 30% 50%, rgba(124,58,237,0.04) 0%, transparent 70%)',
         }} />
 
         <motion.span variants={itemVariants} style={{
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: '#a855f7', position: 'relative',
+          color: '#7c3aed', position: 'relative',
         }}>
           Est. MMXXVI  A Reader's Companion
         </motion.span>
@@ -132,7 +132,7 @@ export default function Login() {
           variants={{ hidden: { scaleX: 0, opacity: 0 }, show: { scaleX: 1, opacity: 1, transition: { duration: 0.8, ease: [0.22,1,0.36,1] } } }}
           style={{
             width: 280, height: 1,
-            background: 'linear-gradient(90deg, #a855f7, rgba(168,85,247,0.10))',
+            background: 'linear-gradient(90deg, #7c3aed, rgba(124,58,237,0.10))',
             transformOrigin: 'left', position: 'relative',
           }}
         />
@@ -140,9 +140,9 @@ export default function Login() {
         <motion.h1
           variants={itemVariants}
           style={{
-            fontFamily: '"Montserrat", sans-serif',
-            fontWeight: 900, fontSize: isMobile ? 32 : 76,
-            lineHeight: 0.95, letterSpacing: '-0.02em', color: '#faf7f0', position: 'relative',
+            fontFamily: '"Instrument Serif", serif',
+            fontWeight: 400, fontSize: isMobile ? 40 : 84,
+            lineHeight: 0.98, letterSpacing: '-0.015em', color: '#211a2e', position: 'relative',
           }}
         >
           Your slides,<br />
@@ -150,7 +150,7 @@ export default function Login() {
             animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
             style={{
-              background: 'linear-gradient(135deg, #d8b4fe, #a855f7, #7c3aed, #d8b4fe)',
+              background: 'linear-gradient(135deg, #8b5cf6, #7c3aed, #5b21b6, #8b5cf6)',
               backgroundSize: '300% 300%',
               backgroundClip: 'text', WebkitBackgroundClip: 'text', color: 'transparent',
               fontStyle: 'italic', display: 'inline-block',
@@ -162,8 +162,8 @@ export default function Login() {
         </motion.h1>
 
         <motion.p variants={itemVariants} style={{
-          fontFamily: '"Lora", serif',
-          fontSize: 16, lineHeight: 1.75, color: 'rgba(250,247,240,0.65)', maxWidth: 440,
+          fontFamily: '"Newsreader", serif',
+          fontSize: 16, lineHeight: 1.75, color: 'rgba(33,26,46,0.72)', maxWidth: 440,
         }}>
           Upload a lecture. Choose a lecturer: patient, vicious, Harvard-grade, lazy.
           They'll explain your slides and quiz you in their own voice.
@@ -173,13 +173,13 @@ export default function Login() {
           display: 'flex', alignItems: 'center', gap: 10,
           fontFamily: '"JetBrains Mono", ui-monospace, monospace',
           fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
-          color: 'rgba(250,247,240,0.35)', flexWrap: 'wrap',
+          color: 'rgba(33,26,46,0.48)', flexWrap: 'wrap',
         }}>
           {['Eight lecturers', 'MCQ & Theory', 'Scored'].map((tag, i) => (
             <React.Fragment key={tag}>
-              {i > 0 && <span style={{ color: '#a855f7' }}>·</span>}
+              {i > 0 && <span style={{ color: '#7c3aed' }}>·</span>}
               <motion.span
-                whileHover={{ color: '#a855f7', y: -1 }}
+                whileHover={{ color: '#7c3aed', y: -1 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 style={{ cursor: 'default' }}
               >
@@ -210,10 +210,10 @@ export default function Login() {
           style={{
             width: '100%', maxWidth: 420,
             padding: isMobile ? '32px 24px' : '44px 40px',
-            background: '#161b22',
-            border: '1px solid rgba(168,85,247,0.14)',
+            background: '#ffffff',
+            border: '1px solid rgba(124,58,237,0.14)',
             borderRadius: 12,
-            boxShadow: '0 4px 32px rgba(0,0,0,0.40), 0 0 0 1px rgba(168,85,247,0.06)',
+            boxShadow: '0 4px 32px rgba(41,28,66,0.14), 0 0 0 1px rgba(124,58,237,0.06)',
             position: 'relative', overflow: 'hidden',
             rotateX: isMobile ? 0 : rotateX,
             rotateY: isMobile ? 0 : rotateY,
@@ -227,7 +227,7 @@ export default function Login() {
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             style={{
               position: 'absolute', top: 0, right: 0, width: 160, height: 160,
-              background: 'radial-gradient(circle at 80% 20%, rgba(168,85,247,0.12), transparent 65%)',
+              background: 'radial-gradient(circle at 80% 20%, rgba(124,58,237,0.12), transparent 65%)',
               pointerEvents: 'none',
             }}
           />
@@ -238,7 +238,7 @@ export default function Login() {
             style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase',
-              color: '#a855f7', position: 'relative',
+              color: '#7c3aed', position: 'relative',
             }}
           >
             Sign in
@@ -249,7 +249,7 @@ export default function Login() {
             transition={{ delay: 0.5, duration: 0.5, ease: 'easeOut' }}
             style={{
               width: '100%', height: 1,
-              background: 'rgba(168,85,247,0.14)',
+              background: 'rgba(124,58,237,0.14)',
               margin: '14px 0 24px', transformOrigin: 'left',
             }}
           />
@@ -258,8 +258,8 @@ export default function Login() {
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.45, type: 'spring', stiffness: 260, damping: 24 }}
             style={{
-              fontFamily: '"Montserrat", sans-serif',
-              fontWeight: 700, fontSize: 32, color: '#faf7f0',
+              fontFamily: '"Instrument Serif", serif',
+              fontWeight: 400, fontSize: 36, color: '#211a2e',
               lineHeight: 1.1, marginBottom: 10, position: 'relative',
             }}
           >
@@ -270,8 +270,8 @@ export default function Login() {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: 0.55 }}
             style={{
-              fontFamily: '"Lora", serif',
-              fontSize: 14, color: 'rgba(250,247,240,0.55)',
+              fontFamily: '"Newsreader", serif',
+              fontSize: 14, color: 'rgba(33,26,46,0.64)',
               lineHeight: 1.65, marginBottom: 28, position: 'relative',
             }}
           >
@@ -286,10 +286,10 @@ export default function Login() {
               exit={{ opacity: 0, height: 0 }}
               style={{
                 padding: '10px 14px',
-                background: 'rgba(239,68,68,0.10)',
-                border: '1px solid rgba(239,68,68,0.30)',
-                borderRadius: 6, color: '#f87171', fontSize: 13,
-                fontFamily: '"Lora", serif', position: 'relative',
+                background: 'rgba(220,38,38,0.10)',
+                border: '1px solid rgba(220,38,38,0.30)',
+                borderRadius: 6, color: '#ef4444', fontSize: 13,
+                fontFamily: '"Newsreader", serif', position: 'relative',
               }}
             >
               {error}
@@ -297,7 +297,7 @@ export default function Login() {
           )}
 
           <motion.button
-            whileHover={{ scale: 1.02, boxShadow: '0 0 32px rgba(168,85,247,0.35)' }}
+            whileHover={{ scale: 1.02, boxShadow: '0 0 32px rgba(124,58,237,0.35)' }}
             whileTap={{ scale: 0.98 }}
             onClick={handleSignIn}
             disabled={loading}
@@ -305,9 +305,9 @@ export default function Login() {
             style={{
               width: '100%', padding: '15px 20px',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
-              background: CTA, color: '#0d1117', border: 'none', borderRadius: 8,
+              background: CTA, color: '#ffffff', border: 'none', borderRadius: 8,
               cursor: loading ? 'not-allowed' : 'pointer',
-              fontFamily: '"Montserrat", sans-serif',
+              fontFamily: '"Instrument Sans", sans-serif',
               fontWeight: 700, fontSize: 15,
               opacity: loading ? 0.65 : 1, transition: 'opacity 0.2s',
               position: 'relative',
@@ -319,8 +319,8 @@ export default function Login() {
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                   style={{
-                    width: 20, height: 20, border: '2px solid rgba(13,17,23,0.3)',
-                    borderTopColor: '#0d1117', borderRadius: '50%',
+                    width: 20, height: 20, border: '2px solid rgba(255,255,255,0.35)',
+                    borderTopColor: '#ffffff', borderRadius: '50%',
                   }}
                 />
                 Signing in...
@@ -338,16 +338,16 @@ export default function Login() {
             margin: '22px 0 18px',
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
-            color: 'rgba(250,247,240,0.28)', position: 'relative',
+            color: 'rgba(33,26,46,0.42)', position: 'relative',
           }}>
-            <span style={{ flex: 1, height: 1, background: 'rgba(168,85,247,0.12)' }} />
+            <span style={{ flex: 1, height: 1, background: 'rgba(124,58,237,0.12)' }} />
             Private &amp; secure
-            <span style={{ flex: 1, height: 1, background: 'rgba(168,85,247,0.12)' }} />
+            <span style={{ flex: 1, height: 1, background: 'rgba(124,58,237,0.12)' }} />
           </div>
 
           <p style={{
-            fontFamily: '"Lora", serif',
-            fontSize: 12, color: 'rgba(250,247,240,0.30)',
+            fontFamily: '"Newsreader", serif',
+            fontSize: 12, color: 'rgba(33,26,46,0.45)',
             lineHeight: 1.6, textAlign: 'center', position: 'relative',
           }}>
             No marketing email. Ever. Your slides stay in your account.

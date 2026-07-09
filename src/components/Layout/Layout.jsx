@@ -12,7 +12,7 @@ function NavSectionLabel({ children }) {
     <div style={{
       fontFamily: '"JetBrains Mono", ui-monospace, monospace',
       fontSize: 9, letterSpacing: '0.24em', textTransform: 'uppercase',
-      color: 'rgba(168, 85, 247,0.45)', padding: '0 12px', marginBottom: 8,
+      color: 'rgba(124, 58, 237,0.45)', padding: '0 12px', marginBottom: 8,
     }}>
       {children}
     </div>
@@ -26,8 +26,8 @@ function SidebarNavItem({ to, icon, label, count }) {
       style={({ isActive }) => ({
         display: 'flex', alignItems: 'center', gap: 10,
         padding: '10px 12px', textDecoration: 'none',
-        borderLeft: `2px solid ${isActive ? '#a855f7' : 'transparent'}`,
-        background: isActive ? 'rgba(168, 85, 247,0.08)' : 'transparent',
+        borderLeft: `2px solid ${isActive ? '#7c3aed' : 'transparent'}`,
+        background: isActive ? 'rgba(124, 58, 237,0.08)' : 'transparent',
         transition: 'all 0.15s', cursor: 'pointer',
         borderRadius: '0 6px 6px 0',
       })}
@@ -35,22 +35,22 @@ function SidebarNavItem({ to, icon, label, count }) {
       {({ isActive }) => (
         <>
           <span style={{
-            color: isActive ? '#a855f7' : 'rgba(250,247,240,0.30)',
+            color: isActive ? '#7c3aed' : 'rgba(33,26,46,0.45)',
             display: 'flex', alignItems: 'center', flexShrink: 0,
           }}>
             {icon}
           </span>
           <span style={{
             flex: 1,
-            fontFamily: '"Lora", serif',
-            fontSize: 14, color: isActive ? '#faf7f0' : 'rgba(250,247,240,0.50)',
+            fontFamily: '"Newsreader", serif',
+            fontSize: 14, color: isActive ? '#211a2e' : 'rgba(33,26,46,0.60)',
           }}>
             {label}
           </span>
           {count !== undefined && (
             <span style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-              fontSize: 10, letterSpacing: '0.12em', color: 'rgba(250,247,240,0.28)',
+              fontSize: 10, letterSpacing: '0.12em', color: 'rgba(33,26,46,0.42)',
             }}>
               {String(count).padStart(2, '0')}
             </span>
@@ -149,11 +149,11 @@ export default function Layout({ children }) {
     ) : (
       <div style={{
         width: size, height: size, borderRadius: '50%',
-        background: 'linear-gradient(135deg, #a855f7, #9333ea)',
-        color: '#0d1117',
+        background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+        color: '#ffffff',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: '"Montserrat", sans-serif',
-        fontWeight: 900, fontSize: size * 0.38, flexShrink: 0,
+        fontFamily: '"Instrument Sans", sans-serif',
+        fontWeight: 700, fontSize: size * 0.38, flexShrink: 0,
       }}>
         {initials}
       </div>
@@ -163,17 +163,17 @@ export default function Layout({ children }) {
   const sidebarContent = (
     <aside style={{
       width: 280, minWidth: 280, height: '100%',
-      background: '#0d1117',
-      borderRight: '1px solid rgba(168, 85, 247,0.10)',
+      background: '#f7f5fb',
+      borderRight: '1px solid rgba(124, 58, 237,0.10)',
       display: 'flex', flexDirection: 'column', overflow: 'hidden',
     }}>
       {/* Wordmark + optional close (mobile) */}
       <div style={{
         padding: '24px 20px',
-        borderBottom: '1px solid rgba(168, 85, 247,0.08)',
+        borderBottom: '1px solid rgba(124, 58, 237,0.08)',
         flexShrink: 0,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        color: '#faf7f0',
+        color: '#211a2e',
       }}>
         <Wordmark size={22} />
         {isMobile && (
@@ -181,12 +181,12 @@ export default function Layout({ children }) {
             onClick={() => setSidebarOpen(false)}
             style={{
               all: 'unset', cursor: 'pointer',
-              color: 'rgba(250,247,240,0.40)',
+              color: 'rgba(33,26,46,0.52)',
               display: 'flex', alignItems: 'center', padding: 4,
               transition: 'color 0.15s',
             }}
-            onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.40)'}
+            onMouseEnter={e => e.currentTarget.style.color = '#211a2e'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(33,26,46,0.52)'}
           >
             <CloseIcon />
           </button>
@@ -219,11 +219,11 @@ export default function Layout({ children }) {
                 all: 'unset', cursor: 'pointer',
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                 fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase',
-                color: 'rgba(250,247,240,0.25)', paddingRight: 12,
+                color: 'rgba(33,26,46,0.38)', paddingRight: 12,
                 transition: 'color 0.15s',
               }}
-              onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
-              onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.25)'}
+              onMouseEnter={e => e.currentTarget.style.color = '#dc2626'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(33,26,46,0.38)'}
             >
               Clear
             </button>
@@ -234,13 +234,13 @@ export default function Layout({ children }) {
                 key={u.id}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 4,
-                  borderLeft: `2px solid ${i === 0 ? '#a855f7' : 'transparent'}`,
-                  background: i === 0 ? 'rgba(168, 85, 247,0.06)' : 'transparent',
+                  borderLeft: `2px solid ${i === 0 ? '#7c3aed' : 'transparent'}`,
+                  background: i === 0 ? 'rgba(124, 58, 237,0.06)' : 'transparent',
                   borderRadius: '0 4px 4px 0',
                   transition: 'background 0.15s',
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(168, 85, 247,0.06)'}
-                onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(168, 85, 247,0.06)' : 'transparent'}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(124, 58, 237,0.06)'}
+                onMouseLeave={e => e.currentTarget.style.background = i === 0 ? 'rgba(124, 58, 237,0.06)' : 'transparent'}
               >
                 {/* Filename — click to go to dashboard */}
                 <button
@@ -252,15 +252,15 @@ export default function Layout({ children }) {
                   }}
                 >
                   <span style={{
-                    fontFamily: '"Lora", serif',
-                    fontSize: 13, color: '#faf7f0', lineHeight: 1.3,
+                    fontFamily: '"Newsreader", serif',
+                    fontSize: 13, color: '#211a2e', lineHeight: 1.3,
                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180,
                   }}>
                     {u.filename}
                   </span>
                   <span style={{
                     fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                    fontSize: 10, color: 'rgba(250,247,240,0.35)', letterSpacing: '0.08em',
+                    fontSize: 10, color: 'rgba(33,26,46,0.48)', letterSpacing: '0.08em',
                   }}>
                     {formatDate(u.createdAt)}
                   </span>
@@ -280,12 +280,12 @@ export default function Layout({ children }) {
                   style={{
                     all: 'unset', cursor: 'pointer',
                     padding: '8px 10px',
-                    color: 'rgba(250,247,240,0.25)',
+                    color: 'rgba(33,26,46,0.38)',
                     display: 'flex', alignItems: 'center',
                     transition: 'color 0.15s', flexShrink: 0,
                   }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#a855f7'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.25)'}
+                  onMouseEnter={e => e.currentTarget.style.color = '#7c3aed'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(33,26,46,0.38)'}
                 >
                   <svg width={13} height={13} viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -301,21 +301,21 @@ export default function Layout({ children }) {
       {/* BOTTOM USER */}
       <div style={{
         marginTop: 'auto', padding: '14px 16px',
-        borderTop: '1px solid rgba(168, 85, 247,0.08)',
+        borderTop: '1px solid rgba(124, 58, 237,0.08)',
         display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
       }}>
         <UserAvatar size={32} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{
-            fontFamily: '"Lora", serif',
-            fontSize: 13, color: '#faf7f0', lineHeight: 1.25,
+            fontFamily: '"Newsreader", serif',
+            fontSize: 13, color: '#211a2e', lineHeight: 1.25,
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}>
             {user?.displayName || 'User'}
           </div>
           <div style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 11, color: 'rgba(250,247,240,0.35)', lineHeight: 1.25,
+            fontSize: 11, color: 'rgba(33,26,46,0.48)', lineHeight: 1.25,
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}>
             {user?.email}
@@ -326,12 +326,12 @@ export default function Layout({ children }) {
           title="Sign out"
           style={{
             all: 'unset', cursor: 'pointer',
-            color: 'rgba(250,247,240,0.30)',
+            color: 'rgba(33,26,46,0.45)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: 4, borderRadius: 4, transition: 'color 0.15s', flexShrink: 0,
           }}
-          onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
-          onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.30)'}
+          onMouseEnter={e => e.currentTarget.style.color = '#211a2e'}
+          onMouseLeave={e => e.currentTarget.style.color = 'rgba(33,26,46,0.45)'}
         >
           <IconLogout size={16} />
         </button>
@@ -344,7 +344,7 @@ export default function Layout({ children }) {
   return (
     <div style={{
       width: '100vw', height: '100vh',
-      background: '#0d1117',
+      background: '#f7f5fb',
       display: 'flex', overflow: 'hidden', position: 'relative',
     }}>
       {/* In-app toast */}
@@ -358,16 +358,16 @@ export default function Layout({ children }) {
               position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)',
               zIndex: 9999, display: 'flex', alignItems: 'center', gap: 12,
               padding: '12px 18px',
-              background: toast.type === 'confirm' ? '#1c2128' : '#1c1015',
-              border: `1px solid ${toast.type === 'confirm' ? 'rgba(168, 85, 247,0.30)' : 'rgba(239,68,68,0.40)'}`,
+              background: toast.type === 'confirm' ? '#f1edf9' : '#1c1015',
+              border: `1px solid ${toast.type === 'confirm' ? 'rgba(124, 58, 237,0.30)' : 'rgba(220,38,38,0.40)'}`,
               borderRadius: 10,
-              boxShadow: '0 8px 32px rgba(0,0,0,0.60)',
+              boxShadow: '0 8px 32px rgba(41,28,66,0.16)',
               maxWidth: 380, width: 'calc(100vw - 48px)',
             }}
           >
             <span style={{
-              fontFamily: '"Lora", serif', fontSize: 13,
-              color: toast.type === 'confirm' ? 'rgba(250,247,240,0.80)' : '#fca5a5',
+              fontFamily: '"Newsreader", serif', fontSize: 13,
+              color: toast.type === 'confirm' ? 'rgba(33,26,46,0.80)' : '#fca5a5',
               flex: 1, lineHeight: 1.5,
             }}>
               {toast.msg}
@@ -378,8 +378,8 @@ export default function Layout({ children }) {
                   onClick={() => { clearUploads(); setToast(null); }}
                   style={{
                     all: 'unset', cursor: 'pointer', padding: '5px 12px',
-                    background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.40)',
-                    borderRadius: 5, color: '#ef4444',
+                    background: 'rgba(220,38,38,0.15)', border: '1px solid rgba(220,38,38,0.40)',
+                    borderRadius: 5, color: '#dc2626',
                     fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10,
                     letterSpacing: '0.12em', textTransform: 'uppercase',
                   }}
@@ -390,8 +390,8 @@ export default function Layout({ children }) {
                   onClick={() => setToast(null)}
                   style={{
                     all: 'unset', cursor: 'pointer', padding: '5px 12px',
-                    background: 'rgba(250,247,240,0.06)', border: '1px solid rgba(250,247,240,0.12)',
-                    borderRadius: 5, color: 'rgba(250,247,240,0.50)',
+                    background: 'rgba(33,26,46,0.06)', border: '1px solid rgba(33,26,46,0.12)',
+                    borderRadius: 5, color: 'rgba(33,26,46,0.60)',
                     fontFamily: '"JetBrains Mono", ui-monospace, monospace', fontSize: 10,
                     letterSpacing: '0.12em', textTransform: 'uppercase',
                   }}
@@ -402,7 +402,7 @@ export default function Layout({ children }) {
             ) : (
               <button
                 onClick={() => setToast(null)}
-                style={{ all: 'unset', cursor: 'pointer', color: 'rgba(250,247,240,0.35)', padding: 4 }}
+                style={{ all: 'unset', cursor: 'pointer', color: 'rgba(33,26,46,0.48)', padding: 4 }}
               >
                 <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -416,8 +416,8 @@ export default function Layout({ children }) {
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
         background: `
-          radial-gradient(ellipse 60% 55% at 50% 30%, rgba(168, 85, 247,0.04) 0%, transparent 70%),
-          radial-gradient(120% 90% at 50% 110%, rgba(168, 85, 247,0.02) 0%, transparent 60%)
+          radial-gradient(ellipse 60% 55% at 50% 30%, rgba(124, 58, 237,0.04) 0%, transparent 70%),
+          radial-gradient(120% 90% at 50% 110%, rgba(124, 58, 237,0.02) 0%, transparent 60%)
         `,
       }} />
 
@@ -426,18 +426,18 @@ export default function Layout({ children }) {
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0,
           height: MOBILE_TOP,
-          background: '#0d1117',
-          borderBottom: '1px solid rgba(168, 85, 247,0.10)',
+          background: '#f7f5fb',
+          borderBottom: '1px solid rgba(124, 58, 237,0.10)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 16px',
           zIndex: 200, flexShrink: 0,
-          color: '#faf7f0',
+          color: '#211a2e',
         }}>
           <button
             onClick={() => setSidebarOpen(true)}
             style={{
               all: 'unset', cursor: 'pointer',
-              color: 'rgba(250,247,240,0.50)',
+              color: 'rgba(33,26,46,0.60)',
               display: 'flex', alignItems: 'center', padding: '6px 4px',
             }}
           >
@@ -460,7 +460,7 @@ export default function Layout({ children }) {
               onClick={() => setSidebarOpen(false)}
               style={{
                 position: 'fixed', inset: 0,
-                background: 'rgba(13,17,23,0.85)',
+                background: 'rgba(247,245,251,0.85)',
                 zIndex: 250,
                 backdropFilter: 'blur(4px)',
               }}
@@ -495,7 +495,7 @@ export default function Layout({ children }) {
         height: isMobile ? `calc(100vh - ${MOBILE_TOP}px)` : '100vh',
         marginTop: isMobile ? MOBILE_TOP : 0,
         overflowY: 'auto',
-        background: '#0d1117',
+        background: '#f7f5fb',
         position: 'relative', zIndex: 1,
       }}>
         {children}
@@ -511,7 +511,7 @@ export default function Layout({ children }) {
             onClick={() => !clearingUploads && setShowClearModal(false)}
             style={{
               position: 'fixed', inset: 0, zIndex: 500,
-              background: 'rgba(13,17,23,0.88)',
+              background: 'rgba(247,245,251,0.88)',
               backdropFilter: 'blur(6px)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               padding: 24,
@@ -524,20 +524,20 @@ export default function Layout({ children }) {
               transition={{ type: 'spring', stiffness: 280, damping: 26 }}
               onClick={e => e.stopPropagation()}
               style={{
-                background: '#161b22',
-                border: '1px solid rgba(239,68,68,0.25)',
+                background: '#ffffff',
+                border: '1px solid rgba(220,38,38,0.25)',
                 borderRadius: 12,
                 padding: '32px 28px',
                 maxWidth: 380, width: '100%',
-                boxShadow: '0 24px 60px rgba(0,0,0,0.60)',
+                boxShadow: '0 24px 60px rgba(41,28,66,0.18)',
               }}
             >
               <div style={{
                 width: 48, height: 48, borderRadius: '50%',
-                background: 'rgba(239,68,68,0.10)',
-                border: '1px solid rgba(239,68,68,0.30)',
+                background: 'rgba(220,38,38,0.10)',
+                border: '1px solid rgba(220,38,38,0.30)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: 20, color: '#ef4444',
+                marginBottom: 20, color: '#dc2626',
               }}>
                 <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="3 6 5 6 21 6"/>
@@ -550,22 +550,22 @@ export default function Layout({ children }) {
               <div style={{
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                 fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase',
-                color: '#ef4444', marginBottom: 8,
+                color: '#dc2626', marginBottom: 8,
               }}>
                 Clear recents
               </div>
 
               <h3 style={{
-                fontFamily: '"Montserrat", sans-serif',
-                fontWeight: 700, fontSize: 20, color: '#faf7f0',
+                fontFamily: '"Instrument Sans", sans-serif',
+                fontWeight: 700, fontSize: 20, color: '#211a2e',
                 letterSpacing: '-0.02em', lineHeight: 1.2, marginBottom: 12,
               }}>
                 Remove all recent uploads?
               </h3>
 
               <p style={{
-                fontFamily: '"Lora", serif',
-                fontSize: 14, color: 'rgba(250,247,240,0.60)', lineHeight: 1.65,
+                fontFamily: '"Newsreader", serif',
+                fontSize: 14, color: 'rgba(33,26,46,0.68)', lineHeight: 1.65,
                 marginBottom: 28,
               }}>
                 This removes the recent uploads list. Your quiz history is never affected and will always be preserved.
@@ -578,10 +578,10 @@ export default function Layout({ children }) {
                   style={{
                     all: 'unset', cursor: clearingUploads ? 'wait' : 'pointer',
                     flex: 1, padding: '12px 18px', textAlign: 'center',
-                    background: 'rgba(239,68,68,0.12)',
-                    border: '1px solid rgba(239,68,68,0.40)',
-                    borderRadius: 8, color: '#ef4444',
-                    fontFamily: '"Montserrat", sans-serif',
+                    background: 'rgba(220,38,38,0.12)',
+                    border: '1px solid rgba(220,38,38,0.40)',
+                    borderRadius: 8, color: '#dc2626',
+                    fontFamily: '"Instrument Sans", sans-serif',
                     fontWeight: 700, fontSize: 14,
                     opacity: clearingUploads ? 0.6 : 1,
                     transition: 'opacity 0.15s',
@@ -595,10 +595,10 @@ export default function Layout({ children }) {
                   style={{
                     all: 'unset', cursor: 'pointer',
                     flex: 1, padding: '12px 18px', textAlign: 'center',
-                    background: 'rgba(250,247,240,0.05)',
-                    border: '1px solid rgba(250,247,240,0.12)',
-                    borderRadius: 8, color: 'rgba(250,247,240,0.65)',
-                    fontFamily: '"Montserrat", sans-serif',
+                    background: 'rgba(33,26,46,0.05)',
+                    border: '1px solid rgba(33,26,46,0.12)',
+                    borderRadius: 8, color: 'rgba(33,26,46,0.72)',
+                    fontFamily: '"Instrument Sans", sans-serif',
                     fontWeight: 600, fontSize: 14,
                   }}
                 >

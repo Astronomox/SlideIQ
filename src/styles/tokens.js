@@ -6,45 +6,45 @@
 
 export const colors = {
   // Primary
-  primary: '#a855f7', // Purple
-  primaryLight: 'rgba(168, 85, 247, 0.10)',
-  primaryDark: '#7c3aed',
+  primary: '#7c3aed', // Purple
+  primaryLight: 'rgba(124, 58, 237, 0.10)',
+  primaryDark: '#5b21b6',
 
   // Background
   bg: {
-    primary: '#0f1419',
-    secondary: '#1a1f2e',
-    tertiary: '#161b22',
-    hover: 'rgba(168, 85, 247, 0.05)',
+    primary: '#f7f5fb',
+    secondary: '#faf8fd',
+    tertiary: '#ffffff',
+    hover: 'rgba(124, 58, 237, 0.05)',
   },
 
   // Text
   text: {
-    primary: '#faf7f0',
-    secondary: 'rgba(250,247,240,0.65)',
-    tertiary: 'rgba(250,247,240,0.50)',
-    muted: 'rgba(250,247,240,0.25)',
-    hint: '#b0b8c1',
+    primary: '#211a2e',
+    secondary: 'rgba(33,26,46,0.72)',
+    tertiary: 'rgba(33,26,46,0.60)',
+    muted: 'rgba(33,26,46,0.38)',
+    hint: '#6b6480',
   },
 
   // Border
   border: {
-    primary: '1px solid rgba(168, 85, 247, 0.12)',
-    secondary: '1px solid rgba(168, 85, 247, 0.20)',
-    light: '1px solid rgba(168, 85, 247, 0.05)',
+    primary: '1px solid rgba(124, 58, 237, 0.12)',
+    secondary: '1px solid rgba(124, 58, 237, 0.20)',
+    light: '1px solid rgba(124, 58, 237, 0.05)',
   },
 
   // Status
   status: {
-    success: '#10b981',
-    error: '#ef4444',
-    warning: '#f59e0b',
-    info: '#3b82f6',
+    success: '#059669',
+    error: '#dc2626',
+    warning: '#d97706',
+    info: '#2563eb',
   },
 
   // Special
-  accent: '#0084ff',
-  disabled: '#2a2f3e',
+  accent: '#7c3aed',
+  disabled: '#e8e3f3',
 };
 
 export const spacing = {
@@ -70,10 +70,10 @@ export const borderRadius = {
 
 export const typography = {
   fontFamily: {
-    sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    serif: '"Lora", serif',
+    sans: '"Instrument Sans", -apple-system, sans-serif',
+    serif: '"Newsreader", serif',
     mono: '"JetBrains Mono", ui-monospace, monospace',
-    montserrat: '"Montserrat", sans-serif',
+    montserrat: '"Instrument Sans", sans-serif',
   },
 
   fontSize: {
@@ -97,7 +97,7 @@ export const typography = {
     semibold: 600,
     bold: 700,
     extrabold: 800,
-    black: 900,
+    black: 700,
   },
 
   lineHeight: {
@@ -110,10 +110,10 @@ export const typography = {
 };
 
 export const shadows = {
-  sm: '0 1px 8px rgba(0,0,0,0.30)',
-  md: '0 4px 6px rgba(0, 0, 0, 0.3)',
-  lg: '0 8px 32px rgba(168, 85, 247, 0.10)',
-  xl: '0 20px 25px rgba(0, 0, 0, 0.4)',
+  sm: '0 1px 8px rgba(41,28,66,0.10)',
+  md: '0 4px 6px rgba(41,28,66,0.10)',
+  lg: '0 8px 32px rgba(124, 58, 237, 0.10)',
+  xl: '0 20px 25px rgba(41,28,66,0.14)',
 };
 
 export const transitions = {
@@ -241,8 +241,8 @@ export const commonStyles = {
  * Gradient definitions
  */
 export const gradients = {
-  primary: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 60%, #7c3aed 100%)`,
-  subtle: `radial-gradient(ellipse 80% 100% at 50% 0%, rgba(168, 85, 247,0.05) 0%, transparent 70%)`,
+  primary: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.primaryDark} 60%, #5b21b6 100%)`,
+  subtle: `radial-gradient(ellipse 80% 100% at 50% 0%, rgba(124, 58, 237,0.05) 0%, transparent 70%)`,
 };
 
 /**

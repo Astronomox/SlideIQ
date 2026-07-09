@@ -10,7 +10,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
+const CTA = 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 60%, #5b21b6 100%)';
 
 // Supported file types
 const ACCEPTED_TYPES = {
@@ -187,12 +187,12 @@ async function extractTXT(file, onProgress) {
 // ── File type icons ───────────────────────────────────────────────────────────
 function FileTypeIcon({ type, size = 32 }) {
   const colors = {
-    PDF: '#ef4444', DOCX: '#3b82f6', DOC: '#3b82f6',
+    PDF: '#dc2626', DOCX: '#2563eb', DOC: '#2563eb',
     PPTX: '#f97316', PPT: '#f97316',
     XLSX: '#22c55e', XLS: '#22c55e',
-    TXT: '#a855f7', MD: '#a855f7',
+    TXT: '#7c3aed', MD: '#7c3aed',
   };
-  const color = colors[type] || '#a855f7';
+  const color = colors[type] || '#7c3aed';
   return (
     <div style={{
       width: size, height: size, borderRadius: 6, flexShrink: 0,
@@ -321,12 +321,12 @@ export default function UploadZone({ onUploadComplete }) {
             onDragLeave={handleDragLeave}
             onClick={() => inputRef.current?.click()}
             style={{
-              border: `2px dashed ${isDragging ? '#a855f7' : 'rgba(168,85,247,0.25)'}`,
+              border: `2px dashed ${isDragging ? '#7c3aed' : 'rgba(124,58,237,0.25)'}`,
               borderRadius: 12,
               padding: '52px 32px',
               textAlign: 'center',
               cursor: 'pointer',
-              background: isDragging ? 'rgba(168,85,247,0.05)' : 'transparent',
+              background: isDragging ? 'rgba(124,58,237,0.05)' : 'transparent',
               transition: 'border-color 0.2s, background 0.2s',
             }}
           >
@@ -336,26 +336,26 @@ export default function UploadZone({ onUploadComplete }) {
               style={{
                 width: 56, height: 56, margin: '0 auto 20px',
                 borderRadius: 12,
-                background: 'rgba(168,85,247,0.10)',
-                border: '1px solid rgba(168,85,247,0.25)',
+                background: 'rgba(124,58,237,0.10)',
+                border: '1px solid rgba(124,58,237,0.25)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: '#a855f7',
+                color: '#7c3aed',
               }}
             >
               <IconUpload size={24} />
             </motion.div>
 
             <h3 style={{
-              fontFamily: '"Montserrat", sans-serif',
-              fontWeight: 700, fontSize: 18, color: '#faf7f0',
+              fontFamily: '"Instrument Sans", sans-serif',
+              fontWeight: 700, fontSize: 18, color: '#211a2e',
               letterSpacing: '-0.01em', marginBottom: 8,
             }}>
               Drop your lecture here
             </h3>
 
             <p style={{
-              fontFamily: '"Lora", serif',
-              fontSize: 14, color: 'rgba(250,247,240,0.50)', lineHeight: 1.6, marginBottom: 24,
+              fontFamily: '"Newsreader", serif',
+              fontSize: 14, color: 'rgba(33,26,46,0.60)', lineHeight: 1.6, marginBottom: 24,
             }}>
               or click to browse your files
             </p>
@@ -365,12 +365,12 @@ export default function UploadZone({ onUploadComplete }) {
               display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginBottom: 20,
             }}>
               {[
-                { type: 'PDF', color: '#ef4444' },
+                { type: 'PDF', color: '#dc2626' },
                 { type: 'PPTX', color: '#f97316' },
-                { type: 'DOCX', color: '#3b82f6' },
+                { type: 'DOCX', color: '#2563eb' },
                 { type: 'XLSX', color: '#22c55e' },
-                { type: 'TXT', color: '#a855f7' },
-                { type: 'MD', color: '#a855f7' },
+                { type: 'TXT', color: '#7c3aed' },
+                { type: 'MD', color: '#7c3aed' },
               ].map(({ type, color }) => (
                 <motion.span
                   key={type}
@@ -391,14 +391,14 @@ export default function UploadZone({ onUploadComplete }) {
             <p style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 10, letterSpacing: '0.16em',
-              color: 'rgba(250,247,240,0.25)', textTransform: 'uppercase',
+              color: 'rgba(33,26,46,0.38)', textTransform: 'uppercase',
             }}>
               Max 50 MB, text extracted in your browser
             </p>
             <p style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 9, letterSpacing: '0.12em',
-              color: 'rgba(250,247,240,0.18)', marginTop: 6,
+              color: 'rgba(33,26,46,0.18)', marginTop: 6,
             }}>
               Scanned or image PDFs are supported via OCR — may take longer
             </p>
@@ -422,24 +422,24 @@ export default function UploadZone({ onUploadComplete }) {
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ type: 'spring', stiffness: 260, damping: 24 }}
             style={{
-              border: '1px solid rgba(168,85,247,0.20)',
+              border: '1px solid rgba(124,58,237,0.20)',
               borderRadius: 12, padding: '40px 32px',
-              background: '#161b22', textAlign: 'center',
+              background: '#ffffff', textAlign: 'center',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
               <FileTypeIcon type={fileType} size={40} />
               <div style={{ textAlign: 'left' }}>
                 <div style={{
-                  fontFamily: '"Montserrat", sans-serif',
-                  fontWeight: 600, fontSize: 14, color: '#faf7f0',
+                  fontFamily: '"Instrument Sans", sans-serif',
+                  fontWeight: 600, fontSize: 14, color: '#211a2e',
                   maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 }}>
                   {currentFile?.name}
                 </div>
                 <div style={{
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                  fontSize: 10, color: '#a855f7', letterSpacing: '0.12em', marginTop: 2,
+                  fontSize: 10, color: '#7c3aed', letterSpacing: '0.12em', marginTop: 2,
                 }}>
                   {statusMsg || `${labelText}...`}
                 </div>
@@ -448,7 +448,7 @@ export default function UploadZone({ onUploadComplete }) {
 
             {/* Progress bar */}
             <div style={{
-              height: 3, background: 'rgba(168,85,247,0.12)',
+              height: 3, background: 'rgba(124,58,237,0.12)',
               borderRadius: 2, overflow: 'hidden', marginBottom: 12,
             }}>
               <motion.div
@@ -456,15 +456,15 @@ export default function UploadZone({ onUploadComplete }) {
                 transition={{ type: 'spring', stiffness: 60, damping: 16 }}
                 style={{
                   height: '100%',
-                  background: 'linear-gradient(90deg, #9333ea, #a855f7, #d8b4fe)',
-                  boxShadow: '0 0 8px rgba(168,85,247,0.60)',
+                  background: 'linear-gradient(90deg, #6d28d9, #7c3aed, #8b5cf6)',
+                  boxShadow: '0 0 8px rgba(124,58,237,0.60)',
                 }}
               />
             </div>
 
             <div style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-              fontSize: 11, color: 'rgba(250,247,240,0.40)', letterSpacing: '0.12em',
+              fontSize: 11, color: 'rgba(33,26,46,0.52)', letterSpacing: '0.12em',
             }}>
               {pageCount > 1
                 ? `${pagesRead} / ${pageCount} ${fileType === 'PPTX' || fileType === 'PPT' ? 'slides' : fileType === 'XLSX' || fileType === 'XLS' ? 'sheets' : 'pages'}`
@@ -482,9 +482,9 @@ export default function UploadZone({ onUploadComplete }) {
             exit={{ opacity: 0 }}
             transition={{ type: 'spring', stiffness: 260, damping: 24 }}
             style={{
-              border: '1px solid rgba(239,68,68,0.30)',
+              border: '1px solid rgba(220,38,38,0.30)',
               borderRadius: 12, padding: '48px 32px',
-              background: '#161b22', textAlign: 'center',
+              background: '#ffffff', textAlign: 'center',
             }}
           >
             <motion.div
@@ -493,24 +493,24 @@ export default function UploadZone({ onUploadComplete }) {
               transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
               style={{
                 width: 56, height: 56, borderRadius: '50%',
-                background: 'rgba(239,68,68,0.10)',
-                border: '1px solid rgba(239,68,68,0.35)',
+                background: 'rgba(220,38,38,0.10)',
+                border: '1px solid rgba(220,38,38,0.35)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                margin: '0 auto 20px', color: '#ef4444',
+                margin: '0 auto 20px', color: '#dc2626',
               }}
             >
               <IconX size={24} />
             </motion.div>
 
             <h3 style={{
-              fontFamily: '"Montserrat", sans-serif',
-              fontWeight: 700, fontSize: 18, color: '#faf7f0', marginBottom: 8,
+              fontFamily: '"Instrument Sans", sans-serif',
+              fontWeight: 700, fontSize: 18, color: '#211a2e', marginBottom: 8,
             }}>
               Could not read file.
             </h3>
             <p style={{
-              fontFamily: '"Lora", serif',
-              fontSize: 13, color: 'rgba(250,247,240,0.55)', lineHeight: 1.6, marginBottom: 24,
+              fontFamily: '"Newsreader", serif',
+              fontSize: 13, color: 'rgba(33,26,46,0.64)', lineHeight: 1.6, marginBottom: 24,
             }}>
               {errorMsg}
             </p>
@@ -523,7 +523,7 @@ export default function UploadZone({ onUploadComplete }) {
                 all: 'unset', cursor: 'pointer',
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                 fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase',
-                color: '#a855f7', borderBottom: '1px solid rgba(168,85,247,0.40)',
+                color: '#7c3aed', borderBottom: '1px solid rgba(124,58,237,0.40)',
                 paddingBottom: 2,
               }}
             >
@@ -541,9 +541,9 @@ export default function UploadZone({ onUploadComplete }) {
             exit={{ opacity: 0 }}
             transition={{ type: 'spring', stiffness: 260, damping: 24 }}
             style={{
-              border: '1px solid rgba(168,85,247,0.30)',
+              border: '1px solid rgba(124,58,237,0.30)',
               borderRadius: 12, padding: '40px 32px',
-              background: 'rgba(168,85,247,0.04)', textAlign: 'center',
+              background: 'rgba(124,58,237,0.04)', textAlign: 'center',
             }}
           >
             <motion.div
@@ -552,10 +552,10 @@ export default function UploadZone({ onUploadComplete }) {
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
               style={{
                 width: 56, height: 56, borderRadius: '50%',
-                background: 'rgba(168,85,247,0.12)',
-                border: '2px solid #a855f7',
+                background: 'rgba(124,58,237,0.12)',
+                border: '2px solid #7c3aed',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                margin: '0 auto 16px', color: '#a855f7',
+                margin: '0 auto 16px', color: '#7c3aed',
               }}
             >
               <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -566,8 +566,8 @@ export default function UploadZone({ onUploadComplete }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', marginBottom: 6 }}>
               <FileTypeIcon type={fileType} size={28} />
               <h3 style={{
-                fontFamily: '"Montserrat", sans-serif',
-                fontWeight: 700, fontSize: 16, color: '#faf7f0',
+                fontFamily: '"Instrument Sans", sans-serif',
+                fontWeight: 700, fontSize: 16, color: '#211a2e',
               }}>
                 {currentFile?.name}
               </h3>
@@ -575,7 +575,7 @@ export default function UploadZone({ onUploadComplete }) {
 
             <p style={{
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-              fontSize: 10, color: '#a855f7', letterSpacing: '0.16em',
+              fontSize: 10, color: '#7c3aed', letterSpacing: '0.16em',
             }}>
               Ready
             </p>

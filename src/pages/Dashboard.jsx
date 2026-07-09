@@ -7,9 +7,9 @@ import UploadZone from '../components/Upload/UploadZone';
 import PersonalitySelector, { PERSONALITIES } from '../components/PersonalitySelector/PersonalitySelector';
 import QuizMode from '../components/QuizMode/QuizMode';
 import { PersonaGlyph, IconArrow, IconSparkle } from '../components/Icons/Icons';
-import { generateQuizContent } from '../api/claude';
+import { generateQuizContent } from '../api/gemini';
 
-const CTA = 'linear-gradient(135deg, #a855f7 0%, #9333ea 60%, #7c3aed 100%)';
+const CTA = 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 60%, #5b21b6 100%)';
 
 function StepIndicator({ steps, current }) {
   return (
@@ -23,20 +23,20 @@ function StepIndicator({ steps, current }) {
               width: 28, height: 28, borderRadius: '50%',
               border: isCompleted
                 ? 'none'
-                : `1.5px solid ${isActive ? '#a855f7' : 'rgba(168, 85, 247,0.20)'}`,
+                : `1.5px solid ${isActive ? '#7c3aed' : 'rgba(124, 58, 237,0.20)'}`,
               background: isCompleted
-                ? '#a855f7'
+                ? '#7c3aed'
                 : isActive
-                  ? 'rgba(168, 85, 247,0.10)'
+                  ? 'rgba(124, 58, 237,0.10)'
                   : 'transparent',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: '"JetBrains Mono", ui-monospace, monospace',
               fontSize: 11, fontWeight: 600,
               color: isCompleted
-                ? '#0d1117'
+                ? '#ffffff'
                 : isActive
-                  ? '#a855f7'
-                  : 'rgba(250,247,240,0.25)',
+                  ? '#7c3aed'
+                  : 'rgba(33,26,46,0.38)',
               flexShrink: 0, transition: 'all 0.3s',
             }}>
               {isCompleted ? (
@@ -51,7 +51,7 @@ function StepIndicator({ steps, current }) {
             {i < steps.length - 1 && (
               <div style={{
                 flex: 1, height: 1.5, margin: '0 8px',
-                background: isCompleted ? '#a855f7' : 'rgba(168, 85, 247,0.12)',
+                background: isCompleted ? '#7c3aed' : 'rgba(124, 58, 237,0.12)',
                 transition: 'background 0.3s',
               }} />
             )}
@@ -65,26 +65,26 @@ function StepIndicator({ steps, current }) {
 function QuestionCountCard({ label, description, value, onChange, min, max }) {
   return (
     <motion.div
-      whileHover={{ y: -2, boxShadow: '0 8px 32px rgba(168, 85, 247,0.10)' }}
+      whileHover={{ y: -2, boxShadow: '0 8px 32px rgba(124, 58, 237,0.10)' }}
       transition={{ type: 'spring', stiffness: 300, damping: 28 }}
       style={{
-        background: '#161b22',
-        border: '1px solid rgba(168, 85, 247,0.12)',
+        background: '#ffffff',
+        border: '1px solid rgba(124, 58, 237,0.12)',
         borderRadius: 10, padding: 24,
         display: 'flex', flexDirection: 'column', gap: 14,
-        boxShadow: '0 1px 8px rgba(0,0,0,0.30)',
+        boxShadow: '0 1px 8px rgba(41,28,66,0.10)',
       }}>
       <div>
         <h3 style={{
-          fontFamily: '"Montserrat", sans-serif',
+          fontFamily: '"Instrument Sans", sans-serif',
           fontWeight: 700, fontSize: 18, letterSpacing: '-0.02em',
-          color: '#faf7f0', marginBottom: 4,
+          color: '#211a2e', marginBottom: 4,
         }}>
           {label}
         </h3>
         <p style={{
-          fontFamily: '"Lora", serif',
-          fontSize: 13, color: 'rgba(250,247,240,0.50)', lineHeight: 1.5,
+          fontFamily: '"Newsreader", serif',
+          fontSize: 13, color: 'rgba(33,26,46,0.60)', lineHeight: 1.5,
         }}>
           {description}
         </p>
@@ -97,12 +97,12 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
           style={{
             all: 'unset', cursor: value > min ? 'pointer' : 'not-allowed',
             width: 36, height: 36, borderRadius: '50%',
-            border: '1.5px solid rgba(168, 85, 247,0.25)',
-            background: 'transparent', color: '#a855f7',
+            border: '1.5px solid rgba(124, 58, 237,0.25)',
+            background: 'transparent', color: '#7c3aed',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 20, opacity: value <= min ? 0.25 : 1, transition: 'background 0.15s',
           }}
-          onMouseEnter={e => { if (value > min) e.currentTarget.style.background = 'rgba(168, 85, 247,0.08)'; }}
+          onMouseEnter={e => { if (value > min) e.currentTarget.style.background = 'rgba(124, 58, 237,0.08)'; }}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         >
           −
@@ -110,11 +110,11 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
 
         <motion.span
           key={value}
-          initial={{ scale: 1.2, color: '#a855f7' }}
-          animate={{ scale: 1, color: '#a855f7' }}
+          initial={{ scale: 1.2, color: '#7c3aed' }}
+          animate={{ scale: 1, color: '#7c3aed' }}
           style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-            fontSize: 48, fontWeight: 600, color: '#a855f7', lineHeight: 1,
+            fontSize: 48, fontWeight: 600, color: '#7c3aed', lineHeight: 1,
           }}
         >
           {value}
@@ -126,12 +126,12 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
           style={{
             all: 'unset', cursor: value < max ? 'pointer' : 'not-allowed',
             width: 36, height: 36, borderRadius: '50%',
-            border: '1.5px solid rgba(168, 85, 247,0.25)',
-            background: 'transparent', color: '#a855f7',
+            border: '1.5px solid rgba(124, 58, 237,0.25)',
+            background: 'transparent', color: '#7c3aed',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 20, opacity: value >= max ? 0.25 : 1, transition: 'background 0.15s',
           }}
-          onMouseEnter={e => { if (value < max) e.currentTarget.style.background = 'rgba(168, 85, 247,0.08)'; }}
+          onMouseEnter={e => { if (value < max) e.currentTarget.style.background = 'rgba(124, 58, 237,0.08)'; }}
           onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
         >
           +
@@ -142,7 +142,7 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
         <div style={{
           position: 'absolute', top: '50%', transform: 'translateY(-50%)',
           left: 0, height: 2,
-          background: 'linear-gradient(90deg, #a855f7, #9333ea)',
+          background: 'linear-gradient(90deg, #7c3aed, #6d28d9)',
           width: `${((value - min) / (max - min)) * 100}%`,
           pointerEvents: 'none', transition: 'width 0.1s',
         }} />
@@ -156,7 +156,7 @@ function QuestionCountCard({ label, description, value, onChange, min, max }) {
       <div style={{
         display: 'flex', justifyContent: 'space-between',
         fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-        fontSize: 10, color: 'rgba(250,247,240,0.28)', letterSpacing: '0.12em',
+        fontSize: 10, color: 'rgba(33,26,46,0.42)', letterSpacing: '0.12em',
       }}>
         <span>{min}</span>
         <span>{max}</span>
@@ -257,7 +257,7 @@ export default function Dashboard() {
       {/* Top atmosphere glow */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: 400,
-        background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(168, 85, 247,0.05) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(124, 58, 237,0.05) 0%, transparent 70%)',
         pointerEvents: 'none', zIndex: 0,
       }} />
       {/* Grain texture overlay */}
@@ -282,7 +282,7 @@ export default function Dashboard() {
           <div style={{
             fontFamily: '"JetBrains Mono", ui-monospace, monospace',
             fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase',
-            color: '#a855f7', marginBottom: 10,
+            color: '#7c3aed', marginBottom: 10,
           }}>
             Welcome back, {firstName.toUpperCase()}
           </div>
@@ -295,11 +295,11 @@ export default function Dashboard() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.3 }}
               style={{
-                fontFamily: '"Montserrat", sans-serif',
-                fontWeight: 900,
-                fontSize: isMobile ? 32 : 56,
-                color: '#faf7f0',
-                letterSpacing: '-0.02em',
+                fontFamily: '"Instrument Serif", serif',
+                fontWeight: 400,
+                fontSize: isMobile ? 38 : 62,
+                color: '#211a2e',
+                letterSpacing: '-0.015em',
                 lineHeight: 1.0,
                 marginBottom: 10,
               }}
@@ -316,9 +316,9 @@ export default function Dashboard() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               style={{
-                fontFamily: '"Lora", serif',
+                fontFamily: '"Newsreader", serif',
                 fontSize: 16,
-                color: 'rgba(250,247,240,0.65)',
+                color: 'rgba(33,26,46,0.72)',
                 lineHeight: 1.75, maxWidth: 520,
               }}
             >
@@ -362,10 +362,10 @@ export default function Dashboard() {
                     all: 'unset', cursor: 'pointer',
                     fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                     fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase',
-                    color: 'rgba(250,247,240,0.35)', transition: 'color 0.15s',
+                    color: 'rgba(33,26,46,0.48)', transition: 'color 0.15s',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.35)'}
+                  onMouseEnter={e => e.currentTarget.style.color = '#211a2e'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(33,26,46,0.48)'}
                 >
                   Back
                 </button>
@@ -384,8 +384,8 @@ export default function Dashboard() {
                         display: 'inline-flex', alignItems: 'center', gap: 10,
                         padding: '13px 24px', borderRadius: 8,
                         background: CTA,
-                        color: '#0d1117',
-                        fontFamily: '"Montserrat", sans-serif',
+                        color: '#ffffff',
+                        fontFamily: '"Instrument Sans", sans-serif',
                         fontWeight: 700, fontSize: 15, border: 'none',
                       }}
                     >
@@ -414,10 +414,10 @@ export default function Dashboard() {
                   all: 'unset', cursor: 'pointer', marginBottom: 28,
                   fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                   fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase',
-                  color: 'rgba(250,247,240,0.35)', display: 'block', transition: 'color 0.15s',
+                  color: 'rgba(33,26,46,0.48)', display: 'block', transition: 'color 0.15s',
                 }}
-                onMouseEnter={e => e.currentTarget.style.color = '#faf7f0'}
-                onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,247,240,0.35)'}
+                onMouseEnter={e => e.currentTarget.style.color = '#211a2e'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(33,26,46,0.48)'}
               >
                 Back
               </button>
@@ -425,22 +425,22 @@ export default function Dashboard() {
               {selectedPersonality && (
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 14,
-                  background: 'rgba(168, 85, 247,0.06)',
-                  border: '1px solid rgba(168, 85, 247,0.15)',
+                  background: 'rgba(124, 58, 237,0.06)',
+                  border: '1px solid rgba(124, 58, 237,0.15)',
                   padding: '14px 18px', borderRadius: 8, marginBottom: 28,
                 }}>
                   <span style={{ color: selectedPersonality.accent }}>
                     <PersonaGlyph id={selectedPersonality.id} size={28} />
                   </span>
                   <span style={{
-                    fontFamily: '"Montserrat", sans-serif',
-                    fontSize: 17, color: '#faf7f0', fontWeight: 700,
+                    fontFamily: '"Instrument Sans", sans-serif',
+                    fontSize: 17, color: '#211a2e', fontWeight: 700,
                   }}>
                     {selectedPersonality.title}
                   </span>
                   <span style={{
-                    fontFamily: '"Lora", serif',
-                    fontStyle: 'italic', fontSize: 13, color: 'rgba(250,247,240,0.45)',
+                    fontFamily: '"Newsreader", serif',
+                    fontStyle: 'italic', fontSize: 13, color: 'rgba(33,26,46,0.56)',
                   }}>
                     "{selectedPersonality.tagline}"
                   </span>
@@ -472,7 +472,7 @@ export default function Dashboard() {
 
               <div style={{
                 fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-                fontSize: 11, letterSpacing: '0.14em', color: 'rgba(250,247,240,0.35)',
+                fontSize: 11, letterSpacing: '0.14em', color: 'rgba(33,26,46,0.48)',
                 textAlign: 'center', marginBottom: 24,
               }}>
                 {mcqCount} MCQ + {theoryCount} Theory = {mcqCount + theoryCount} total questions
@@ -485,18 +485,18 @@ export default function Dashboard() {
                   style={{
                     display: 'flex', alignItems: 'flex-start', gap: 12,
                     padding: '14px 16px', marginBottom: 16,
-                    background: 'rgba(239,68,68,0.08)',
-                    border: '1px solid rgba(239,68,68,0.30)',
+                    background: 'rgba(220,38,38,0.08)',
+                    border: '1px solid rgba(220,38,38,0.30)',
                     borderRadius: 8,
                   }}
                 >
-                  <div style={{ flexShrink: 0, color: '#ef4444', marginTop: 1 }}>
+                  <div style={{ flexShrink: 0, color: '#dc2626', marginTop: 1 }}>
                     <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
                       <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                     </svg>
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: '"Lora", serif', fontSize: 13, color: '#fca5a5', lineHeight: 1.5, marginBottom: 8 }}>
+                    <div style={{ fontFamily: '"Newsreader", serif', fontSize: 13, color: '#fca5a5', lineHeight: 1.5, marginBottom: 8 }}>
                       {generateError}
                     </div>
                     <button
@@ -505,7 +505,7 @@ export default function Dashboard() {
                         all: 'unset', cursor: 'pointer',
                         fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                         fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase',
-                        color: '#ef4444', borderBottom: '1px solid rgba(239,68,68,0.40)', paddingBottom: 1,
+                        color: '#dc2626', borderBottom: '1px solid rgba(220,38,38,0.40)', paddingBottom: 1,
                       }}
                     >
                       Try again →
@@ -523,11 +523,11 @@ export default function Dashboard() {
                   all: 'unset', cursor: generating ? 'wait' : 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
                   padding: '17px 28px', width: '100%', borderRadius: 8,
-                  background: generating ? '#161b22' : CTA,
-                  color: generating ? 'rgba(250,247,240,0.35)' : '#0d1117',
-                  fontFamily: '"Montserrat", sans-serif',
+                  background: generating ? '#ffffff' : CTA,
+                  color: generating ? 'rgba(33,26,46,0.48)' : '#ffffff',
+                  fontFamily: '"Instrument Sans", sans-serif',
                   fontWeight: 700, fontSize: 16,
-                  border: generating ? '1px solid rgba(168, 85, 247,0.15)' : 'none',
+                  border: generating ? '1px solid rgba(124, 58, 237,0.15)' : 'none',
                   transition: 'background 0.2s, color 0.2s',
                   boxSizing: 'border-box',
                 }}
@@ -562,8 +562,8 @@ export default function Dashboard() {
                       exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.35 }}
                       style={{
-                        fontFamily: '"Lora", serif', fontStyle: 'italic',
-                        fontSize: 13, color: 'rgba(250,247,240,0.50)', margin: 0,
+                        fontFamily: '"Newsreader", serif', fontStyle: 'italic',
+                        fontSize: 13, color: 'rgba(33,26,46,0.60)', margin: 0,
                       }}
                     >
                       {GENERATION_MESSAGES[generationPhase]}
@@ -572,7 +572,7 @@ export default function Dashboard() {
                   <p style={{
                     fontFamily: '"JetBrains Mono", ui-monospace, monospace',
                     fontSize: 10, letterSpacing: '0.14em',
-                    color: 'rgba(250,247,240,0.22)', margin: 0,
+                    color: 'rgba(33,26,46,0.22)', margin: 0,
                   }}>
                     This may take up to 30 seconds for large quizzes
                   </p>
